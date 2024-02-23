@@ -1,7 +1,6 @@
-﻿namespace KakeysBakery.ClassLib
-{
-    public class Class1
-    {
+﻿namespace KakeysBakery.ClassLib;
 
-    }
+public class Class1
+{
+
 }
