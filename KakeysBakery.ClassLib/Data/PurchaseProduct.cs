@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KakeysBakery.Data;
-
-public partial class Referencephoto
+namespace KakeysBakeryClassLib.Data;
+public partial class PurchaseProduct
 {
     public int Id { get; set; }
 
     public int? Purchaseid { get; set; }
 
-    public byte[]? Photo { get; set; }
+    public int? Productid { get; set; }
+
+    public virtual Product? Product { get; set; }
 
     public virtual Purchase? Purchase { get; set; }
 }

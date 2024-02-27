@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using KakeysBakeryClassLib.Data;
 using Microsoft.EntityFrameworkCore;
-
 namespace KakeysBakery.Data;
 
 public partial class PostgresContext : DbContext

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KakeysBakery.Data;
+namespace KakeysBakeryClassLib.Data;
 
 public partial class Customer
 {
