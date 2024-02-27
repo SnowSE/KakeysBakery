@@ -33,8 +33,6 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Referencephoto> Referencephotos { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Name=db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,6 +1,7 @@
 using KakeysBakery.Components;
 using KakeysBakery.Data;
 using KakeysBakery.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped<IAddonService, AddOnService>();
 builder.Services.AddControllers();
-builder.Services.AddDbContext<PostgresContext>();
+builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

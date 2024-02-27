@@ -13,6 +13,8 @@ namespace KakeysBakery.Tests;
 public class BakeryFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _dbContainer;
+    //private string testConnection = "host=localhost;port=5432; database=ourTestingbase;password=Strong_password_123!;username=username";
+   
 
     public BakeryFactory()
     {
@@ -26,6 +28,9 @@ public class BakeryFactory : WebApplicationFactory<Program>, IAsyncLifetime
         _dbContainer = new PostgreSqlBuilder()
             .WithImage("postgres")
             .WithPassword("Strong_password_123!")
+            .WithUsername("username")
+            .WithDatabase("ourTestingbase")
+            //.WithPortBinding(5432)
             .WithBindMount(backupFile.FullName, "/docker-entrypoint-initdb.d/init.sql")
             .Build();
     }
@@ -35,6 +40,7 @@ public class BakeryFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(DbContextOptions<PostgresContext>));
+            //services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql(testConnection));
             services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql(_dbContainer.GetConnectionString()));
         });
     }

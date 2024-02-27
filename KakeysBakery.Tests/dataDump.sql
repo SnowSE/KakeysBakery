@@ -1,7 +1,7 @@
 -- DROP SCHEMA "KakeysBakery";
 
 CREATE SCHEMA "KakeysBakery"; -- AUTHORIZATION brycecoon_25;
-
+Set search_path to "KakeysBakery";
 -- DROP SEQUENCE "KakeysBakery".addon_id_seq;
 
 CREATE SEQUENCE "KakeysBakery".addon_id_seq
