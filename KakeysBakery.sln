@@ -3,7 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KakeysBakery", "KakeysBakery\KakeysBakery.csproj", "{2ED7A336-B5DE-4722-AA01-A58F53321CE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KakeysBakery", "KakeysBakery\KakeysBakery.csproj", "{2ED7A336-B5DE-4722-AA01-A58F53321CE9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{97E81EBC-FC8F-4CC2-AA6D-F03F2BDB05B2} = {97E81EBC-FC8F-4CC2-AA6D-F03F2BDB05B2}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KakeysBakery.Tests", "KakeysBakery.Tests\KakeysBakery.Tests.csproj", "{ACC819CE-D195-42F8-99D8-0E3CF62A16E6}"
 EndProject

@@ -1,4 +1,5 @@
 using KakeysBakery.Components;
+using KakeysBakery.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddDbContext<PostgresContext>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
