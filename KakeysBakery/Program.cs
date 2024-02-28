@@ -1,6 +1,7 @@
 using KakeysBakery.Components;
 using KakeysBakery.Data;
 using KakeysBakery.Services;
+using KakeysBakeryClassLib.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

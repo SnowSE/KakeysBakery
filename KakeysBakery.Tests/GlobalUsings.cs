@@ -1,3 +1,3 @@
 global using Xunit;
 global using KakeysBakeryClassLib.Data;
-global using KakeysBakeryClassLib.IServices;
+global using KakeysBakeryClassLib.Services.Interfaces;

@@ -19,48 +19,86 @@ public class BakeryTests : IClassFixture<BakeryFactory>
         Assert.Equal(1, 1); 
     }
 
-    //We were failing to relace the production database with a testing database. 
-    //This is because the Posgres Contect was getting the connections string from the enviroment variable and not useing the one set in program.cs
-    //Be sure to check for that when we rescaffold
     [Fact]
-    public async Task CRUDAddOnDB()
-    { 
-        //arrange
-        Addon testaddon = new Addon();
-        testaddon.Description = "TestDesc";
-        testaddon.Addontypename = "TestName";
-        testaddon.Id = 77;
-        testaddon.Suggestedprice = (decimal)100.25;
-        List<Addon> addons = new();
+    public async Task Can_Create_AddOn()
+    {
+        // ARRANGE
+        Addon testaddon = new Addon()
+        {
+            Description = "TestDesc",
+            Addontypename = "TestName",
+            Id = 77,
+            Suggestedprice = (decimal)100.25
+        };
 
-        //act
+        // ACT
         await client.PostAsJsonAsync("api/addon/add", testaddon);
-        addons = await client.GetFromJsonAsync<List<Addon>>("api/addon/getall");
+        List<Addon> addons = await client.GetFromJsonAsync<List<Addon>>("api/addon/getall");
         Addon result = addons.FirstOrDefault(a => a.Id == 77);
-        //assert
+
+        // ASSERT
+        Assert.NotNull(addons);
+        Assert.NotNull(result);
+
         Assert.Equal(testaddon.Suggestedprice, result.Suggestedprice);
         Assert.Equal(testaddon.Flavor, result.Flavor);
         Assert.Equal(testaddon.Id, result.Id);
         Assert.Equal(testaddon.Description, result.Description);
+    }
 
-        //act
+    [Fact]
+    public async Task Can_Edit_AddOn()
+    {
+        // ARRANGE
+        Addon testaddon = new Addon()
+        {
+            Description = "TestDesc",
+            Addontypename = "TestName",
+            Id = 77,
+            Suggestedprice = (decimal)100.25
+        };
+
+        // ACT
         testaddon.Description = "EditedTestDescription";
         await client.PatchAsJsonAsync("api/addon/update", testaddon);
-        addons = await client.GetFromJsonAsync<List<Addon>>("api/addon/getall");
-        result = addons.FirstOrDefault(a => a.Id == 77);
-        //assert
+        List<Addon>  addons = await client.GetFromJsonAsync<List<Addon>>("api/addon/getall");
+        Addon result = addons.FirstOrDefault(a => a.Id == 77);
+
+        // ASSERT
+        Assert.NotNull(addons);
+        Assert.NotNull(result);
+
         Assert.Equal(testaddon.Description, result.Description);
         Assert.Equal(testaddon.Id, result.Id);
-        //act
+    }
+
+    //We were failing to relace the production database with a testing database. 
+    //This is because the Posgres Contect was getting the connections string from the enviroment variable and not useing the one set in program.cs
+    //Be sure to check for that when we rescaffold
+    [Fact]
+    public async Task Can_Delete_AddOn()
+    { 
+        // ARRANGE
+        Addon testaddon = new Addon()
+        {
+            Description = "TestDesc",
+            Addontypename = "TestName",
+            Id = 77,
+            Suggestedprice = (decimal)100.25
+        };
+    
+        // ACT
         await client.DeleteAsync($"api/addon/delete/{testaddon.Id}");
-        addons = await client.GetFromJsonAsync<List<Addon>>("api/addon/getall");
-        result = addons.FirstOrDefault(a => a.Id == 77);
-        //assert
+        List<Addon> addons = await client.GetFromJsonAsync<List<Addon>>("api/addon/getall");
+        Addon result = addons.FirstOrDefault(a => a.Id == 77);
+
+        // ASSERT
+
         Assert.Null(result);
     }
 
     [Fact]
-    public async Task CRUDBaseGoodDB()
+    public async Task CRUD_For_BaseGoods()
     {
         //arrange
         Basegood testBaseGood = new();

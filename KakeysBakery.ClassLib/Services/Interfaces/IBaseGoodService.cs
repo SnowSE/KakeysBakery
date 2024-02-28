@@ -5,15 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KakeysBakeryClassLib.IServices;
+namespace KakeysBakeryClassLib.Services.Interfaces;
 
 public interface IBaseGoodService
 {
     public Task<List<Basegood>> GetBaseGoodListAsync();
-
     public Task CreateBaseGoodAsync(Basegood basegood);
-
     public Task DeleteBaseGoodAsync(int basegoodId);
-
     public Task UpdateBaseGoodAsync(Basegood basegood);
 }
