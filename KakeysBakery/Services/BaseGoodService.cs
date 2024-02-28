@@ -1,6 +1,4 @@
 ﻿using KakeysBakery.Data;
-using KakeysBakeryClassLib.Data;
-using KakeysBakeryClassLib.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
@@ -44,6 +42,20 @@ public class BaseGoodService : IBaseGoodService
             return await _context.Basegoods.ToListAsync();
         }
         catch { return new List<Basegood>(); }
+    }
+
+    public async Task<Basegood?> GetBaseGoodAsync(int id)
+    {
+        return await _context.Basegoods
+                .Where(b => b.Id == id)
+                .FirstOrDefaultAsync();
+    }
+
+    public async Task<Basegood?> GetBaseGoodAsync(string name)
+    {
+        return await _context.Basegoods
+                .Where(b => b.Basegoodname == name)
+                .FirstOrDefaultAsync();
     }
 
     public Task UpdateBaseGoodAsync(Basegood basegood)

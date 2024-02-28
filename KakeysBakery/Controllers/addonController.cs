@@ -1,7 +1,5 @@
-﻿using KakeysBakery.Services;
-using KakeysBakeryClassLib.Data;
-using KakeysBakeryClassLib.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+
 namespace KakeysBakery.Controllers;
 
 [ApiController]
@@ -18,6 +16,28 @@ public class addonController : ControllerBase
     public async Task<List<Addon>> GetAddonsAsync()
     {
         return await addonService.GetAddonListAsync();
+    }
+
+    [HttpGet("get/{id}")]
+    public async Task<IActionResult> GetAddonAsync(int id)
+    {
+        var addon = await addonService.GetAddonAsync(id);
+        if (addon == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(addon); // Return the addon if found
+    }
+
+    [HttpGet("get_by_name/{name}")]
+    public async Task<IActionResult> GetAddonAsync(string name)
+    {
+        var addon = await addonService.GetAddonAsync(name);
+        if (addon == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(addon); // Return the addon if found
     }
 
     [HttpPost("add")]
@@ -37,5 +57,4 @@ public class addonController : ControllerBase
     {
         await addonService.UpdateAddOnAsync(addon);
     }
-
 }
