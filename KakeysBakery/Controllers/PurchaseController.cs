@@ -1,4 +1,5 @@
-﻿using KakeysBakeryClassLib.Data;
+﻿using KakeysBakery.Services;
+using KakeysBakeryClassLib.Data;
 using KakeysBakeryClassLib.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,25 +15,36 @@ public class PurchaseController : ControllerBase
     }
 
     [HttpGet("getall")]
-    public async Task<List<Purchase>> GetAddonsAsync()
+    public async Task<List<Purchase>> GetPurchaseListAsync()
     {
         return await purchaseService.GetPurchaseListAsync();
     }
 
+    [HttpGet("get/{id}")]
+    public async Task<IActionResult> GetPurchaseAsync(int id)
+    {
+        var addon = await purchaseService.GetPurchaseAsync(id);
+        if (addon == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(addon); // Return the addon if found
+    }
+
     [HttpPost("add")]
-    public async Task CreateAddOnAsync(Purchase addon)
+    public async Task CreatePurchaseAsync(Purchase addon)
     {
         await purchaseService.CreatePurchaseAsync(addon);
     }
 
     [HttpDelete("delete/{id}")]
-    public async Task DeleteAddOnAsync(int id)
+    public async Task DeletePurchaseAsync(int id)
     {
         await purchaseService.DeletePurchaseAsync(id);
     }
 
     [HttpPatch("update")]
-    public async Task UpdateAddonAsync(Purchase addon)
+    public async Task UpdatePurchaseAsync(Purchase addon)
     {
         await purchaseService.UpdatePurchaseAsync(addon);
     }

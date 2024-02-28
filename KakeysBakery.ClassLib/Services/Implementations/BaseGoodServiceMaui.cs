@@ -20,6 +20,16 @@ namespace KakeysBakeryClassLib.Services.Implementations
             throw new NotImplementedException();
         }
 
+        public Task<Basegood?> GetBaseGoodAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Basegood?> GetBaseGoodAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<Basegood>> GetBaseGoodListAsync()
         {
             throw new NotImplementedException();

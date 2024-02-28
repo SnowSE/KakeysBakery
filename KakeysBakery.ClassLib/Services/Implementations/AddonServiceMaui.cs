@@ -20,6 +20,16 @@ namespace KakeysBakeryClassLib.Services.Implementations
             throw new NotImplementedException();
         }
 
+        public Task<Addon?> GetAddonAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Addon?> GetAddonAsync(string addonName)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<Addon>> GetAddonListAsync()
         {
             throw new NotImplementedException();

@@ -27,7 +27,7 @@ public class PurchaseService : IPurchaseService
     {
         try
         {
-            Purchase purchase = await _context.Purchases.FirstOrDefaultAsync(a => a.Id == purchaseID);
+            Purchase? purchase = await _context.Purchases.FirstOrDefaultAsync(a => a.Id == purchaseID);
             if (purchase != null)
             {
                 _context.Purchases.Remove(purchase);
@@ -44,6 +44,13 @@ public class PurchaseService : IPurchaseService
             return await _context.Purchases.ToListAsync();
         }
         catch { return new List<Purchase>(); }
+    }
+
+    public async Task<Purchase?> GetPurchaseAsync(int id)
+    {
+        return await _context.Purchases
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync();
     }
 
     public Task UpdatePurchaseAsync(Purchase purchase)
