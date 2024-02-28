@@ -10,6 +10,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<IAddonService, AddOnService>();
+builder.Services.AddScoped<IBaseGoodService, BaseGoodService>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
 

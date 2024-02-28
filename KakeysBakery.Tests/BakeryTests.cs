@@ -68,12 +68,12 @@ public class BakeryTests : IClassFixture<BakeryFactory>
         testBaseGood.Id = 77;
         testBaseGood.Suggestedprice = (decimal)100.25;
         testBaseGood.Flavor = "testFlavor";
-        List<Basegood> basegood = new();
+        List<Basegood> basegoods = new();
 
         //act
         await client.PostAsJsonAsync("api/basegood/add", testBaseGood);
-        basegood = await client.GetFromJsonAsync<List<Basegood>>("api/basegood/getall");
-        Basegood result = basegood.FirstOrDefault(a => a.Id == 77);
+        basegoods = await client.GetFromJsonAsync<List<Basegood>>("api/basegood/getall");
+        Basegood result = basegoods.FirstOrDefault(a => a.Id == 77);
         //assert
         Assert.Equal(testBaseGood.Suggestedprice, result.Suggestedprice);
         Assert.Equal(testBaseGood.Flavor, result.Flavor);
@@ -82,15 +82,15 @@ public class BakeryTests : IClassFixture<BakeryFactory>
         //act
         testBaseGood.Basegoodname = "EditedTestName";
         await client.PatchAsJsonAsync("api/basegood/update", testBaseGood);
-        basegood = await client.GetFromJsonAsync<List<Basegood>>("api/basegood/getall");
-        result = basegood.FirstOrDefault(a => a.Id == 77);
+        basegoods = await client.GetFromJsonAsync<List<Basegood>>("api/basegood/getall");
+        result = basegoods.FirstOrDefault(a => a.Id == 77);
         //assert
         Assert.Equal(testBaseGood.Basegoodname, result.Basegoodname);
         Assert.Equal(testBaseGood.Id, result.Id);
         //act
         await client.DeleteAsync($"api/basegood/delete/{testBaseGood.Id}");
-        basegood = await client.GetFromJsonAsync<List<Basegood>>("api/basegood/getall");
-        result = basegood.FirstOrDefault(a => a.Id == 77);
+        basegoods = await client.GetFromJsonAsync<List<Basegood>>("api/basegood/getall");
+        result = basegoods.FirstOrDefault(a => a.Id == 77);
         //assert
         Assert.Null(result);
     }
