@@ -1,2 +1,2 @@
-﻿global using KakeysBakeryClassLib.IServices;
+﻿global using KakeysBakeryClassLib.Services.Interfaces;
 global using KakeysBakeryClassLib.Data;
