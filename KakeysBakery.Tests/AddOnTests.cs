@@ -5,7 +5,6 @@ namespace KakeysBakery.Tests;
 public class AddOnTests : IClassFixture<BakeryFactory>
 {
     public HttpClient client { get; set; }
-    public BakeryFactory bakeryFactory { get; set; }
     public AddOnTests(BakeryFactory Factory)
     {
         client = Factory.CreateDefaultClient();

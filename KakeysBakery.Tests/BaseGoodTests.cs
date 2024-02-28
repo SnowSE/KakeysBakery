@@ -6,7 +6,6 @@ namespace KakeysBakery.Tests;
 public class BaseGoodTests : IClassFixture<BakeryFactory>
 {
     public HttpClient client { get; set; }
-    public BakeryFactory bakeryFactory { get; set; }
     public BaseGoodTests(BakeryFactory Factory)
     {
         client = Factory.CreateDefaultClient();
@@ -136,6 +135,8 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
 
 
         // ASSERT
+        Assert.NotNull(result);
+
         Assert.Equal(testBaseGood.Suggestedprice, result.Suggestedprice);
         Assert.Equal(testBaseGood.Flavor, result.Flavor);
         Assert.Equal(testBaseGood.Id, result.Id);

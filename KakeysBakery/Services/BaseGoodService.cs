@@ -25,7 +25,7 @@ public class BaseGoodService : IBaseGoodService
     {
         try
         {
-            Basegood basegood = _context.Basegoods.FirstOrDefault(b => b.Id == baseGoodId);
+            Basegood? basegood = _context.Basegoods.FirstOrDefault(b => b.Id == baseGoodId);
             if (basegood != null)
             {
                 _context.Basegoods.Remove(basegood);

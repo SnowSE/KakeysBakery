@@ -27,7 +27,7 @@ public class AddOnService : IAddonService
     {
         try
         {
-            Addon addon = await _context.Addons.FirstOrDefaultAsync(a => a.Id == addonID);
+            Addon? addon = await _context.Addons.FirstOrDefaultAsync(a => a.Id == addonID);
             if (addon != null)
             {
                 _context.Addons.Remove(addon);

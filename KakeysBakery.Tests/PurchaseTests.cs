@@ -6,7 +6,6 @@ namespace KakeysBakery.Tests;
 public class PurchaseTests : IClassFixture<BakeryFactory>
 {
     public HttpClient client { get; set; }
-    public BakeryFactory bakeryFactory { get; set; }
     public PurchaseTests(BakeryFactory Factory)
     {
         client = Factory.CreateDefaultClient();
