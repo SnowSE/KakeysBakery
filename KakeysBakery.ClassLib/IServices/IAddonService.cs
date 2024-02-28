@@ -13,7 +13,7 @@ public interface IAddonService
 
     public Task CreateAddOnAsync(Addon addon);
 
-    public Task DeleteAddOnAsync(Addon addon);
+    public Task DeleteAddOnAsync(int addonId);
 
     public Task UpdateAddOnAsync(Addon addon);
 }

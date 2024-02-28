@@ -25,4 +25,16 @@ public class addonController : ControllerBase
         await addonService.CreateAddOnAsync(addon);
     }
 
+    [HttpDelete("delete/{id}")]
+    public async Task DeleteAddOnAsync(int id)
+    {
+        await addonService.DeleteAddOnAsync(id);
+    }
+
+    [HttpPatch("update")]
+    public async Task UpdateAddonAsync(Addon addon)
+    {
+        await addonService.UpdateAddOnAsync(addon);
+    }
+
 }
