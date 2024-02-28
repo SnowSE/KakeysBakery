@@ -50,6 +50,7 @@ public class BaseGoodService : IBaseGoodService
         try
         {
             _context.Basegoods.Update(basegood);
+            _context.SaveChanges();
         }
         catch { }
         return Task.CompletedTask;
