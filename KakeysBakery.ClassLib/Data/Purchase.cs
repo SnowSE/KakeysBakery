@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLiteNetExtensions.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace KakeysBakeryClassLib.Data;
@@ -21,7 +22,9 @@ public partial class Purchase
 
     public virtual Customer? Customer { get; set; }
 
+    [ManyToOne]
     public virtual ICollection<PurchaseProduct> PurchaseProducts { get; set; } = new List<PurchaseProduct>();
 
+    [ManyToOne]
     public virtual ICollection<Referencephoto> Referencephotos { get; set; } = new List<Referencephoto>();
 }

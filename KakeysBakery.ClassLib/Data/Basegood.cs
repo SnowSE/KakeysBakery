@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLiteNetExtensions.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace KakeysBakeryClassLib.Data;
@@ -13,5 +14,6 @@ public partial class Basegood
 
     public decimal? Suggestedprice { get; set; }
 
+    [ManyToOne]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }
