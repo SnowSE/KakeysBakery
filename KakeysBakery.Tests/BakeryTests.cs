@@ -133,3 +133,30 @@ public class BakeryTests : IClassFixture<BakeryFactory>
         Assert.Null(result);
     }
 }
+
+public class PurchaseTests : IClassFixture<BakeryFactory>
+{
+    public HttpClient client { get; set; }
+    public BakeryFactory bakeryFactory { get; set; }
+    public PurchaseTests(BakeryFactory Factory)
+    {
+        client = Factory.CreateDefaultClient();
+    }
+
+    [Fact]
+    public async Task canAddPurchases()
+    {
+        //arrange
+        Purchase testPurchase = new Purchase();
+        testPurchase.Id = 245;
+        testPurchase.Actualprice = (decimal)100.40;
+
+        //act
+        await client.PostAsJsonAsync("api/Purchase/add", testPurchase);
+        List<Purchase> gotten = await client.GetFromJsonAsync<List<Purchase>>("api/Purchase/getall");
+        Purchase result = gotten.FirstOrDefault(p => p.Id == 245);
+
+        //assert
+        Assert.Equal(testPurchase.Id, result.Id);
+    }
+}
