@@ -46,6 +46,20 @@ public class AddOnService : IAddonService
         catch { return new List<Addon>(); }
     }
 
+    public async Task<Addon?> GetAddonAsync(int id)
+    {
+        return await _context.Addons
+                .Where(a => a.Id == id)
+                .FirstOrDefaultAsync();
+    }
+
+    public async Task<Addon?> GetAddonAsync(string name)
+    {
+        return await _context.Addons
+                .Where(a => a.Addontypename == name)
+                .FirstOrDefaultAsync();
+    }
+
     public Task UpdateAddOnAsync(Addon addon)
     {
         try

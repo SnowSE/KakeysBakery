@@ -19,6 +19,28 @@ public class basegoodController : ControllerBase
         return await baseGoodService.GetBaseGoodListAsync();
     }
 
+    [HttpGet("get/{id}")]
+    public async Task<IActionResult> GetBasegoodAsync(int id)
+    {
+        var addon = await baseGoodService.GetBaseGoodAsync(id);
+        if (addon == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(addon); // Return the addon if found
+    }
+
+    [HttpGet("get_by_name/{name}")]
+    public async Task<IActionResult> GetBasegoodAsync(string name)
+    {
+        var addon = await baseGoodService.GetBaseGoodAsync(name);
+        if (addon == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(addon); // Return the addon if found
+    }
+
     [HttpPost("add")]
     public async Task CreateBaseGoodAsync(Basegood basegood)
     {
