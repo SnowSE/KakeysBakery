@@ -128,7 +128,7 @@ CREATE TABLE customer (
 	preferredcontact varchar(30) NULL,
 	issubscribed bool NULL,
 	CONSTRAINT customer_pkey PRIMARY KEY (id),
-	CONSTRAINT customer_preferredcontact_check CHECK (((preferredcontact)::text = ((('Text'::text || 'Call'::text) || 'Email'::text) || 'Other'::text)))
+	CONSTRAINT customer_preferredcontact_check CHECK (preferredcontact IN ('Text', 'Call', 'Email', 'Other'))
 );
 
 

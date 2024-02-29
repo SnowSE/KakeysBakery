@@ -30,7 +30,7 @@ public class CustomerTests : IClassFixture<BakeryFactory>
         // ARRANGE
         Customer testCustomer = new Customer()
         {
-            Id = 1,
+            Id = 6,
             Email = "test Email",
             Forename = "first",
             Surname = "last",
@@ -55,7 +55,7 @@ public class CustomerTests : IClassFixture<BakeryFactory>
         // ARRANGE
         Customer testCustomer = new Customer()
         {
-            Id = 1,
+            Id = 4,
             Email = "test Email",
             Forename = "first",
             Surname = "last",
@@ -85,10 +85,10 @@ public class CustomerTests : IClassFixture<BakeryFactory>
         // ARRANGE
         Customer testCustomer = new Customer()
         {
-            Id = 1,
+            Id = 3,
             Email = "test Email",
-            Forename = "first",
-            Surname = "last",
+            Forename = "Jeffrey",
+            Surname = "aheie",
             Phone = "8018018888",
             Preferredcontact = "Text"
 
@@ -115,7 +115,7 @@ public class CustomerTests : IClassFixture<BakeryFactory>
         // ARRANGE
         Customer testCustomer = new Customer()
         {
-            Id = 1,
+            Id = 5,
             Email = "test Email",
             Forename = "first",
             Surname = "last",
@@ -173,7 +173,7 @@ public class CustomerTests : IClassFixture<BakeryFactory>
         // ARRANGE
         Customer testCustomer = new Customer()
         {
-            Id = 1,
+            Id = 2,
             Email = "test Email",
             Forename = "first",
             Surname = "last",
