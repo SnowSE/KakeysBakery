@@ -1,5 +1,4 @@
-﻿using SQLiteNetExtensions.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace KakeysBakeryClassLib.Data;
@@ -20,9 +19,7 @@ public partial class Customer
 
     public bool? Issubscribed { get; set; }
 
-    [ManyToOne]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
-    [ManyToOne]
     public virtual ICollection<Purchase> Purchases { get; set; } = new List<Purchase>();
 }

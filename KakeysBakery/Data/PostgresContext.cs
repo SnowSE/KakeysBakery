@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using KakeysBakeryClassLib.Data;
 using Microsoft.EntityFrameworkCore;
+
 namespace KakeysBakery.Data;
 
 public partial class PostgresContext : DbContext
@@ -32,7 +32,6 @@ public partial class PostgresContext : DbContext
     public virtual DbSet<PurchaseProduct> PurchaseProducts { get; set; }
 
     public virtual DbSet<Referencephoto> Referencephotos { get; set; }
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
