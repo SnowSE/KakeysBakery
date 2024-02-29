@@ -14,7 +14,7 @@ public partial class Customer
 
     public string? Surname { get; set; }
 
-    public int? Phone { get; set; }
+    public string? Phone { get; set; }
 
     public string? Preferredcontact { get; set; }
 

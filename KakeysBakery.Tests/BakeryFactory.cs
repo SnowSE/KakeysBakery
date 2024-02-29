@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Testcontainers.PostgreSql;
 
 
-namespace KakeysBakery.Tests;
+namespace KakeysBakeryTests;
 
 public class BakeryFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {

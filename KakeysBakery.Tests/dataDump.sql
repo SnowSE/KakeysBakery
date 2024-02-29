@@ -124,7 +124,7 @@ CREATE TABLE customer (
 	email varchar(50) NOT NULL,
 	forename varchar(50) NULL,
 	surname varchar(50) NULL,
-	phone int4 NULL,
+	phone varchar(15) NULL,
 	preferredcontact varchar(30) NULL,
 	issubscribed bool NULL,
 	CONSTRAINT customer_pkey PRIMARY KEY (id),

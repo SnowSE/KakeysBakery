@@ -1,4 +1,4 @@
-﻿using KakeysBakery.Tests;
+﻿using KakeysBakeryTests;
 using KakeysBakeryClassLib.Data;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KakeysBakery.Tests;
+namespace KakeysBakeryTests;
 
 public class ProductTests : IClassFixture<BakeryFactory>
 {
@@ -83,7 +83,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         basegood.Id = 1;
         Product testProduct = new()
         {
-            Id = 245,
+            Id = 255,
             Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",

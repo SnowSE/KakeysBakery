@@ -108,7 +108,9 @@ public partial class PostgresContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("forename");
             entity.Property(e => e.Issubscribed).HasColumnName("issubscribed");
-            entity.Property(e => e.Phone).HasColumnName("phone");
+            entity.Property(e => e.Phone)
+                .HasMaxLength(15)
+                .HasColumnName("phone");
             entity.Property(e => e.Preferredcontact)
                 .HasMaxLength(30)
                 .HasColumnName("preferredcontact");

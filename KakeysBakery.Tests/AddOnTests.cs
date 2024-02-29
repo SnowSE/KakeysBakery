@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 
-namespace KakeysBakery.Tests;
+namespace KakeysBakeryTests;
 
 public class AddOnTests : IClassFixture<BakeryFactory>
 {

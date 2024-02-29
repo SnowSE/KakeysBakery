@@ -22,11 +22,11 @@ public class ProductService : IProductService
         return Task.CompletedTask;
     }
 
-    public Task DeleteProductAsync(int baseGoodId)
+    public Task DeleteProductAsync(int productId)
     {
         try
         {
-            Product? product = _context.Products.FirstOrDefault(b => b.Id == baseGoodId);
+            Product? product = _context.Products.FirstOrDefault(b => b.Id == productId);
             if (product != null)
             {
                 _context.Products.Remove(product);
