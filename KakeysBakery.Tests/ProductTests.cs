@@ -33,7 +33,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 245,
-            Basegoodid = 1,
+            //Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };
@@ -58,7 +58,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 245,
-            Basegoodid = 1,
+           // Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };
@@ -93,7 +93,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 255,
-            Basegoodid = 1,
+            //Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };
@@ -119,7 +119,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 255,
-            Basegoodid = 1,
+           // Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };
@@ -147,7 +147,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 245,
-            Basegoodid = 1,
+           // Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };
@@ -177,7 +177,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 245,
-            Basegoodid = 1,
+           // Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };
