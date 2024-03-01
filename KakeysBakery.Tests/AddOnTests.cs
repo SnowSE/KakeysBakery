@@ -72,7 +72,7 @@ public class AddOnTests : IClassFixture<BakeryFactory>
     {
         await Assert.ThrowsAsync<HttpRequestException>(async () =>
         {
-            await client.GetFromJsonAsync<Basegood>($"api/addon/get/{-1}");
+            await client.GetFromJsonAsync<Addon>($"api/addon/get/{-1}");
         });
     }
 
@@ -107,7 +107,7 @@ public class AddOnTests : IClassFixture<BakeryFactory>
     {
         await Assert.ThrowsAsync<HttpRequestException>(async () =>
         {
-            await client.GetFromJsonAsync<Basegood>($"api/addon/get_by_name/foo");
+            await client.GetFromJsonAsync<Addon>($"api/addon/get_by_name/foo");
         });
     }
 

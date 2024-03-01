@@ -64,7 +64,7 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
     {
         await Assert.ThrowsAsync<HttpRequestException>(async () =>
         {
-            await client.GetFromJsonAsync<Basegood>($"api/purchase/get/{-1}");
+            await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{-1}");
         });
     }
 
@@ -133,7 +133,7 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
         // ASSERT
         await Assert.ThrowsAsync<HttpRequestException>(async () =>
         {
-            await client.GetFromJsonAsync<Addon>($"api/purchase/get/{testPurchase.Id}");
+            await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
         });
     }
 

@@ -76,6 +76,15 @@ public class ProductTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public async Task Get_Product_ById_When_NotExists()
+    {
+        await Assert.ThrowsAsync<HttpRequestException>(async () =>
+        {
+            await client.GetFromJsonAsync<Product>($"api/Product/get/{-1}");
+        });
+    }
+
+    [Fact]
     public async Task Create_Product()
     {
         // ARRANGE
@@ -155,7 +164,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         // ASSERT
         await Assert.ThrowsAsync<HttpRequestException>(async () =>
         {
-            await client.GetFromJsonAsync<Addon>($"api/Product/get/{testProduct.Id}");
+            await client.GetFromJsonAsync<Product>($"api/Product/get/{testProduct.Id}");
         });
     }
 }

@@ -206,7 +206,7 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         // ASSERT
         await Assert.ThrowsAsync<HttpRequestException>(async () =>
         {
-            await client.GetFromJsonAsync<Addon>($"api/basegood/get/{testBaseGood.Id}");
+            await client.GetFromJsonAsync<Basegood>($"api/basegood/get/{testBaseGood.Id}");
         });
     }
 
