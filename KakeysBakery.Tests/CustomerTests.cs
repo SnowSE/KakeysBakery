@@ -36,13 +36,12 @@ public class CustomerTests : IClassFixture<BakeryFactory>
             Surname = "last",
             Phone = "8018018888",
             Preferredcontact = "Text"
-
         };
 
-        await client.PostAsJsonAsync("api/Customer/add", testCustomer);
+        await client.PostAsJsonAsync("api/customer/add", testCustomer);
 
         // ACT
-        List<Customer>? Customers = await client.GetFromJsonAsync<List<Customer>>("api/Customer/getall");
+        List<Customer>? Customers = await client.GetFromJsonAsync<List<Customer>>("api/customer/getall");
 
         // ASSERT
         Assert.NotNull(Customers);
@@ -61,13 +60,12 @@ public class CustomerTests : IClassFixture<BakeryFactory>
             Surname = "last",
             Phone = "8018018888",
             Preferredcontact = "Text"
-
         };
 
-        await client.PostAsJsonAsync("api/Customer/add", testCustomer);
+        await client.PostAsJsonAsync("api/customer/add", testCustomer);
 
         // ACT
-        Customer? result = await client.GetFromJsonAsync<Customer>($"api/Customer/get/{testCustomer.Id}");
+        Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get/{testCustomer.Id}");
 
         // ASSERT
         Assert.NotNull(result);
@@ -77,6 +75,15 @@ public class CustomerTests : IClassFixture<BakeryFactory>
         Assert.Equal(testCustomer.Id, result.Id);
         Assert.Equal(testCustomer.Phone, result.Phone);
         Assert.Equal(testCustomer.Preferredcontact, result.Preferredcontact);
+    }
+
+    [Fact]
+    public async Task Get_Customer_ById_When_NotExists()
+    {
+        await Assert.ThrowsAsync<HttpRequestException>(async () =>
+        {
+            await client.GetFromJsonAsync<Customer>($"api/customer/get/{-1}");
+        });
     }
 
     [Fact]
@@ -91,13 +98,12 @@ public class CustomerTests : IClassFixture<BakeryFactory>
             Surname = "aheie",
             Phone = "8018018888",
             Preferredcontact = "Text"
-
         };
 
-        await client.PostAsJsonAsync("api/Customer/add", testCustomer);
+        await client.PostAsJsonAsync("api/customer/add", testCustomer);
 
         // ACT
-        Customer? result = await client.GetFromJsonAsync<Customer>($"api/Customer/get_by_name/{testCustomer.Forename}/{testCustomer.Surname}");
+        Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{testCustomer.Forename}/{testCustomer.Surname}");
 
         // ASSERT
         Assert.NotNull(result);
@@ -107,6 +113,15 @@ public class CustomerTests : IClassFixture<BakeryFactory>
         Assert.Equal(testCustomer.Id, result.Id);
         Assert.Equal(testCustomer.Phone, result.Phone);
         Assert.Equal(testCustomer.Preferredcontact, result.Preferredcontact);
+    }
+
+    [Fact]
+    public async Task Get_Customer_ByName_When_NotExists()
+    {
+        await Assert.ThrowsAsync<HttpRequestException>(async () =>
+        {
+            await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/foo");
+        });
     }
 
     [Fact]
@@ -121,12 +136,11 @@ public class CustomerTests : IClassFixture<BakeryFactory>
             Surname = "last",
             Phone = "8018018888",
             Preferredcontact = "Text"
-
         };
 
         // ACT
-        await client.PostAsJsonAsync("api/Customer/add", testCustomer);
-        Customer? result = await client.GetFromJsonAsync<Customer>($"api/Customer/get/{testCustomer.Id}");
+        await client.PostAsJsonAsync("api/customer/add", testCustomer);
+        Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get/{testCustomer.Id}");
 
         // ASSERT
         Assert.NotNull(result);
@@ -136,6 +150,33 @@ public class CustomerTests : IClassFixture<BakeryFactory>
         Assert.Equal(testCustomer.Id, result.Id);
         Assert.Equal(testCustomer.Phone, result.Phone);
         Assert.Equal(testCustomer.Preferredcontact, result.Preferredcontact);
+    }
+
+    [Fact]
+    public async Task Create_Customer_When_AlreadyExists()
+    {
+        // ARRANGE
+        Customer testCustomer = new Customer()
+        {
+            Id = 5,
+            Email = "test Email",
+            Forename = "first",
+            Surname = "last",
+            Phone = "8018018888",
+            Preferredcontact = "Text"
+        };
+
+        await client.PostAsJsonAsync("api/customer/add", testCustomer);
+
+        // ASSERT
+        try
+        {
+            await client.PostAsJsonAsync("api/customer/add", testCustomer);
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail("Expected no exception, but got:" + ex.Message);
+        }
     }
 
     [Fact]
@@ -150,15 +191,14 @@ public class CustomerTests : IClassFixture<BakeryFactory>
             Surname = "last",
             Phone = "8018018888",
             Preferredcontact = "Text"
-
         };
 
-        await client.PostAsJsonAsync("api/Customer/add", testCustomer);
+        await client.PostAsJsonAsync("api/customer/add", testCustomer);
 
         // ACT
         testCustomer.Surname = "Edited Test Married Name";
-        await client.PatchAsJsonAsync("api/Customer/update", testCustomer);
-        Customer? result = await client.GetFromJsonAsync<Customer>($"api/Customer/get/{testCustomer.Id}");
+        await client.PatchAsJsonAsync("api/customer/update", testCustomer);
+        Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get/{testCustomer.Id}");
 
         // ASSERT
         Assert.NotNull(result);
@@ -179,21 +219,33 @@ public class CustomerTests : IClassFixture<BakeryFactory>
             Surname = "last",
             Phone = "8018018888",
             Preferredcontact = "Text"
-
         };
 
-        await client.PostAsJsonAsync("api/Customer/add", testCustomer);
+        await client.PostAsJsonAsync("api/customer/add", testCustomer);
 
         // Assert
-        Assert.NotNull(await client.GetFromJsonAsync<Customer>($"api/Customer/get/{testCustomer.Id}"));
+        Assert.NotNull(await client.GetFromJsonAsync<Customer>($"api/customer/get/{testCustomer.Id}"));
 
         // ACT
-        await client.DeleteAsync($"api/Customer/delete/{testCustomer.Id}");
+        await client.DeleteAsync($"api/customer/delete/{testCustomer.Id}");
 
         // ASSERT
         await Assert.ThrowsAsync<HttpRequestException>(async () =>
         {
-            await client.GetFromJsonAsync<Customer>($"api/Customer/get/{testCustomer.Id}");
+            await client.GetFromJsonAsync<Customer>($"api/customer/get/{testCustomer.Id}");
         });
+    }
+
+    [Fact]
+    public async Task Delete_Customer_When_NotExists()
+    {
+        try
+        {
+            await client.DeleteAsync($"api/customer/delete/{-1}");
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail("Expected no exception, but got:" + ex.Message);
+        }
     }
 }
