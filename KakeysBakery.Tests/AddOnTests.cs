@@ -68,6 +68,15 @@ public class AddOnTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public async Task Get_AddOn_ById_When_NotExists()
+    {
+        await Assert.ThrowsAsync<HttpRequestException>(async () =>
+        {
+            await client.GetFromJsonAsync<Addon>($"api/addon/get/{-1}");
+        });
+    }
+
+    [Fact]
     public async Task Get_Addon_ByName()
     {
         // ARRANGE
@@ -91,6 +100,15 @@ public class AddOnTests : IClassFixture<BakeryFactory>
         Assert.Equal(testaddon.Flavor, result.Flavor);
         Assert.Equal(testaddon.Id, result.Id);
         Assert.Equal(testaddon.Description, result.Description);
+    }
+
+    [Fact]
+    public async Task Get_AddOn_ByName_When_NotExists()
+    {
+        await Assert.ThrowsAsync<HttpRequestException>(async () =>
+        {
+            await client.GetFromJsonAsync<Addon>($"api/addon/get_by_name/foo");
+        });
     }
 
     [Fact]
@@ -118,6 +136,32 @@ public class AddOnTests : IClassFixture<BakeryFactory>
         Assert.Equal(testaddon.Flavor, result.Flavor);
         Assert.Equal(testaddon.Id, result.Id);
         Assert.Equal(testaddon.Description, result.Description);
+    }
+
+    [Fact]
+    public async Task Create_AddOn_When_AlreadyExists()
+    {
+        // ARRANGE
+        Addon existing = new Addon()
+        {
+            Description = "TestDesc",
+            Addontypename = "TestName",
+            Id = 101,
+            Suggestedprice = (decimal)100.25
+        };
+
+        // ACT
+        await client.PostAsJsonAsync("api/addon/add", existing);
+
+        // Assert
+        try
+        {
+            await client.PostAsJsonAsync("api/addon/add", existing);
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail("Expected no exception, but got:" + ex.Message);
+        }
     }
 
     [Fact]
@@ -168,5 +212,18 @@ public class AddOnTests : IClassFixture<BakeryFactory>
         {
             await client.GetFromJsonAsync<Addon>($"api/addon/get/{testaddon.Id}");
         });
+    }
+
+    [Fact]
+    public async Task Delete_AddOn_When_NotExists()
+    {
+        try
+        {
+            await client.DeleteAsync($"api/addon/delete/{-1}");
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail("Expected no exception, but got:" + ex.Message);
+        }
     }
 }

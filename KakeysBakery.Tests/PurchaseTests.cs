@@ -27,10 +27,10 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
             Actualprice = (decimal)100.40
         };
 
-        await client.PostAsJsonAsync("api/Purchase/add", testPurchase);
+        await client.PostAsJsonAsync("api/purchase/add", testPurchase);
 
         // ACT
-        List<Purchase>? result = await client.GetFromJsonAsync<List<Purchase>>("api/Purchase/getall");
+        List<Purchase>? result = await client.GetFromJsonAsync<List<Purchase>>("api/purchase/getall");
 
         // ASSERT
         Assert.NotNull(result);
@@ -47,16 +47,25 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
             Actualprice = (decimal)100.40
         };
 
-        await client.PostAsJsonAsync("api/Purchase/add", testPurchase);
+        await client.PostAsJsonAsync("api/purchase/add", testPurchase);
 
         // ACT
-        Purchase? result = await client.GetFromJsonAsync<Purchase>($"api/Purchase/get/{testPurchase.Id}");
+        Purchase? result = await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
 
         // ASSERT
         Assert.NotNull(result);
 
         Assert.Equal(testPurchase.Actualprice, result.Actualprice);
         Assert.Equal(testPurchase.Id, result.Id);
+    }
+
+    [Fact]
+    public async Task Get_Purchase_ById_When_NotExists()
+    {
+        await Assert.ThrowsAsync<HttpRequestException>(async () =>
+        {
+            await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{-1}");
+        });
     }
 
     [Fact]
@@ -70,8 +79,8 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
         };
 
         // ACT
-        await client.PostAsJsonAsync("api/Purchase/add", testPurchase);
-        Purchase? result = await client.GetFromJsonAsync<Purchase>($"api/Purchase/get/{testPurchase.Id}");
+        await client.PostAsJsonAsync("api/purchase/add", testPurchase);
+        Purchase? result = await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
 
         // Assert
         Assert.NotNull(result);
@@ -90,13 +99,13 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
             Actualprice = (decimal)100.40
         };
 
-        await client.PostAsJsonAsync("api/Purchase/add", testPurchase);
+        await client.PostAsJsonAsync("api/purchase/add", testPurchase);
 
         // ACT
         testPurchase.Actualprice = (decimal)123.50;
-        await client.PatchAsJsonAsync("api/Purchase/update", testPurchase);
+        await client.PatchAsJsonAsync("api/purchase/update", testPurchase);
         
-        Purchase? result = await client.GetFromJsonAsync<Purchase>($"api/Purchase/get/{testPurchase.Id}");
+        Purchase? result = await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
 
 
         // ASSERT
@@ -116,15 +125,28 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
             Actualprice = (decimal)100.40
         };
 
-        await client.PostAsJsonAsync("api/Purchase/add", testPurchase);
+        await client.PostAsJsonAsync("api/purchase/add", testPurchase);
 
         // ACT
-        await client.DeleteAsync($"api/Purchase/delete/{testPurchase.Id}");
+        await client.DeleteAsync($"api/purchase/delete/{testPurchase.Id}");
 
         // ASSERT
         await Assert.ThrowsAsync<HttpRequestException>(async () =>
         {
-            await client.GetFromJsonAsync<Addon>($"api/Purchase/get/{testPurchase.Id}");
+            await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
         });
+    }
+
+    [Fact]
+    public async Task Delete_Purchase_When_NotExists()
+    {
+        try
+        {
+            await client.DeleteAsync($"api/purchase/delete/{-1}");
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail("Expected no exception, but got:" + ex.Message);
+        }
     }
 }

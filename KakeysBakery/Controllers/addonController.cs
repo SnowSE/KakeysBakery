@@ -4,10 +4,10 @@ namespace KakeysBakery.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class addonController : ControllerBase
+public class AddonController : ControllerBase
 {
     private readonly IAddonService addonService;
-    public addonController(IAddonService AddOnService)
+    public AddonController(IAddonService AddOnService)
     {
         addonService = AddOnService;
     }

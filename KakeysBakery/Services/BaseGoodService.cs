@@ -31,7 +31,8 @@ public class BaseGoodService : IBaseGoodService
                 _context.Basegoods.Remove(basegood);
                 _context.SaveChanges();
             }
-        } catch {  } 
+        } 
+        catch {  } 
         return Task.CompletedTask;
     }
 
