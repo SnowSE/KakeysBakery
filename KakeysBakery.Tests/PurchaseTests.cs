@@ -60,6 +60,15 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public async Task Get_Purchase_ById_When_NotExists()
+    {
+        await Assert.ThrowsAsync<HttpRequestException>(async () =>
+        {
+            await client.GetFromJsonAsync<Basegood>($"api/Purchase/get/{-1}");
+        });
+    }
+
+    [Fact]
     public async Task Create_Purchase()
     {
         // ARRANGE
@@ -126,5 +135,18 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
         {
             await client.GetFromJsonAsync<Addon>($"api/Purchase/get/{testPurchase.Id}");
         });
+    }
+
+    [Fact]
+    public async Task Delete_Purchase_When_NotExists()
+    {
+        try
+        {
+            await client.DeleteAsync($"api/Purchase/delete/{-1}");
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail("Expected no exception, but got:" + ex.Message);
+        }
     }
 }
