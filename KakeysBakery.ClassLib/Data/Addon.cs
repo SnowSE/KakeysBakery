@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SQLiteNetExtensions;
-using SQLiteNetExtensions.Attributes;
 
 namespace KakeysBakeryClassLib.Data;
 
@@ -9,14 +7,17 @@ public partial class Addon
 {
     public int Id { get; set; }
 
-    public string? Flavor { get; set; }
-
     public string? Description { get; set; }
 
     public decimal? Suggestedprice { get; set; }
 
-    public string? Addontypename { get; set; }
+    public int? Addontypeid { get; set; }
 
-    [ManyToOne]
-    public virtual ICollection<ProductAddon> ProductAddons { get; set; } = new List<ProductAddon>();
+    public int? Addonflavorid { get; set; }
+
+    public virtual Addonflavor? Addonflavor { get; set; }
+
+    public virtual Addontype? Addontype { get; set; }
+
+    public virtual ICollection<ProductAddonBasegood> ProductAddonBasegoods { get; set; } = new List<ProductAddonBasegood>();
 }

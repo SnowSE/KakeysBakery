@@ -54,9 +54,10 @@ public class BaseGoodService : IBaseGoodService
 
     public async Task<Basegood?> GetBaseGoodAsync(string name)
     {
-        return await _context.Basegoods
-                .Where(b => b.Basegoodname == name)
-                .FirstOrDefaultAsync();
+        throw new NotImplementedException();
+        //return await _context.Basegoods
+        //        .Where(b => b.Basegoodname == name)
+        //        .FirstOrDefaultAsync();
     }
 
     public Task UpdateBaseGoodAsync(Basegood basegood)

@@ -21,7 +21,7 @@ namespace KakeysBakeryClassLib.Services
             _conn.CreateTable<Cart>();
             _conn.CreateTable<Customer>();
             _conn.CreateTable<Product>();
-            _conn.CreateTable<ProductAddon>();
+            _conn.CreateTable<ProductAddonBasegood>();
             _conn.CreateTable<Purchase>();
             _conn.CreateTable<PurchaseProduct>();
             _conn.CreateTable<Referencephoto>();

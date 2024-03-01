@@ -34,14 +34,14 @@ public class AddOnService : IAddonService
                 _context.SaveChanges();
             }
         }
-        catch {}
+        catch { }
     }
 
     public async Task<List<Addon>> GetAddonListAsync()
     {
         try
         {
-           return await _context.Addons.ToListAsync();
+            return await _context.Addons.ToListAsync();
         }
         catch { return new List<Addon>(); }
     }
@@ -55,9 +55,10 @@ public class AddOnService : IAddonService
 
     public async Task<Addon?> GetAddonAsync(string name)
     {
-        return await _context.Addons
-                .Where(a => a.Addontypename == name)
-                .FirstOrDefaultAsync();
+        throw new NotImplementedException();
+        //return await _context.Addons
+        //        .Where(a => a.Addontypename == name)
+        //        .FirstOrDefaultAsync();
     }
 
     public Task UpdateAddOnAsync(Addon addon)

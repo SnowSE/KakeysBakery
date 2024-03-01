@@ -17,7 +17,15 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Addon> Addons { get; set; }
 
+    public virtual DbSet<Addonflavor> Addonflavors { get; set; }
+
+    public virtual DbSet<Addontype> Addontypes { get; set; }
+
     public virtual DbSet<Basegood> Basegoods { get; set; }
+
+    public virtual DbSet<Basegoodflavor> Basegoodflavors { get; set; }
+
+    public virtual DbSet<Basegoodtype> Basegoodtypes { get; set; }
 
     public virtual DbSet<Cart> Carts { get; set; }
 
@@ -25,7 +33,7 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
-    public virtual DbSet<ProductAddon> ProductAddons { get; set; }
+    public virtual DbSet<ProductAddonBasegood> ProductAddonBasegoods { get; set; }
 
     public virtual DbSet<Purchase> Purchases { get; set; }
 
@@ -42,18 +50,50 @@ public partial class PostgresContext : DbContext
             entity.ToTable("addon", "KakeysBakery");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Addontypename)
-                .HasMaxLength(60)
-                .HasColumnName("addontypename");
+            entity.Property(e => e.Addonflavorid).HasColumnName("addonflavorid");
+            entity.Property(e => e.Addontypeid).HasColumnName("addontypeid");
             entity.Property(e => e.Description)
                 .HasMaxLength(300)
                 .HasColumnName("description");
-            entity.Property(e => e.Flavor)
-                .HasMaxLength(70)
-                .HasColumnName("flavor");
             entity.Property(e => e.Suggestedprice)
                 .HasColumnType("money")
                 .HasColumnName("suggestedprice");
+
+            entity.HasOne(d => d.Addonflavor).WithMany(p => p.Addons)
+                .HasForeignKey(d => d.Addonflavorid)
+                .HasConstraintName("addontype");
+
+            entity.HasOne(d => d.Addontype).WithMany(p => p.Addons)
+                .HasForeignKey(d => d.Addontypeid)
+                .HasConstraintName("addonflavor");
+        });
+
+        modelBuilder.Entity<Addonflavor>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("addonflavor_pkey");
+
+            entity.ToTable("addonflavor", "KakeysBakery");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Flavor)
+                .HasMaxLength(50)
+                .HasColumnName("flavor");
+        });
+
+        modelBuilder.Entity<Addontype>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("addontype_pkey");
+
+            entity.ToTable("addontype", "KakeysBakery");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Basetype)
+                .HasMaxLength(50)
+                .HasColumnName("basetype");
         });
 
         modelBuilder.Entity<Basegood>(entity =>
@@ -63,15 +103,47 @@ public partial class PostgresContext : DbContext
             entity.ToTable("basegood", "KakeysBakery");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Basegoodname)
-                .HasMaxLength(50)
-                .HasColumnName("basegoodname");
-            entity.Property(e => e.Flavor)
-                .HasMaxLength(50)
-                .HasColumnName("flavor");
+            entity.Property(e => e.Flavorid).HasColumnName("flavorid");
+            entity.Property(e => e.Pastryid).HasColumnName("pastryid");
             entity.Property(e => e.Suggestedprice)
                 .HasColumnType("money")
                 .HasColumnName("suggestedprice");
+
+            entity.HasOne(d => d.Flavor).WithMany(p => p.Basegoods)
+                .HasForeignKey(d => d.Flavorid)
+                .HasConstraintName("flavorid");
+
+            entity.HasOne(d => d.Pastry).WithMany(p => p.Basegoods)
+                .HasForeignKey(d => d.Pastryid)
+                .HasConstraintName("basegoodname");
+        });
+
+        modelBuilder.Entity<Basegoodflavor>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("flavor_pkey");
+
+            entity.ToTable("basegoodflavor", "KakeysBakery");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("nextval('\"KakeysBakery\".flavor_id_seq'::regclass)")
+                .HasColumnName("id");
+            entity.Property(e => e.Flavorname)
+                .HasMaxLength(50)
+                .HasColumnName("flavorname");
+        });
+
+        modelBuilder.Entity<Basegoodtype>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("base_pkey");
+
+            entity.ToTable("basegoodtype", "KakeysBakery");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("nextval('\"KakeysBakery\".base_id_seq'::regclass)")
+                .HasColumnName("id");
+            entity.Property(e => e.Basegood)
+                .HasMaxLength(50)
+                .HasColumnName("basegood");
         });
 
         modelBuilder.Entity<Cart>(entity =>
@@ -125,7 +197,6 @@ public partial class PostgresContext : DbContext
             entity.ToTable("product", "KakeysBakery");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Basegoodid).HasColumnName("basegoodid");
             entity.Property(e => e.Description)
                 .HasMaxLength(100)
                 .HasColumnName("description");
@@ -133,27 +204,30 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Productname)
                 .HasMaxLength(50)
                 .HasColumnName("productname");
-
-            entity.HasOne(d => d.Basegood).WithMany(p => p.Products)
-                .HasForeignKey(d => d.Basegoodid)
-                .HasConstraintName("product_basegoodid_fkey");
         });
 
-        modelBuilder.Entity<ProductAddon>(entity =>
+        modelBuilder.Entity<ProductAddonBasegood>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("product_addon_pkey");
 
-            entity.ToTable("product_addon", "KakeysBakery");
+            entity.ToTable("product_addon_basegood", "KakeysBakery");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("nextval('\"KakeysBakery\".product_addon_id_seq'::regclass)")
+                .HasColumnName("id");
             entity.Property(e => e.Addonid).HasColumnName("addonid");
+            entity.Property(e => e.Basegoodid).HasColumnName("basegoodid");
             entity.Property(e => e.Productid).HasColumnName("productid");
 
-            entity.HasOne(d => d.Addon).WithMany(p => p.ProductAddons)
+            entity.HasOne(d => d.Addon).WithMany(p => p.ProductAddonBasegoods)
                 .HasForeignKey(d => d.Addonid)
                 .HasConstraintName("product_addon_addonid_fkey");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.ProductAddons)
+            entity.HasOne(d => d.Basegood).WithMany(p => p.ProductAddonBasegoods)
+                .HasForeignKey(d => d.Basegoodid)
+                .HasConstraintName("basegood");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductAddonBasegoods)
                 .HasForeignKey(d => d.Productid)
                 .HasConstraintName("product_addon_productid_fkey");
         });

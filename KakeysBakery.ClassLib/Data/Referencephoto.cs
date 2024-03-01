@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 namespace KakeysBakeryClassLib.Data;
+
 public partial class Referencephoto
 {
     public int Id { get; set; }
