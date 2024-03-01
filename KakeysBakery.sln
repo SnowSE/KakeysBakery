@@ -12,7 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KakeysBakeryTests", "Kakeys
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KakeysBakeryClassLib", "KakeysBakery.ClassLib\KakeysBakeryClassLib.csproj", "{97E81EBC-FC8F-4CC2-AA6D-F03F2BDB05B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KakeysBakeryMaui", "KakeysBakeryMaui\KakeysBakeryMaui.csproj", "{5BB404D7-530A-44FA-BB05-46993E78999E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KakeysBakeryMaui", "KakeysBakeryMaui\KakeysBakeryMaui.csproj", "{5BB404D7-530A-44FA-BB05-46993E78999E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{97E81EBC-FC8F-4CC2-AA6D-F03F2BDB05B2} = {97E81EBC-FC8F-4CC2-AA6D-F03F2BDB05B2}
 	EndProjectSection

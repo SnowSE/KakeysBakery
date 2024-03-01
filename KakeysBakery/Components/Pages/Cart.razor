@@ -1,0 +1,34 @@
+﻿@page "/Cart"
+@inject IPurchaseService purchase
+@inject ICustomerService customer
+@inject IProductService product
+
+
+<div class="align-content-center bg-light p-5">
+	<div class="text-center">
+
+    <h2 class=""> YOUR CART </h2>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col">Qty</th>
+                <th scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><img src="~/favicon.png" /></td>
+                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vel ex nec erat sollicitudin mattis id quis est. Ut tincidunt sit amet ante ut accumsan. Duis non turpis facilisis, ultrices nulla sit amet, ornare libero. Vestibulum lacinia egestas commodo. Proin nec mi tristique, vestibulum enim quis, viverra magna. Ut vestibulum sollicitudin elementum. Praesent sodales tortor at lorem commodo molestie. Curabitur non congue enim. Aliquam erat volutpat. Duis at lectus elementum, aliquet ipsum in, ornare magna. In quis nibh in enim blandit tempus. Praesent purus tellus, rutrum nec laoreet a, rhoncus eu tellus. Proin fringilla, sem ac dapibus sodales, velit quam suscipit augue, ut tincidunt dolor arcu et est. Donec non imperdiet nunc. Maecenas varius vitae nisi id tempus.</td>
+                <td>1x</td>
+                <td>$5.00</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@code {
+
+}
