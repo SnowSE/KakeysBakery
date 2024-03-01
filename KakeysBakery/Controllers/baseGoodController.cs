@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace KakeysBakery.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-public class basegoodController : ControllerBase
+public class BasegoodController : ControllerBase
 {
     private readonly IBaseGoodService baseGoodService;
-    public basegoodController(IBaseGoodService service)
+    public BasegoodController(IBaseGoodService service)
     {
         baseGoodService = service;
     }

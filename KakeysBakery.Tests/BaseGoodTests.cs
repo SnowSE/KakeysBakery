@@ -65,6 +65,15 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public async Task Get_BaseGood_ById_When_NotExists()
+    {
+        await Assert.ThrowsAsync<HttpRequestException>(async () =>
+        {
+            await client.GetFromJsonAsync<Basegood>($"api/basegood/get/{-1}");
+        });
+    }
+
+    [Fact]
     public async Task Get_BaseGood_ByName()
     {
         // ARRANGE
@@ -90,6 +99,15 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public async Task Get_BaseGood_ByName_When_NotExists()
+    {
+        await Assert.ThrowsAsync<HttpRequestException>(async () =>
+        {
+            await client.GetFromJsonAsync<Basegood>($"api/basegood/get_by_name/foo");
+        });
+    }
+
+    [Fact]
     public async Task Create_BaseGood()
     {
         // ARRANGE
@@ -111,6 +129,32 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         Assert.Equal(testBaseGood.Suggestedprice, result.Suggestedprice);
         Assert.Equal(testBaseGood.Flavor, result.Flavor);
         Assert.Equal(testBaseGood.Id, result.Id);
+    }
+
+    [Fact]
+    public async Task Create_BaseGood_When_AlreadyExists()
+    {
+        // ARRANGE
+        Basegood existing = new()
+        {
+            Basegoodname = "TestName",
+            Id = 80,
+            Suggestedprice = (decimal)100.25,
+            Flavor = "testFlavor"
+        };
+
+        // ACT
+        await client.PostAsJsonAsync("api/basegood/add", existing);
+
+        // Assert
+        try
+        {
+            await client.PostAsJsonAsync("api/basegood/add", existing);
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail("Expected no exception, but got:" + ex.Message);
+        }
     }
 
     [Fact]
@@ -164,5 +208,18 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         {
             await client.GetFromJsonAsync<Addon>($"api/basegood/get/{testBaseGood.Id}");
         });
+    }
+
+    [Fact]
+    public async Task Delete_BaseGood_When_NotExists()
+    {
+        try
+        {
+            await client.DeleteAsync($"api/basegood/delete/{-1}");
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail("Expected no exception, but got:" + ex.Message);
+        }
     }
 }
