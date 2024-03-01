@@ -138,7 +138,7 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         Basegood existing = new()
         {
             Basegoodname = "TestName",
-            Id = 80,
+            Id = 101,
             Suggestedprice = (decimal)100.25,
             Flavor = "testFlavor"
         };
