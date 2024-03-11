@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KakeysBakeryClassLib.Services.Interfaces;
 
-public interface IProductAddonBasegoodAddonBasegoodService
+public interface IProductAddonBasegoodService
 {
     public Task<List<ProductAddonBasegood>> GetProductAddonBasegoodListAsync();
     public Task<ProductAddonBasegood> GetProductAddonBasegoodAsync(int productAddonBasegoodId);
