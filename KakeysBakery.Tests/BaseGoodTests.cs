@@ -74,35 +74,6 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
-    public async Task Get_BaseGood_ByName()
-    {
-        // ARRANGE
-        Basegood testBaseGood = new()
-        {
-            //Basegoodname = "UniqueTestName",
-            Id = 79,
-            Suggestedprice = (decimal)100.25,
-            //Flavor = "testFlavor"
-        };
-
-        await client.PostAsJsonAsync("api/basegood/add", testBaseGood);
-
-        // ACT
-        //Basegood? result = await client.GetFromJsonAsync<Basegood>($"api/basegood/get_by_name/{testBaseGood.Basegoodname}");
-        //Assert.NotNull(result);
-
-        //Assert.Equal(testBaseGood.Suggestedprice, result.Suggestedprice);
-        //Assert.Equal(testBaseGood.Flavor, result.Flavor);
-        //Assert.Equal(testBaseGood.Id, result.Id);
-        // ASSERT
-        //Assert.NotNull(result);
-
-        //Assert.Equal(testBaseGood.Suggestedprice, result.Suggestedprice);
-        //Assert.Equal(testBaseGood.Flavor, result.Flavor);
-        //Assert.Equal(testBaseGood.Id, result.Id);
-    }
-
-    [Fact]
     public async Task Get_BaseGood_ByName_When_NotExists()
     {
         await Assert.ThrowsAsync<HttpRequestException>(async () =>
