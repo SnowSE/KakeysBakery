@@ -1,0 +1,49 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace KakeysBakery.Controllers;
+[ApiController]
+[Route("api/[controller]")]
+public class cartController : ControllerBase
+{
+    private readonly ICartService cartService;
+    public cartController(ICartService service)
+    {
+        cartService = service;
+    }
+
+    [HttpGet("getall")]
+    public async Task<List<Cart>> GetcartsAsync()
+    {
+        return await cartService.GetCartListAsync();
+    }
+
+    [HttpGet("get/{id}")]
+    public async Task<IActionResult> GetcartAsync(int id)
+    {
+        var cart = await cartService.GetCartAsync(id);
+        if (cart == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(cart); // Return the addon if found
+    }
+
+
+    [HttpPost("add")]
+    public async Task CreatecartAsync(Cart cart)
+    {
+        await cartService.CreateCartAsync(cart);
+    }
+
+    [HttpPatch("update")]
+    public async Task UpdatecartAsync(Cart cart)
+    {
+        await cartService.UpdateCartAsync(cart);
+    }
+
+    [HttpDelete("delete/{id}")]
+    public async Task DeletecartAsync(int id)
+    {
+        await cartService.DeleteCartAsync(id);
+    }
+}
