@@ -1,17 +1,53 @@
-﻿body {
+﻿/*regular sized screen*/
+body {
     background-color: forestgreen;
 }
 
 #cupcake1 {
     margin-left: 2.5%;
+    object-fit: cover;
+    height: 500px;
     width: 95%;
-    height: 40vh;
 }
 
 #cupcake2 {
-    width: 250px;
+    margin-top: 30px;
+    width: 25%;
+    height: 200px;
+    margin-left: 17%;
+    object-fit: cover;
 }
 
 .sweet {
-   position: relative;
+    position: absolute;
+    left: 65%;
+    top: 500px;
+    color: brown;
+    background-color: white;
+    background-color: rgb(255, 255, 255, .5);
+    padding: 30px 25px 30px 30px;
+}
+
+#description {
+    position: absolute;
+    left: 50%;
+    bottom: 15px;
+    right: 5%;
+    font-size: 200%;
+}
+
+/*biggest screen*/
+@media screen and (min-width: 1300px) {
+    .sweet {
+        color: green;
+        left: 72%;
+    }
+}
+
+/*smallest screen*/
+@media screen and (max-width: 700px) {
+    .sweet {
+        color: aliceblue;
+        left: 50%;
+    }
 }
