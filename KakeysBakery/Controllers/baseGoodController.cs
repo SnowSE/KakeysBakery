@@ -22,12 +22,12 @@ public class BasegoodController : ControllerBase
     [HttpGet("get/{id}")]
     public async Task<IActionResult> GetBasegoodAsync(int id)
     {
-        var addon = await baseGoodService.GetBaseGoodAsync(id);
-        if (addon == null)
+        var basegood = await baseGoodService.GetBaseGoodAsync(id);
+        if (basegood == null)
         {
             return NotFound(); // Return 404 Not Found status
         }
-        return Ok(addon); // Return the addon if found
+        return Ok(basegood); // Return the addon if found
     }
 
 
