@@ -4,7 +4,7 @@
     width: 3.5rem;
     height: 2.5rem;
     color: white;
-    position: absolute;
+    /*position: absolute;*/
     top: 0.5rem;
     right: 1rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -92,9 +92,6 @@
 }
 
 @media (min-width: 641px) {
-    .navbar-toggler {
-        display: none;
-    }
 
     .nav-scrollable {
         /* Never collapse the sidebar for wide screens */
