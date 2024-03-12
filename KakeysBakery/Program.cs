@@ -18,6 +18,7 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IPurchaseProductService, PurchaseProductService>();
 builder.Services.AddScoped<IProductAddonBasegoodService, ProductAddonBasegoodService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IBaseGoodTypeService, BaseGoodTypeService>();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));

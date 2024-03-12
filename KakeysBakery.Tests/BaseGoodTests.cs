@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 
 namespace KakeysBakeryTests;
@@ -147,6 +146,7 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         await client.PostAsJsonAsync("api/basegood/add", testBaseGood);
 
         // ACT
+        testBaseGood.Suggestedprice = (decimal)111.25;
         //testBaseGood.Basegoodname = "EditedTestName";
         await client.PatchAsJsonAsync("api/basegood/update", testBaseGood);
         
