@@ -11,7 +11,6 @@ public interface IAddonService
 {
     public Task<List<Addon>> GetAddonListAsync();
     public Task<Addon?> GetAddonAsync(int id);
-    public Task<Addon?> GetAddonAsync(string addonName);
     public Task CreateAddOnAsync(Addon addon);
     public Task DeleteAddOnAsync(int addonId);
     public Task UpdateAddOnAsync(Addon addon);

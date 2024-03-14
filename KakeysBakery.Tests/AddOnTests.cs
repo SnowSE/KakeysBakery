@@ -10,11 +10,6 @@ public class AddOnTests : IClassFixture<BakeryFactory>
         client = Factory.CreateDefaultClient();
     }
 
-    [Fact]
-    public void CanPassATest()
-    {
-        Assert.Equal(1, 1); 
-    }
 
     //We were failing to relace the production database with a testing database. 
     //This is because the Posgres Contect was getting the connections string from the enviroment variable and not useing the one set in program.cs
