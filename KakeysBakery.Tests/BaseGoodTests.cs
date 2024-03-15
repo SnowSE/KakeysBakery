@@ -9,13 +9,6 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
     {
         client = Factory.CreateDefaultClient();
     }
-
-    [Fact]
-    public void CanPassATest()
-    {
-        Assert.Equal(1, 1); 
-    }
-
     [Fact]
     public async Task Get_BaseGoodList()
     {

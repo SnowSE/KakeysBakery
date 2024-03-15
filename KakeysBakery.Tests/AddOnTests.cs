@@ -10,11 +10,6 @@ public class AddOnTests : IClassFixture<BakeryFactory>
         client = Factory.CreateDefaultClient();
     }
 
-    [Fact]
-    public void CanPassATest()
-    {
-        Assert.Equal(1, 1); 
-    }
 
     //We were failing to relace the production database with a testing database. 
     //This is because the Posgres Contect was getting the connections string from the enviroment variable and not useing the one set in program.cs
@@ -76,31 +71,6 @@ public class AddOnTests : IClassFixture<BakeryFactory>
         });
     }
 
-    [Fact]
-    public async Task Get_Addon_ByName()
-    {
-        // ARRANGE
-        Addon testaddon = new Addon()
-        {
-            Description = "TestDesc",
-            //Addontypename = "UniqueTestName",
-            Id = 82,
-            Suggestedprice = (decimal)100.25
-        };
-
-        await client.PostAsJsonAsync("api/addon/add", testaddon);
-
-        // ACT
-        //Addon? result = await client.GetFromJsonAsync<Addon>($"api/addon/get_by_name/{testaddon.Addontypename}");
-
-        // ASSERT
-        //Assert.NotNull(result);
-
-        //Assert.Equal(testaddon.Suggestedprice, result.Suggestedprice);
-        ////Assert.Equal(testaddon.Flavor, result.Flavor);
-        //Assert.Equal(testaddon.Id, result.Id);
-        //Assert.Equal(testaddon.Description, result.Description);
-    }
 
     [Fact]
     public async Task Get_AddOn_ByName_When_NotExists()
@@ -145,7 +115,6 @@ public class AddOnTests : IClassFixture<BakeryFactory>
         Addon existing = new Addon()
         {
             Description = "TestDesc",
-            //Addontypename = "TestName",
             Id = 101,
             Suggestedprice = (decimal)100.25
         };

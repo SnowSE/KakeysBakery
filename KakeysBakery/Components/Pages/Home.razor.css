@@ -1,53 +1,78 @@
 ﻿/*regular sized screen*/
+
 body {
-    background-color: forestgreen;
+    background-color: #F5E5D8;
+    height: 2000px;
 }
 
 #cupcake1 {
     margin-left: 2.5%;
     object-fit: cover;
     height: 500px;
-    width: 95%;
+    width: 94vw;
+    border-radius: 10px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5);
 }
 
 #cupcake2 {
     margin-top: 30px;
     width: 25%;
     height: 200px;
-    margin-left: 17%;
+    margin-left: 14%;
     object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5);
 }
 
 .sweet {
     position: absolute;
-    left: 65%;
-    top: 500px;
+    left: 55%;
+    top: 480px;
     color: brown;
     background-color: white;
     background-color: rgb(255, 255, 255, .5);
-    padding: 30px 25px 30px 30px;
+    padding: 30px 25px 40px 30px;
+    border-radius: 5px;
+    font-family: serif;
+    font-size: 4vw;
+    font-style: oblique;
+    font-weight: 900;
+
 }
 
 #description {
-    position: absolute;
-    left: 50%;
-    bottom: 15px;
-    right: 5%;
-    font-size: 200%;
+    padding: 30px 25px 40px 60px;
+    float: right;
+    font-size: 3vw;
+    width: 50%;
+}
+
+.secondRow {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 /*biggest screen*/
 @media screen and (min-width: 1300px) {
     .sweet {
         color: green;
-        left: 72%;
+        left: 68%;
+        font-size: 2.5vw;
+    }
+
+    #description {
+        font-size: 2.2vw;
     }
 }
 
 /*smallest screen*/
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 750px) {
     .sweet {
         color: aliceblue;
         left: 50%;
+    }
+
+    #description {
+        font-size: 3.6vw;
     }
 }

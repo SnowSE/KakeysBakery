@@ -12,7 +12,7 @@ public class AddOnService : IAddonService
     {
         _context = context;
     }
-    public Task CreateAddOnAsync(Addon addon)
+    public async Task CreateAddOnAsync(Addon addon)
     {
         try
         {
@@ -20,7 +20,7 @@ public class AddOnService : IAddonService
             _context.SaveChanges();
         }
         catch { }
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 
     public async Task DeleteAddOnAsync(int addonID)
@@ -51,14 +51,6 @@ public class AddOnService : IAddonService
         return await _context.Addons
                 .Where(a => a.Id == id)
                 .FirstOrDefaultAsync();
-    }
-
-    public async Task<Addon?> GetAddonAsync(string name)
-    {
-        throw new NotImplementedException();
-        //return await _context.Addons
-        //        .Where(a => a.Addontypename == name)
-        //        .FirstOrDefaultAsync();
     }
 
     public Task UpdateAddOnAsync(Addon addon)
