@@ -1,0 +1,19 @@
+﻿.imgbutton {
+    /*height: auto;*/
+    object-fit: cover;
+    aspect-ratio: 1/1;
+}
+
+.cartbutton {
+    position: absolute;
+    top: 73%;
+    left: 70%;
+    background-color: #E8A87C;
+    border-color: #4E362E;
+    border-style: solid;
+    border-width: 3px;
+}
+
+.cart {
+    color: #4E362E;
+}

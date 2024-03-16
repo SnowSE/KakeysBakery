@@ -2,19 +2,35 @@
 @inject IBaseGoodService basegood
 @inject IProductService product
 @inject ICustomerService customer
+@inject IBaseGoodTypeService basegoodtype
 
 <h3>Order</h3>
 
-<div class="p-5 bg-light">
-
-</div>
-
-<div>
-    <img src="images/SweetnessCupcakes.png" />
-    <p>Description</p>
-    <img src="images/CartIcon.png"/>
+<div class="mt-5 bg-light border vh-100">
+    <div class="d-flex flex-wrap justify-content-between p-5 mt-5">
+        @if (basegoodtypes != null)
+        {
+            @for (int i = 0; i < basegoodtypes.Count; i++)
+            {
+                <div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
+                    <img class="imgbutton img-fluid img-thumbnail rounded-5 shadow" src="images/SweetnessCupcakes.png">
+                    <button class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
+                    <p>@basegoodtypes[i].Basegood</p>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Loading products, please wait</p>
+        }
+    </div>
 </div>
 
 @code {
+    public List<Basegoodtype>? basegoodtypes;
 
+    override protected async Task OnInitializedAsync()
+    {
+        basegoodtypes = await basegoodtype.GetBaseGoodTypeListAsync();
+    }
 }
