@@ -1,4 +1,4 @@
-﻿<nav class="navbar navbar-expand-lg border-bottom border-body shadow-lg rounded-bottom" data-bs-theme="dark" style="background-color: #4E362E">
+﻿<nav class="navbar navbar-expand-xl border-bottom border-body shadow-xl rounded-bottom" data-bs-theme="dark" style="background-color: #4E362E">
     <div class="container-fluid">
 
         @* <a class="navbar-brand me-5" href="#">Navbar</a> *@
@@ -6,40 +6,40 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         
-        <div class="d-lg-none position-absolute top-0 start-50 translate-middle-x d-flex justify-content-center">
+        <div class="d-xl-none position-absolute top-0 start-50 translate-middle-x d-flex justify-content-center">
             <img style="width:16rem" src="images/BlackLogo.png" />
         </div>
         
         <div class="collapse navbar-collapse py-3" id="navbarSupportedContent">
             <div class="navbar-nav ms-auto me-auto mb-2 mb-lg-0 position-relative">
                 <span class="d-none d-lg-block position-absolute top-100 start-0 translate-middle p-5 my-5" style="z-index:0">
-                    <img style="width:60%; height:auto;" src="images/BlackLogo.png" />
+                    <img class="mt-5 pt-5" style="width:60%; height:auto;" src="images/BlackLogo.png" />
                 </span>
 
-                <NavLink class="nav-link px-1" href="Order" style="z-index:1" Match="NavLinkMatch.All">
-                    <span class="nav-link" href="#">ORDER</span>
+                <NavLink class="nav-link" href="Order" style="z-index:1" Match="NavLinkMatch.All">
+                    <span class="nav-item" href="#">order</span>
                 </NavLink>
                 <NavLink class="nav-link" href="Customize" style="z-index:1" Match="NavLinkMatch.All">
-                    <span class="nav-link" href="#">CUSTOMIZE</span>
+                    <span class="nav-item" href="#">customize</span>
                 </NavLink>
                 <NavLink class="nav-link" href="AboutUs" style="z-index:1" Match="NavLinkMatch.All">
-                    <span class="nav-link" href="#">ABOUT US</span>
+                    <span class="nav-item" href="#">about us</span>
                 </NavLink>
                 <NavLink class="nav-link" href="ContactUs" style="z-index:1" Match="NavLinkMatch.All">
-                    <span class="nav-link" href="#">CONTACT US</span>
+                    <span class="nav-item" href="#">contact us</span>
                 </NavLink>
-                <NavLink class="nav-link" href="" style="z-index:1" Match="NavLinkMatch.All">
-                    <span class="nav-link" href="#">HOME</span>
+                <NavLink class="nav-link" href="#" style="z-index:1" Match="NavLinkMatch.All">
+                    <span class="nav-item" href="#">home</span>
                 </NavLink>
             </div>
 
-            <div class="navbar-nav mb-2 mb-lg-0">
+            <div class="navbar-nav mb-2 mb-lg-0" data-bs-theme="dark">
                 <div class="nav-item px-1 d-flex justify-content-center">
-                    <a class="d-none d-lg-inline nav-link bi bi-cart-fill px-3" href="#"></a>
+                    <a class="d-none d-lg-inline nav-link bi bi-cart-fill px-3 pb-5" href="#"></a>
                     <a class="d-lg-none nav-link" href="#">cart</a>
                 </div>
                 <div class="nav-item px-1 d-flex justify-content-center">
-                    <a class="d-none d-lg-inline nav-link bi bi-person-square px-3" href="#"></a>
+                    <a class="d-none d-lg-inline d-flex nav-link px-3 pb-5" href="#"><i class="bi bi-person-square "></i></a>
                     <a class="d-lg-none nav-link" href="#">login</a>
                 </div>
             </div>
