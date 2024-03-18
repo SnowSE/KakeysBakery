@@ -4,6 +4,10 @@ namespace KakeysBakeryTests;
 
 public class BaseGoodTests : IClassFixture<BakeryFactory>
 {
+
+    /// <summary>
+    /// ///////////////////////////////////////////////////////////////////test GetBasegoodsFromTypeAsync////////////////////////////////////////
+    /// </summary>
     public HttpClient client { get; set; }
     public BaseGoodTests(BakeryFactory Factory)
     {
