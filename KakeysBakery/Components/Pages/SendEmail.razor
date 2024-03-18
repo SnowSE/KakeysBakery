@@ -1,0 +1,37 @@
+﻿@page "/SendEmail"
+@using MimeKit
+@inject IEmailService emailService
+@rendermode InteractiveServer
+
+<h3>SendEmail</h3>
+<img src="images/SweetnessCupcakes.png" id="cupcake1" />
+<button @onclick="sender">Send test email</button>
+@if (isSent)
+{
+    <p>Messesge was sent</p>
+}
+
+
+@code {
+    bool isSent = false;
+    private async Task sender()
+    {
+        var message = new MimeMessage();
+        // message.From.Add(new MailboxAddress("Auto Emailer", SenderEmail));
+        // message.To.Add(new MailboxAddress("An Email in need of a Message", ReceiverEmail));
+        message.Subject = "Automated Message System";
+
+        message.Body = new TextPart("plain")
+            {
+                Text = @"Dear Customer,
+
+                   This Is A test Email
+
+                    -- The Bakery"
+            };
+        emailService.sendEmail("twodoschool@gmail.com", message);
+        isSent = true;
+        await Task.CompletedTask;
+    }
+
+}
