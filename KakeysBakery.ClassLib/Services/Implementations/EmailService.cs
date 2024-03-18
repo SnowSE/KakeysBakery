@@ -22,23 +22,25 @@ public class EmailService(IConfiguration _config) : IEmailService
 
     public string sendEmail(string recipiantEmail, MimeMessage message)
     {
-        try {
+        try 
+        {
             string senderEmail = _config["KakeysEmail"];
             string senderPass = _config["EmailAppPass"];
 
-        using (var client = new MailKit.Net.Smtp.SmtpClient())
-        {
-            client.Connect("smtp.gmail.com", 587, false);
+            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, false);
 
 
-            // Note: only needed if the SMTP server requires authentication
-            client.Authenticate(senderEmail, senderPass);
-
-            client.Send(message);
-            client.Disconnect(true);
+                // Note: only needed if the SMTP server requires authentication
+                client.Authenticate(senderEmail, senderPass);
+                message.From.Add(new MailboxAddress("Kakey's Bakery", senderEmail));
+                message.To.Add(new MailboxAddress("Dear Customer,", recipiantEmail));
+                client.Send(message);
+                client.Disconnect(true);
+            }
+            return "Email Sent";
         }
-        return "Email Sent";
-    }
         catch
         {
             return "Bad Exception Happend";
