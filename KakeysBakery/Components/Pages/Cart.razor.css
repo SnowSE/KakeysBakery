@@ -1,4 +1,11 @@
-﻿body {
+﻿
+@font-face {
+    font-family: testFont;
+    src: url(Fonts/cartFont3.otf) format('opentype');
+}
+
+
+body {
     background-color: green;
 }
 
@@ -7,7 +14,7 @@
 }
 
 .itemDescription {
-
+    font-family: testFont;
 }
 
 .itemImage {
