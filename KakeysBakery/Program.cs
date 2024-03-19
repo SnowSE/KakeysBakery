@@ -23,6 +23,8 @@ builder.Services.AddScoped<IBaseGoodFlavorService, BaseGoodFlavorService>();
 builder.Services.AddScoped<IAddonTypeService, AddonTypeService>();
 builder.Services.AddScoped<IAddonFlavorService, AddonFlavorService>();
 
+builder.Services.AddBlazorBootstrap();
+
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
 
