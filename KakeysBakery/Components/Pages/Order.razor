@@ -7,7 +7,7 @@
 
 @rendermode InteractiveServer
 
-<h3>Order</h3>
+<h3 class="pageTitle">Order</h3>
 
 
 <Modal @ref="modal" Title="Modal title">
@@ -31,7 +31,7 @@
     </FooterTemplate>
 </Modal>
 
-<div class="mt-5 bg-light border vh-100">
+<div class="mt-5 border vh-100 totalPage">
     <div class="d-flex flex-wrap justify-content-between p-5 mt-5">
         @if (basegoodtypes != null)
         {
@@ -39,9 +39,9 @@
             {
 
                 <div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
+                    <h3 class="typelabel">@basegoodtype.Basegood</h3>
                     <img class="imgbutton img-fluid img-thumbnail rounded-5 shadow" src="images/SweetnessCupcakes.png">
                     <button @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await OnShowModalClick();}" class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
-                    <p>@basegoodtype.Basegood</p>
                 </div>
 
             }

@@ -8,10 +8,6 @@
     src: url(Fonts/cartFont3.otf) format('opentype');
 }
 
-body {
-    background-color: green;
-}
-
 .itemName {
     font-family: testFont2;
 }
@@ -49,5 +45,10 @@ body {
 
 #pageTitle {
     font-family: testFont2;
+}
+
+#displayTotal {
+    font-size: 200%;
+    font: bold;
 }
 
