@@ -1,12 +1,11 @@
 ﻿/*regular sized screen*/
 
-body {
-    background-color: #F5E5D8;
-    height: 2000px;
-}
+/*body {
+    background-color: #F5E5D8;*/
+    /*height: 2000px;*/
+/*}*/
 
 #cupcake1 {
-    /*margin-left: 2.5%;*/
     object-fit: cover;
     height: 500px;
     width: 94vw;
@@ -18,7 +17,6 @@ body {
     margin-top: 30px;
     width: 25%;
     height: 200px;
-    margin-left: 14%;
     object-fit: cover;
     border-radius: 10px;
     box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5);
@@ -37,7 +35,6 @@ body {
     font-size: 4vw;
     font-style: oblique;
     font-weight: 900;
-
 }
 
 #description {
@@ -47,32 +44,25 @@ body {
     width: 50%;
 }
 
-.secondRow {
-    display: flex;
-    flex-wrap: wrap;
+/*smallest screen*/
+@media screen and (max-width: 1200px) {
+    .sweet {
+        left: 50%;
+    }
+
+    #description {
+        font-size: 3.6vw;
+    }
 }
 
 /*biggest screen*/
-@media screen and (min-width: 1300px) {
+@media screen and (min-width: 1200px) {
     .sweet {
-        color: green;
         left: 68%;
         font-size: 2.5vw;
     }
 
     #description {
         font-size: 2.2vw;
-    }
-}
-
-/*smallest screen*/
-@media screen and (max-width: 750px) {
-    .sweet {
-        color: aliceblue;
-        left: 50%;
-    }
-
-    #description {
-        font-size: 3.6vw;
     }
 }
