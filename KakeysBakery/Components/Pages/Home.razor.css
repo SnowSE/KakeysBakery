@@ -35,7 +35,7 @@
 .sweet {
     position: absolute;
     left: 55%;
-    top: 480px;
+    top: 60%;
     color: brown;
     background-color: white;
     background-color: rgb(255, 255, 255, .5);
@@ -47,6 +47,20 @@
     font-weight: 900;
 }
 
+.testsweet {
+    color: brown;
+    background-color: white;
+    background-color: rgb(255, 255, 255, .5);
+    padding: 30px 25px 40px 30px;
+    border-radius: 5px;
+    font-family: BakeryFont;
+    /*font-size: 4vw;*/
+    font-style: oblique;
+    font-weight: 900;
+    left: 65%;
+    top: 60%;
+}
+
 #description {
     padding: 30px 25px 40px 60px;
     float: right;
@@ -56,8 +70,10 @@
 }
 
 /*smallest screen*/
+
 @media screen and (max-width: 1200px) {
-    .sweet {
+    .testsweet {
+        color: green;
         left: 50%;
     }
 
@@ -67,8 +83,9 @@
 }
 
 /*biggest screen*/
-@media screen and (min-width: 1200px) {
-    .sweet {
+@media screen and (min-width: 1463px) {
+    .testsweet {
+        color: blue;
         left: 68%;
         font-size: 2.5vw;
     }
