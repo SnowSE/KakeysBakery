@@ -1,4 +1,5 @@
 ﻿@page "/Order"
+@using BlazorBootstrap
 @inject IBaseGoodService basegood
 @inject IProductService product
 @inject ICustomerService customer
@@ -8,19 +9,41 @@
 
 <h3>Order</h3>
 
+
+<Modal @ref="modal" Title="Modal title">
+    <BodyTemplate>
+        <p>choose your type</p>
+        <select>
+            <option> --- </option>
+            @if (baseGoodDetails is not null)
+            {
+
+                @foreach (Basegood basegoods in baseGoodDetails)
+                {
+                    <option value="@basegoods.Flavor.Id">@basegoods.Flavor.Flavorname</option>
+                }
+            }
+        </select>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Primary">Save changes</Button>
+    </FooterTemplate>
+</Modal>
+
 <div class="mt-5 bg-light border vh-100">
     <div class="d-flex flex-wrap justify-content-between p-5 mt-5">
         @if (basegoodtypes != null)
         {
-            @foreach(Basegoodtype basegoodtype in basegoodtypes)
+            @foreach (Basegoodtype basegoodtype in basegoodtypes)
             {
-                
-            <div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
+
+                <div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
                     <img class="imgbutton img-fluid img-thumbnail rounded-5 shadow" src="images/SweetnessCupcakes.png">
-                    <button @onclick="() => BaseGoodClicked(basegoodtype.Id)" class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
+                    <button @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await OnShowModalClick();}" class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
                     <p>@basegoodtype.Basegood</p>
                 </div>
-            
+
             }
         }
         else
@@ -34,7 +57,7 @@
             <option> --- </option>
             @foreach (Basegood basegoods in baseGoodDetails)
             {
-                <option>@basegoods.Flavor.Flavorname</option>
+                <option value="@basegoods.Flavor.Id">@basegoods.Flavor.Flavorname</option>
             }
         </select>
 
@@ -43,6 +66,20 @@
 
 
 @code {
+    private Modal modal = default!;
+
+    private async Task OnShowModalClick()
+    {
+        await modal.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal.HideAsync();
+    }
+
+
+
     List<Basegood>? baseGoodDetails;
     int displayNum = 0;
 
