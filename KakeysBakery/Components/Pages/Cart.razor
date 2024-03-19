@@ -10,23 +10,23 @@
     </div>
 
 
-    <div class="p3" style="background-color: #ceddeb;">
-        <table id="totalTable">
+    <div class="p-4" style="background-color: #EBDCCE;">
+        <table>
             <thead>
                 <tr>
                     <th scope="col"></th>
                     <th scope="col"></th>
-                    <th scope="col">Qty</th>
-                    <th scope="col price">Price</th>
+                    <th class="px-3" scope="col">Qty</th>
+                    <th class="px-3" scope="col">Price</th>
                 </tr>
             <tr><td colspan="4"><hr /></td></tr>
             </thead>
             <tbody>
                 @for (int i = 0; i < 4; i++)
                 {
-                    <tr class="cartCard">
-                        <td class="itemImage"><img src="images/cookie.jpg" /></td>
-                        <td class="itemName">
+                    <tr class="cartCard flex-row">
+                        <td class="pe-4"><img src="images/cookie.jpg" /></td>
+                        <td>
                             <h1>Some Item Name</h1>
                             <p class="itemDescription">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -43,13 +43,13 @@
                                 Maecenas varius vitae nisi id tempus.
                             </p>
                         </td>
-                        <td>1x</td>
-                        <td>$5.00</td>
+                        <td class="ps-4">1x</td>
+                        <td class="px-3">$5.00</td>
                     </tr>
                     <tr><td colspan="4"><hr /></td></tr>
 
                 }
-                <tr id="total">
+                <tr id="">
                     <td colspan="4" style="text-align: right;">TOTAL: $10.00</td>
                 </tr>
             </tbody>

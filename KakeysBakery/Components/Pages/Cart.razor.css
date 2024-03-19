@@ -26,16 +26,15 @@
 }
 
 #total {
-    text-align: right; /* Align content to the right */
-    font-weight: bold; /* Optionally make the total bold */
+    text-align: right;
+    font-weight: bold; 
 }
 
 #totalCart {
-    background-color: #EBDCCE;
+    /*background-color: #EBDCCE;*/
 }
 
 #totalTable {
     padding-right: 100px;
-    background-color: #ceddeb;
 }
 
