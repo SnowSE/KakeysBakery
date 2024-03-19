@@ -1,20 +1,23 @@
-﻿
-@font-face {
+﻿@font-face {
     font-family: testFont;
-    src: url(Fonts/cartFont3.otf) format('opentype');
+    src: url(Fonts/cartFont2.otf) format('opentype');
 }
 
+@font-face {
+    font-family: testFont2;
+    src: url(Fonts/cartFont3.otf) format('opentype');
+}
 
 body {
     background-color: green;
 }
 
 .itemName {
-    padding-left: 5%;
+    font-family: testFont;
 }
 
 .itemDescription {
-    font-family: testFont;
+    font-family: serif;
 }
 
 .itemImage {
@@ -38,10 +41,13 @@ body {
 }
 
 #totalCart {
-    /*background-color: #EBDCCE;*/
 }
 
 #totalTable {
     padding-right: 100px;
+}
+
+#pageTitle {
+    font-family: testFont2;
 }
 
