@@ -4,29 +4,58 @@
 @inject IProductService product
 
 
-<div class="align-content-center bg-light p-5">
-	<div class="text-center">
-
-    <h2 class=""> YOUR CART </h2>
+<div class="align-content-center p-5" id="totalCart">
+    <div class="text-center">
+        <h2> YOUR CART </h2>
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col">Qty</th>
-                <th scope="col">Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><img src="~/favicon.png" /></td>
-                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vel ex nec erat sollicitudin mattis id quis est. Ut tincidunt sit amet ante ut accumsan. Duis non turpis facilisis, ultrices nulla sit amet, ornare libero. Vestibulum lacinia egestas commodo. Proin nec mi tristique, vestibulum enim quis, viverra magna. Ut vestibulum sollicitudin elementum. Praesent sodales tortor at lorem commodo molestie. Curabitur non congue enim. Aliquam erat volutpat. Duis at lectus elementum, aliquet ipsum in, ornare magna. In quis nibh in enim blandit tempus. Praesent purus tellus, rutrum nec laoreet a, rhoncus eu tellus. Proin fringilla, sem ac dapibus sodales, velit quam suscipit augue, ut tincidunt dolor arcu et est. Donec non imperdiet nunc. Maecenas varius vitae nisi id tempus.</td>
-                <td>1x</td>
-                <td>$5.00</td>
-            </tr>
-        </tbody>
-    </table>
+
+
+    <div class="p3" style="background-color: #ceddeb;">
+        <table id="totalTable">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">Qty</th>
+                    <th scope="col price">Price</th>
+                </tr>
+            <tr><td colspan="4"><hr /></td></tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < 4; i++)
+                {
+                    <tr class="cartCard">
+                        <td class="itemImage"><img src="images/cookie.jpg" /></td>
+                        <td class="itemName">
+                            <h1>Some Item Name</h1>
+                            <p class="itemDescription">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                Aliquam vel ex nec erat sollicitudin mattis id quis est.
+                                Ut tincidunt sit amet ante ut accumsan. Duis non turpis facilisis,
+                                ultrices nulla sit amet, ornare libero. Vestibulum lacinia egestas commodo.
+                                Proin nec mi tristique, vestibulum enim quis, viverra magna.
+                                Ut vestibulum sollicitudin elementum. Praesent sodales tortor at lorem commodo
+                                molestie. Curabitur non congue enim. Aliquam erat volutpat.
+                                Duis at lectus elementum, aliquet ipsum in, ornare magna.
+                                In quis nibh in enim blandit tempus. Praesent purus tellus, rutrum nec
+                                laoreet a, rhoncus eu tellus. Proin fringilla, sem ac dapibus sodales,
+                                velit quam suscipit augue, ut tincidunt dolor arcu et est. Donec non imperdiet nunc.
+                                Maecenas varius vitae nisi id tempus.
+                            </p>
+                        </td>
+                        <td>1x</td>
+                        <td>$5.00</td>
+                    </tr>
+                    <tr><td colspan="4"><hr /></td></tr>
+
+                }
+                <tr id="total">
+                    <td colspan="4" style="text-align: right;">TOTAL: $10.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 @code {

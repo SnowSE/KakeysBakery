@@ -1,0 +1,41 @@
+﻿body {
+    background-color: green;
+}
+
+.itemName {
+    padding-left: 5%;
+}
+
+.itemDescription {
+
+}
+
+.itemImage {
+    vertical-align: middle;
+    padding-left: 1%;
+}
+
+.cartCard {
+    padding: 50px;
+    vertical-align: middle;
+
+}
+
+.price {
+    margin-left: 30%;
+}
+
+#total {
+    text-align: right; /* Align content to the right */
+    font-weight: bold; /* Optionally make the total bold */
+}
+
+#totalCart {
+    background-color: #EBDCCE;
+}
+
+#totalTable {
+    padding-right: 100px;
+    background-color: #ceddeb;
+}
+
