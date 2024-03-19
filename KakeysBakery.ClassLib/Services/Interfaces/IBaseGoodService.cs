@@ -5,6 +5,7 @@ namespace KakeysBakeryClassLib.Services.Interfaces;
 
 public interface IBaseGoodService
 {
+    public Task<List<Basegood>> GetBasegoodsFromTypeAsync(int BaseGoodTypeId);
     public Task<List<Basegood>> GetBaseGoodListAsync();
     public Task<Basegood?> GetBaseGoodAsync(int id);
     public Task CreateBaseGoodAsync(Basegood basegood);

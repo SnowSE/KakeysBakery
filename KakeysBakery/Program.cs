@@ -2,6 +2,7 @@ using KakeysBakery.Components;
 using KakeysBakery.Data;
 using KakeysBakery.Services;
 using KakeysBakeryClassLib.Services.Interfaces;
+using KakeysBakeryClassLib.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IBaseGoodTypeService, BaseGoodTypeService>();
 builder.Services.AddScoped<IBaseGoodFlavorService, BaseGoodFlavorService>();
 builder.Services.AddScoped<IAddonTypeService, AddonTypeService>();
 builder.Services.AddScoped<IAddonFlavorService, AddonFlavorService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));

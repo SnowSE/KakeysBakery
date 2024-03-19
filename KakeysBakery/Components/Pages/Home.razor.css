@@ -1,4 +1,14 @@
-﻿/*regular sized screen*/
+﻿@font-face{
+    font-family: Bidaq;
+    src: url(Fonts/bidaq/BidaqRegular.otf) format('opentype');
+}
+
+@font-face {
+    font-family: BakeryFont;
+    src: url(Fonts/BakeryFont/BakeryFont.ttf) format('truetype');
+}
+
+/*regular sized screen*/
 
 /*body {
     background-color: #F5E5D8;*/
@@ -31,7 +41,7 @@
     background-color: rgb(255, 255, 255, .5);
     padding: 30px 25px 40px 30px;
     border-radius: 5px;
-    font-family: serif;
+    font-family: BakeryFont;
     font-size: 4vw;
     font-style: oblique;
     font-weight: 900;
@@ -42,6 +52,7 @@
     float: right;
     font-size: 3vw;
     width: 50%;
+    font-family: BakeryFont;
 }
 
 /*smallest screen*/

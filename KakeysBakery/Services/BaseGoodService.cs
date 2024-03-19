@@ -62,4 +62,15 @@ public class BaseGoodService : IBaseGoodService
         catch { }
         return Task.CompletedTask;
     }
+
+
+    public async Task<List<Basegood>> GetBasegoodsFromTypeAsync(int BasegoodTypeId)
+    {
+        try
+        {
+            return await _context.Basegoods.Where(i => i.Pastryid==BasegoodTypeId).Include(i => i.Flavor).ToListAsync();
+        }
+        catch { return new List<Basegood>(); }
+       
+    }
 }

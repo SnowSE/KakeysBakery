@@ -4,19 +4,23 @@
 @inject ICustomerService customer
 @inject IBaseGoodTypeService basegoodtype
 
+@rendermode InteractiveServer
+
 <h3>Order</h3>
 
 <div class="mt-5 bg-light border vh-100">
     <div class="d-flex flex-wrap justify-content-between p-5 mt-5">
         @if (basegoodtypes != null)
         {
-            @for (int i = 0; i < basegoodtypes.Count; i++)
+            @foreach(Basegoodtype basegoodtype in basegoodtypes)
             {
-                <div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
+                
+            <div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
                     <img class="imgbutton img-fluid img-thumbnail rounded-5 shadow" src="images/SweetnessCupcakes.png">
-                    <button class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
-                    <p>@basegoodtypes[i].Basegood</p>
+                    <button @onclick="() => BaseGoodClicked(basegoodtype.Id)" class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
+                    <p>@basegoodtype.Basegood</p>
                 </div>
+            
             }
         }
         else
@@ -24,13 +28,34 @@
             <p>Loading products, please wait</p>
         }
     </div>
+    @if (baseGoodDetails is not null)
+    {
+        <select>
+            <option> --- </option>
+            @foreach (Basegood basegoods in baseGoodDetails)
+            {
+                <option>@basegoods.Flavor.Flavorname</option>
+            }
+        </select>
+
+    }
 </div>
 
+
 @code {
+    List<Basegood>? baseGoodDetails;
+    int displayNum = 0;
+
+    public async Task BaseGoodClicked(int basegoodtypeid)
+    {
+        baseGoodDetails = await basegood.GetBasegoodsFromTypeAsync(basegoodtypeid);
+    }
+
     public List<Basegoodtype>? basegoodtypes;
 
     override protected async Task OnInitializedAsync()
     {
         basegoodtypes = await basegoodtype.GetBaseGoodTypeListAsync();
     }
+
 }
