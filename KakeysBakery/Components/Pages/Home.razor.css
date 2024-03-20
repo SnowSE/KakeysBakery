@@ -92,27 +92,12 @@
     #description {
         font-size: 200%;
     }
+}
 
-/*@media screen and (max-width: 1200px) {
+/*gargantuan*/
+@media screen and (min-width: 2000px) {
     #sweet {
-        color: green;
-        left: 50%;
+        left: 70%;
+        top: 70%;
     }
-
-    #description {
-        font-size: 200%;
-    }
-}*/
-
-/*biggest screen*/
-/*@media screen and (min-width: 1463px) {
-    #sweet {
-        color: blue;
-        left: 68%;
-        font-size: 2.5vw;
-    }
-
-    #description {
-        font-size: 200%;
-    }
-}*/
+}
