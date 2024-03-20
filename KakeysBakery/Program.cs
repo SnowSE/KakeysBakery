@@ -23,6 +23,7 @@ builder.Services.AddScoped<IBaseGoodTypeService, BaseGoodTypeService>();
 builder.Services.AddScoped<IBaseGoodFlavorService, BaseGoodFlavorService>();
 builder.Services.AddScoped<IAddonTypeService, AddonTypeService>();
 builder.Services.AddScoped<IAddonFlavorService, AddonFlavorService>();
+builder.Services.AddScoped<IUserroleService, UserroleService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddControllers();
