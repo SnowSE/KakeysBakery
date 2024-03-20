@@ -18,19 +18,15 @@
     src: url(Fonts/cartFont3.otf) format('opentype');
 }
 
-/*regular sized screen*/
-
-/*body {
-    background-color: #F5E5D8;*/
-    /*height: 2000px;*/
-/*}*/
+.bshadow {
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5);
+}
 
 #cupcake1 {
     object-fit: cover;
     height: 500px;
     width: 94vw;
     border-radius: 10px;
-    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5);
 }
 
 #cupcake2 {
@@ -42,22 +38,7 @@
     box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5);
 }
 
-.sweet {
-    position: absolute;
-    left: 55%;
-    top: 60%;
-    color: brown;
-    background-color: white;
-    background-color: rgb(255, 255, 255, .5);
-    padding: 30px 25px 40px 30px;
-    border-radius: 5px;
-    font-family: BakeryFont;
-    font-size: 4vw;
-    font-style: oblique;
-    font-weight: 900;
-}
-
-.testsweet {
+#sweet {
     color: brown;
     background-color: white;
     background-color: rgb(255, 255, 255, .5);
@@ -72,17 +53,38 @@
 }
 
 #description {
-    padding: 30px 15px 40px 60px;
-    float: left;
-    font-size: 200%;
-    width: 60%;
+    font-size: 150%;
     font-family: 'Footlight MT';
 }
 
-/*smallest screen*/
 
-@media screen and (max-width: 1200px) {
-    .testsweet {
+/*small*/
+@media screen and (min-width: 576px) {
+
+}
+
+/*medium*/
+@media screen and (min-width: 786px) {
+
+}
+
+/*large*/
+@media screen and (min-width: 992px) {
+
+}
+
+/*extra large*/
+@media screen and (min-width: 1200px) {
+
+}
+
+/*extra extra large*/
+@media screen and (min-width: 1400px) {
+
+}
+
+/*@media screen and (max-width: 1200px) {
+    #sweet {
         color: green;
         left: 50%;
     }
@@ -90,11 +92,11 @@
     #description {
         font-size: 200%;
     }
-}
+}*/
 
 /*biggest screen*/
-@media screen and (min-width: 1463px) {
-    .testsweet {
+/*@media screen and (min-width: 1463px) {
+    #sweet {
         color: blue;
         left: 68%;
         font-size: 2.5vw;
@@ -103,4 +105,4 @@
     #description {
         font-size: 200%;
     }
-}
+}*/
