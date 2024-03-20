@@ -17,5 +17,5 @@ jobs:
       - name: Test with the dotnet CLI
         run: |
             pwd
-            cd ..
+            # cd ..
             dotnet test
