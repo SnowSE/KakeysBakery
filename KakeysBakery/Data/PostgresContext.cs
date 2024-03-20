@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using KakeysBakeryClassLib.Data;
 
 namespace KakeysBakery.Data;
 
@@ -31,6 +32,8 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Customer> Customers { get; set; }
 
+    public virtual DbSet<CustomerRole> CustomerRoles { get; set; }
+
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<ProductAddonBasegood> ProductAddonBasegoods { get; set; }
@@ -40,6 +43,8 @@ public partial class PostgresContext : DbContext
     public virtual DbSet<PurchaseProduct> PurchaseProducts { get; set; }
 
     public virtual DbSet<Referencephoto> Referencephotos { get; set; }
+
+    public virtual DbSet<Userrole> Userroles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -104,6 +109,7 @@ public partial class PostgresContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Flavorid).HasColumnName("flavorid");
+            entity.Property(e => e.Isavalible).HasColumnName("isavalible");
             entity.Property(e => e.Pastryid).HasColumnName("pastryid");
             entity.Property(e => e.Suggestedprice)
                 .HasColumnType("money")
@@ -188,6 +194,27 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Surname)
                 .HasMaxLength(50)
                 .HasColumnName("surname");
+        });
+
+        modelBuilder.Entity<CustomerRole>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("customer_role_pkey");
+
+            entity.ToTable("customer_role", "KakeysBakery");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.UserroleId).HasColumnName("userrole_id");
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.CustomerRoles)
+                .HasForeignKey(d => d.CustomerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("customer_role_customer_id_fkey");
+
+            entity.HasOne(d => d.Userrole).WithMany(p => p.CustomerRoles)
+                .HasForeignKey(d => d.UserroleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("customer_role_userrole_id_fkey");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -291,6 +318,18 @@ public partial class PostgresContext : DbContext
             entity.HasOne(d => d.Purchase).WithMany(p => p.Referencephotos)
                 .HasForeignKey(d => d.Purchaseid)
                 .HasConstraintName("referencephoto_purchaseid_fkey");
+        });
+
+        modelBuilder.Entity<Userrole>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("userrole_pkey");
+
+            entity.ToTable("userrole", "KakeysBakery");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Userrole1)
+                .HasMaxLength(20)
+                .HasColumnName("userrole");
         });
 
         OnModelCreatingPartial(modelBuilder);
