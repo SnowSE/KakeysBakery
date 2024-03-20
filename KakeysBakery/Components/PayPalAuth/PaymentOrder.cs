@@ -1,6 +1,6 @@
-﻿namespace KakeysBakery;
+﻿namespace KakeysBakery.Components.PayPalAuth;
 
-public class CreateOrderJson
+public class PaymentOrder
 {
     public string method { get; set; }
     public Headers headers { get; set; }

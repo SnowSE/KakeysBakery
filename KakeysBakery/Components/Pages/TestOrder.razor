@@ -1,0 +1,15 @@
+﻿@page "/OrderTest"
+
+@inject IPayPalAuthentication paypal
+
+@rendermode InteractiveServer
+
+<h3>TestOrder</h3>
+<button @onclick="testorder"> testorder </button>
+
+@code {
+    public void testorder()
+    {
+        paypal.CreateOrder(100m);
+    }
+}
