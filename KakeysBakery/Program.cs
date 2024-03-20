@@ -4,6 +4,7 @@ using KakeysBakery.Services;
 using KakeysBakeryClassLib.Services.Interfaces;
 using KakeysBakeryClassLib.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
+using KakeysBakery.Components.PayPalAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,10 @@ builder.Services.AddScoped<IBaseGoodFlavorService, BaseGoodFlavorService>();
 builder.Services.AddScoped<IAddonTypeService, AddonTypeService>();
 builder.Services.AddScoped<IAddonFlavorService, AddonFlavorService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<IPayPalAuthentication,PayPalAuthentication>();
 
 builder.Services.AddBlazorBootstrap();
 

@@ -1,4 +1,4 @@
-﻿namespace KakeysBakery;
+﻿namespace KakeysBakery.Components.PayPalAuth;
 
 public class AuthToken
 {
