@@ -45,11 +45,10 @@
     padding: 30px 25px 40px 30px;
     border-radius: 5px;
     font-family: BakeryFont;
-    /*font-size: 4vw;*/
     font-style: oblique;
     font-weight: 900;
-    left: 65%;
-    top: 60%;
+    left: 60%;
+    top: 70%;
 }
 
 #description {
@@ -57,11 +56,15 @@
     font-family: 'Footlight MT';
 }
 
+#example {
+    object-fit: cover;
+}
+
+
 /*small*/
 @media screen and (min-width: 576px) {
     #example {
         height: 25rem;
-        /*border-radius: 10px;*/
     }
 }
 
@@ -79,13 +82,16 @@
 
 /*extra large*/
 @media screen and (min-width: 1200px) {
-
+    #example {
+        width: 500rem;
+    }
 }
 
 /*extra extra large*/
 @media screen and (min-width: 1400px) {
-
-}
+    #description {
+        font-size: 200%;
+    }
 
 /*@media screen and (max-width: 1200px) {
     #sweet {
