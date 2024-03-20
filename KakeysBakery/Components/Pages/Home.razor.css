@@ -57,10 +57,12 @@
     font-family: 'Footlight MT';
 }
 
-
 /*small*/
 @media screen and (min-width: 576px) {
-
+    #example {
+        height: 25rem;
+        /*border-radius: 10px;*/
+    }
 }
 
 /*medium*/
