@@ -7,11 +7,11 @@ env:
   AZURE_WEBAPP_NAME: KakeysBakery20240319120850
   AZURE_WEBAPP_PACKAGE_PATH: KakeysBakery/published
   CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 8.0.x
+  # DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: KakeysBakery
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET SDK
@@ -22,8 +22,10 @@ jobs:
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
-    - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+    - name: Run Test Suite
+      run: |
+        cd ./KakeysBakery.Tests/
+        dotnet test
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
@@ -32,7 +34,7 @@ jobs:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     steps:
     - name: Download artifact from build job
