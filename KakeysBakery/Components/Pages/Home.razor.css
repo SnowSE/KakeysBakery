@@ -67,7 +67,9 @@
 
 /*medium*/
 @media screen and (min-width: 786px) {
-
+    #example {
+        border-radius: 10px;
+    }
 }
 
 /*large*/
