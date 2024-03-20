@@ -11,6 +11,12 @@ public class AddonFlavorTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public void FailingTest()
+    {
+        Assert.True(false);
+    }
+
+    [Fact]
     public async Task Get_AddonFlavorList()
     {
         // ARRANGE
