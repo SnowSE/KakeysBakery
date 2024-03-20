@@ -8,6 +8,16 @@
     src: url(Fonts/BakeryFont/BakeryFont.ttf) format('truetype');
 }
 
+@font-face {
+    font-family: testFont;
+    src: url(Fonts/cartFont2.otf) format('opentype');
+}
+
+@font-face {
+    font-family: testFont2;
+    src: url(Fonts/cartFont3.otf) format('opentype');
+}
+
 /*regular sized screen*/
 
 /*body {
@@ -62,11 +72,11 @@
 }
 
 #description {
-    padding: 30px 25px 40px 60px;
-    float: right;
-    font-size: 2vw;
-    width: 50%;
-    font-family: BakeryFont;
+    padding: 30px 15px 40px 60px;
+    float: left;
+    font-size: 200%;
+    width: 60%;
+    font-family: 'Footlight MT';
 }
 
 /*smallest screen*/
@@ -78,7 +88,7 @@
     }
 
     #description {
-        font-size: 3.6vw;
+        font-size: 200%;
     }
 }
 
@@ -91,6 +101,6 @@
     }
 
     #description {
-        font-size: 2.2vw;
+        font-size: 200%;
     }
 }
