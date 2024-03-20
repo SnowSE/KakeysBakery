@@ -19,6 +19,8 @@ public partial class Customer
 
     public bool? Issubscribed { get; set; }
 
+    public virtual ICollection<CustomerRole> CustomerRoles { get; set; } = new List<CustomerRole>();
+
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<Purchase> Purchases { get; set; } = new List<Purchase>();

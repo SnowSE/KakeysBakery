@@ -1,4 +1,4 @@
-﻿-- DROP SCHEMA "KakeysBakery";
+-- DROP SCHEMA "KakeysBakery";
 
 CREATE SCHEMA "KakeysBakery";
 Set search_path to "KakeysBakery";
@@ -42,6 +42,15 @@ CREATE SEQUENCE "KakeysBakery".cart_id_seq
 -- DROP SEQUENCE "KakeysBakery".customer_id_seq;
 
 CREATE SEQUENCE "KakeysBakery".customer_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE "KakeysBakery".customer_role_id_seq;
+
+CREATE SEQUENCE "KakeysBakery".customer_role_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
@@ -101,6 +110,15 @@ CREATE SEQUENCE "KakeysBakery".referencephoto_id_seq
 	MAXVALUE 2147483647
 	START 1
 	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE "KakeysBakery".userrole_id_seq;
+
+CREATE SEQUENCE "KakeysBakery".userrole_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
 	NO CYCLE;-- "KakeysBakery".addonflavor definition
 
 -- Drop table
@@ -134,7 +152,7 @@ CREATE TABLE "KakeysBakery".addontype (
 -- DROP TABLE "KakeysBakery".basegoodflavor;
 
 CREATE TABLE "KakeysBakery".basegoodflavor (
-	id int4 DEFAULT nextval('"KakeysBakery".flavor_id_seq'::regclass) NOT NULL,
+	id int4 NOT NULL DEFAULT nextval('"KakeysBakery".flavor_id_seq'::regclass),
 	flavorname varchar(50) NULL,
 	CONSTRAINT flavor_pkey PRIMARY KEY (id)
 );
@@ -147,7 +165,7 @@ CREATE TABLE "KakeysBakery".basegoodflavor (
 -- DROP TABLE "KakeysBakery".basegoodtype;
 
 CREATE TABLE "KakeysBakery".basegoodtype (
-	id int4 DEFAULT nextval('"KakeysBakery".base_id_seq'::regclass) NOT NULL,
+	id int4 NOT NULL DEFAULT nextval('"KakeysBakery".base_id_seq'::regclass),
 	basegood varchar(50) NULL,
 	CONSTRAINT base_pkey PRIMARY KEY (id)
 );
@@ -168,7 +186,8 @@ CREATE TABLE "KakeysBakery".customer (
 	preferredcontact varchar(30) NULL,
 	issubscribed bool NULL,
 	CONSTRAINT customer_pkey PRIMARY KEY (id),
-	CONSTRAINT customer_preferredcontact_check CHECK (preferredcontact IN ('Text', 'Call', 'Email', 'Other')));
+	CONSTRAINT customer_preferredcontact_check CHECK (preferredcontact IN ('Text','Call','Email','Other'))
+);
 
 
 -- "KakeysBakery".product definition
@@ -183,6 +202,19 @@ CREATE TABLE "KakeysBakery".product (
 	productname varchar(50) NULL,
 	ispublic bool NULL,
 	CONSTRAINT product_pkey PRIMARY KEY (id)
+);
+
+
+-- "KakeysBakery".userrole definition
+
+-- Drop table
+
+-- DROP TABLE "KakeysBakery".userrole;
+
+CREATE TABLE "KakeysBakery".userrole (
+	id serial4 NOT NULL,
+	userrole varchar(20) NOT NULL,
+	CONSTRAINT userrole_pkey PRIMARY KEY (id)
 );
 
 
@@ -215,6 +247,7 @@ CREATE TABLE "KakeysBakery".basegood (
 	suggestedprice money NULL,
 	pastryid int4 NULL,
 	flavorid int4 NULL,
+	isavalible _bool NULL,
 	CONSTRAINT basegood_pkey PRIMARY KEY (id),
 	CONSTRAINT basegoodname FOREIGN KEY (pastryid) REFERENCES "KakeysBakery".basegoodtype(id),
 	CONSTRAINT flavorid FOREIGN KEY (flavorid) REFERENCES "KakeysBakery".basegoodflavor(id)
@@ -237,6 +270,22 @@ CREATE TABLE "KakeysBakery".cart (
 );
 
 
+-- "KakeysBakery".customer_role definition
+
+-- Drop table
+
+-- DROP TABLE "KakeysBakery".customer_role;
+
+CREATE TABLE "KakeysBakery".customer_role (
+	id serial4 NOT NULL,
+	userrole_id int4 NOT NULL,
+	customer_id int4 NOT NULL,
+	CONSTRAINT customer_role_pkey PRIMARY KEY (id),
+	CONSTRAINT customer_role_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES "KakeysBakery".customer(id),
+	CONSTRAINT customer_role_userrole_id_fkey FOREIGN KEY (userrole_id) REFERENCES "KakeysBakery".userrole(id)
+);
+
+
 -- "KakeysBakery".product_addon_basegood definition
 
 -- Drop table
@@ -244,7 +293,7 @@ CREATE TABLE "KakeysBakery".cart (
 -- DROP TABLE "KakeysBakery".product_addon_basegood;
 
 CREATE TABLE "KakeysBakery".product_addon_basegood (
-	id int4 DEFAULT nextval('"KakeysBakery".product_addon_id_seq'::regclass) NOT NULL,
+	id int4 NOT NULL DEFAULT nextval('"KakeysBakery".product_addon_id_seq'::regclass),
 	productid int4 NULL,
 	addonid int4 NULL,
 	basegoodid int4 NULL,
