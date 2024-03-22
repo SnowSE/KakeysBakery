@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 namespace KakeysBakeryClassLib.Data;
 
 public partial class ProductAddonBasegood

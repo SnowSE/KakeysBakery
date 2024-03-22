@@ -208,12 +208,10 @@ public partial class PostgresContext : DbContext
 
             entity.HasOne(d => d.Customer).WithMany(p => p.CustomerRoles)
                 .HasForeignKey(d => d.CustomerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("customer_role_customer_id_fkey");
 
             entity.HasOne(d => d.Userrole).WithMany(p => p.CustomerRoles)
                 .HasForeignKey(d => d.UserroleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("customer_role_userrole_id_fkey");
         });
 
