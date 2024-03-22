@@ -11,7 +11,7 @@ public partial class CustomerRole
 
     public int CustomerId { get; set; }
 
-    public virtual Customer Customer { get; set; } = null!;
+    public virtual Customer? Customer { get; set; } = null!;
 
-    public virtual Userrole Userrole { get; set; } = null!;
+    public virtual Userrole? Userrole { get; set; } = null!;
 }
