@@ -15,7 +15,7 @@
     aspect-ratio: 1/1;
 }
 
-.hover0 {
+.cartbutton {
     position: absolute;
     bottom: 30px;
     right: 30px;
@@ -26,7 +26,7 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-    .hover0:hover {
+    .cartbutton:hover {
         border-color: white;
     }
 
@@ -58,16 +58,15 @@
     width: 350px;
 }
 
-.hover01 .imgbutton {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-    -webkit-transition: .3s ease-in-out;
-    transition: .3s ease-in-out;
+.hover01 figure img {
+	-webkit-transform: scale(1);
+	transform: scale(1);
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
 }
-
-.hover01 imgbutton:hover {
-    -webkit-transform: scale(1.3);
-    transform: scale(1.3);
+.hover01 figure:hover img {
+	-webkit-transform: scale(1.3);
+	transform: scale(1.3);
 }
 
 /*small*/
