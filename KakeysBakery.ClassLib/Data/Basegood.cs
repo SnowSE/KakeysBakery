@@ -12,7 +12,7 @@ public partial class Basegood
     public int? Pastryid { get; set; }
 
     public int? Flavorid { get; set; }
-    public List<bool>? Isavalible { get; set; }
+    public bool? Isavalible { get; set; }
 
     public virtual Basegoodflavor? Flavor { get; set; }
 
