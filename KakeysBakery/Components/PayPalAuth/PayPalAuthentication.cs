@@ -16,15 +16,14 @@ public class PayPalAuthentication(HttpClient client, IConfiguration config) : IP
     {
         
         var fullUrl = $"{baseurl}v1/oauth2/token";
-        Auth authorization = new Auth()
+        Headers headers = new Headers()
         {
-            username = config["Test_Client_id"],
-            password = config["Test_Client_secret"],
+            Authorization = "Basic " + config["Test_Client_id"] + ":" + config["Test_Client_secret"]
         };
         AuthToken token = new AuthToken()
         {
-            data = "grant_type=client_credentials",
-            auth = authorization
+            body = "grant_type=client_credentials",
+            headers = headers,
         };
 
         var json = JsonSerializer.Serialize(token);
@@ -55,7 +54,6 @@ public class PayPalAuthentication(HttpClient client, IConfiguration config) : IP
 
         Headers header = new Headers()
         {
-            Content_type = "application/json",
             Authorization = $"Bearer {accessToken}"
         };
         Amount amount = new Amount()
@@ -116,7 +114,6 @@ public class PayPalAuthentication(HttpClient client, IConfiguration config) : IP
 
         Headers header = new Headers()
         {
-            Content_type = "application/json",
             Authorization = $"Bearer {accesstoken}"
         };
         PaymentOrder baseJSON = new PaymentOrder()

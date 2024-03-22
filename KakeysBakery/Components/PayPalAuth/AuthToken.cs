@@ -2,9 +2,10 @@
 
 public class AuthToken
 {
-    public string url { get; set; }
+    public string body { get; set; }
+    public Headers headers { get; set; }
     public string data { get; set; }
-    public Auth auth { get; set; }
+
 }
 
 public class Auth

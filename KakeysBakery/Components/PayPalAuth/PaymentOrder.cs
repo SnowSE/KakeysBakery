@@ -9,7 +9,6 @@ public class PaymentOrder
 
 public class Headers
 {
-    public string Content_type { get; set; }
     public string Authorization { get; set; }
 }
 
