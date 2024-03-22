@@ -90,6 +90,8 @@ public class CustomerRoleTests : IClassFixture<BakeryFactory>
         };
 
         // ACT
+        await client.PostAsJsonAsync("api/Customer/add", testcustomer);
+        await client.PostAsJsonAsync("api/Userrole/add", testUserRole);
         await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
         CustomerRole? result = await client.GetFromJsonAsync<CustomerRole>($"api/CustomerRole/get/{testCustomerRole.Id}");
 
