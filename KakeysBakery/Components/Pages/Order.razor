@@ -10,89 +10,108 @@
 <h3 class="pageTitle">Order</h3>
 
 
-<Modal @ref="modal" Title="Modal title">
-    <BodyTemplate>
-        <p>choose your type</p>
-        <select>
-            <option> --- </option>
-            @if (baseGoodDetails is not null)
-            {
+<Modal @ref="modal" Title="Modal Title">
+	<BodyTemplate>
+		<p>choose your type</p>
+		<select name="flavor" @onchange="SelectHasChanged">
+			@if (baseGoodDetails is not null)
+			{
+				@foreach (Basegood basegoods in baseGoodDetails)
+				{
+					@* @if (basegoods.Isavalible)                      once the database is fixed *@
 
-                @foreach (Basegood basegoods in baseGoodDetails)
-                {
-                    <option value="@basegoods.Flavor.Id">@basegoods.Flavor.Flavorname</option>
-                }
-            }
-        </select>
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
-        <Button Color="ButtonColor.Primary">Save changes</Button>
-    </FooterTemplate>
+					<option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
+
+				}
+			}
+		</select>
+
+		@if (currentBaseGood is not null)
+		{
+			<div>
+				@currentBaseGood.Suggestedprice
+			</div>
+		}
+
+	</BodyTemplate>
+	<FooterTemplate>
+		<Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+		<Button Color="ButtonColor.Primary">Add To Cart</Button>
+	</FooterTemplate>
 </Modal>
 
 <div class="mt-5 border vh-100 totalPage">
-    <div class="d-flex flex-wrap justify-content-between p-5 mt-5">
-        @if (basegoodtypes != null)
-        {
-            @foreach (Basegoodtype basegoodtype in basegoodtypes)
-            {
+	<div class="d-flex flex-wrap justify-content-between p-5 mt-5">
+		@if (basegoodtypes == null)
+		{
+			<p>Loading products, please wait</p>
+		}
+		else
+		{
+			@foreach (Basegoodtype basegoodtype in basegoodtypes)
+			{
 
-                <div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
-                    <h3 class="typelabel">@basegoodtype.Basegood</h3>
-                    <img class="imgbutton img-fluid img-thumbnail rounded-5 shadow" src="images/SweetnessCupcakes.png">
-                    <button @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await OnShowModalClick();}" class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
-                </div>
+				<div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
+					<h3 class="typelabel">@basegoodtype.Basegood</h3>
+					<img class="imgbutton img-fluid img-thumbnail rounded-5 shadow" src="images/SweetnessCupcakes.png">
+					<button @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await OnShowModalClick();}" class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
+					<p>@basegoodtype.Basegood</p>
+				</div>
 
-            }
-        }
-        else
-        {
-            <p>Loading products, please wait</p>
-        }
-    </div>
-    @if (baseGoodDetails is not null)
-    {
-        <select>
-            <option> --- </option>
-            @foreach (Basegood basegoods in baseGoodDetails)
-            {
-                <option value="@basegoods.Flavor.Id">@basegoods.Flavor.Flavorname</option>
-            }
-        </select>
-
-    }
+			}
+		}
+	</div>
+@* 	@if (baseGoodDetails is not null)
+	{
+		<select>
+			<option> --- </option>
+			@foreach (Basegood basegoods in baseGoodDetails)
+			{
+				<option value="@basegoods.Flavor.Id">@basegoods.Flavor.Flavorname</option>
+			}
+		</select>
+	} *@
 </div>
 
 
 @code {
-    private Modal modal = default!;
+	private Modal modal = default!;
 
-    private async Task OnShowModalClick()
-    {
-        await modal.ShowAsync();
-    }
+	private async Task OnShowModalClick()
+	{
+		await modal.ShowAsync();
+	}
 
-    private async Task OnHideModalClick()
-    {
-        await modal.HideAsync();
-    }
+	private async Task OnHideModalClick()
+	{
+		await modal.HideAsync();
+	}
+
+	private async Task SelectHasChanged(ChangeEventArgs e)
+	{
+		if (e.Value is not null)
+		{
+			int typeId = Convert.ToInt32(e.Value.ToString());
+			currentBaseGood = await basegood.GetBaseGoodFromFlavorAsync(clickedbasegoodid, typeId);
+		}
+	}
 
 
+	Basegood? currentBaseGood;
+	List<Basegood>? baseGoodDetails;
+	int clickedbasegoodid;
 
-    List<Basegood>? baseGoodDetails;
-    int displayNum = 0;
+	public async Task BaseGoodClicked(int basegoodtypeid)
+	{
+		clickedbasegoodid = basegoodtypeid;
+		baseGoodDetails = await basegood.GetBasegoodsFromTypeAsync(basegoodtypeid);
+	}
 
-    public async Task BaseGoodClicked(int basegoodtypeid)
-    {
-        baseGoodDetails = await basegood.GetBasegoodsFromTypeAsync(basegoodtypeid);
-    }
+	public List<Basegoodtype>? basegoodtypes;
 
-    public List<Basegoodtype>? basegoodtypes;
-
-    override protected async Task OnInitializedAsync()
-    {
-        basegoodtypes = await basegoodtype.GetBaseGoodTypeListAsync();
-    }
+	override protected async Task OnInitializedAsync()
+	{
+		basegoodtypes = await basegoodtype.GetBaseGoodTypeListAsync();
+	}
 
 }

@@ -1,0 +1,34 @@
+﻿@using BlazorBootstrap
+@using KakeysBakeryClassLib.Data
+<Modal @ref="modal" Title="Modal title">
+    <BodyTemplate>
+        <p>choose your type</p>
+        <select>
+            <option> --- </option>
+            @if (baseGoodDetails is not null)
+            {
+
+                @foreach (Basegood basegoods in baseGoodDetails)
+                {
+                    <option value="@basegoods.Flavor.Id">@basegoods.Flavor.Flavorname</option>
+                }
+            }
+        </select>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Primary">Save changes</Button>
+    </FooterTemplate>
+</Modal>
+
+@code {
+    private Modal modal = default!;
+
+    [Parameter]
+    public List<Basegood>? baseGoodDetails { get; set; }
+
+    public void OnHideModalClick()
+    {
+        
+    }
+}
