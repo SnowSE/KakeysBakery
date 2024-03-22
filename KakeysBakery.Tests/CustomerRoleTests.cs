@@ -117,6 +117,7 @@ public class CustomerRoleTests : IClassFixture<BakeryFactory>
         };
 
         // ACT
+<<<<<<< HEAD
         try
         {
             var json = JsonSerializer.Serialize(testCustomerRole);
@@ -125,6 +126,13 @@ public class CustomerRoleTests : IClassFixture<BakeryFactory>
             await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
             //var content = await response.Content.ReadAsStringAsync();
             CustomerRole? result = await client.GetFromJsonAsync<CustomerRole>($"api/CustomerRole/get/{testCustomerRole.Id}");
+=======
+        await client.PostAsJsonAsync("api/Customer/add", testcustomer);
+        await client.PostAsJsonAsync("api/Userrole/add", testUserRole);
+        await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
+        CustomerRole? result = await client.GetFromJsonAsync<CustomerRole>($"api/CustomerRole/get/{testCustomerRole.Id}");
+
+>>>>>>> 51c3c909facb6c49b36d8f4d9dc432906f6f9cbb
         // Assert
         Assert.NotNull(result);
        // Assert.Equal(testCustomerRole.CustomerRole1, result.CustomerRole1);

@@ -17,8 +17,8 @@
 
 .cartbutton {
     position: absolute;
-    top: 80%;
-    left: 70%;
+    bottom: 30px;
+    right: 30px;
     background-color: #E8A87C;
     border-color: #4E362E;
     border-style: solid;
@@ -52,4 +52,47 @@
 
 .totalPage {
     background-color: #EBDCCE;
+}
+
+.order-container {
+    width: 350px;
+}
+
+/*small*/
+@media screen and (min-width: 576px) {
+/*    .cartbutton {
+        bottom: 50px;
+        right: 50px;
+    }*/
+}
+
+/*medium*/
+@media screen and (min-width: 786px) {
+
+}
+
+/*large*/
+@media screen and (min-width: 992px) {
+    .order-container {
+        width: 450px;
+    }
+}
+
+/*extra large*/
+@media screen and (min-width: 1200px) {
+    .order-container {
+        width: 350px;
+    }
+}
+
+/*extra extra large*/
+@media screen and (min-width: 1400px) {
+
+}
+
+/*gargantuan*/
+@media screen and (min-width: 2000px) {
+    .order-container {
+        width: 550px;
+    }
 }
