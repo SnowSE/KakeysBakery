@@ -15,7 +15,20 @@
     aspect-ratio: 1/1;
 }
 
-.cartbutton {
+img {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+}
+
+img:hover {
+    -webkit-transform: scale(1.3);
+    transform: scale(1.3);
+}
+
+
+/*.cartbutton {
     position: absolute;
     bottom: 30px;
     right: 30px;
@@ -28,7 +41,40 @@
 
     .cartbutton:hover {
         border-color: white;
+    }*/
+
+.order-container {
+    width: 350px;
+    overflow: hidden;
+}
+/*Begin img zoom section*/
+.imgbutton {
+    overflow: hidden;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+}
+
+    .imgbutton:hover {
+        overflow: hidden;
+        -webkit-transform: scale(1.3);
+        transform: scale(1.3);
     }
+
+/* Zoom In #1 */
+.hover01 figure img {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+}
+
+.hover01 figure:hover img {
+    -webkit-transform: scale(1.3);
+    transform: scale(1.3);
+}
+/*end img zoom section*/
 
 .typelabel{
     position: absolute;
@@ -54,9 +100,6 @@
     background-color: #EBDCCE;
 }
 
-.order-container {
-    width: 350px;
-}
 
 .hover01 figure img {
 	-webkit-transform: scale(1);
