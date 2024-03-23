@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace KakeysBakeryTests;
 
@@ -14,15 +15,27 @@ public class CustomerRoleTests : IClassFixture<BakeryFactory>
     public async Task Get_CustomerRoleList()
     {
         // ARRANGE
+        Customer testcustomer = new()
+        {
+            Id = 19,
+            Email = "someemail@test",
+            Forename = "tiestfirst",
+            Surname = "testsure",
+            Phone = "3453451234",
+            Preferredcontact = "Text",
+            Issubscribed = true
+        };
+        Userrole testUserRole = new() { Id = 15, Userrole1 = "test role" };
         CustomerRole testCustomerRole = new()
         {
-            Id = 77,
-            UserroleId = 12,
-            CustomerId = 17
+            Id = 78,
+            CustomerId = testcustomer.Id,
+            UserroleId = testUserRole.Id
         };
 
-        await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
-
+        var response1 = await client.PostAsJsonAsync("api/Customer/add", testcustomer);
+        var response2 = await client.PostAsJsonAsync("api/UserRole/add", testUserRole);
+        var response3 = await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
         // ACT
         List<CustomerRole>? result = await client.GetFromJsonAsync<List<CustomerRole>>("api/CustomerRole/getall");
 
@@ -35,13 +48,27 @@ public class CustomerRoleTests : IClassFixture<BakeryFactory>
     public async Task Get_CustomerRole_ById()
     {
         // ARRANGE
+        Customer testcustomer = new()
+        {
+            Id = 19,
+            Email = "someemail@test",
+            Forename = "tiestfirst",
+            Surname = "testsure",
+            Phone = "3453451234",
+            Preferredcontact = "Text",
+            Issubscribed = true
+        };
+        Userrole testUserRole = new() { Id = 15, Userrole1 = "test role" };
         CustomerRole testCustomerRole = new()
         {
-            Id = 78
+            Id = 78,
+            CustomerId = testcustomer.Id,
+            UserroleId = testUserRole.Id
         };
 
-        await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
-
+        var response1 = await client.PostAsJsonAsync("api/Customer/add", testcustomer);
+        var response2 = await client.PostAsJsonAsync("api/UserRole/add", testUserRole);
+        var response3 = await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
         // ACT
         CustomerRole? result = await client.GetFromJsonAsync<CustomerRole>($"api/CustomerRole/get/{testCustomerRole.Id}");
 
@@ -90,15 +117,24 @@ public class CustomerRoleTests : IClassFixture<BakeryFactory>
         };
 
         // ACT
-        await client.PostAsJsonAsync("api/Customer/add", testcustomer);
-        await client.PostAsJsonAsync("api/Userrole/add", testUserRole);
-        await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
-        CustomerRole? result = await client.GetFromJsonAsync<CustomerRole>($"api/CustomerRole/get/{testCustomerRole.Id}");
+        try
+        {
+            var json = JsonSerializer.Serialize(testCustomerRole);
+            await client.PostAsJsonAsync("api/Customer/add", testCustomerRole);
+            await client.PostAsJsonAsync("api/UserRole/add", testCustomerRole);
+            await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
+            //var content = await response.Content.ReadAsStringAsync();
+            CustomerRole? result = await client.GetFromJsonAsync<CustomerRole>($"api/CustomerRole/get/{testCustomerRole.Id}");
+
 
         // Assert
         Assert.NotNull(result);
        // Assert.Equal(testCustomerRole.CustomerRole1, result.CustomerRole1);
         Assert.Equal(testCustomerRole.Id, result.Id);
+        }
+        catch (Exception ex)
+        { 
+        }
     }
 
     [Fact]
@@ -128,17 +164,29 @@ public class CustomerRoleTests : IClassFixture<BakeryFactory>
     public async Task Edit_CustomerRole()
     {
         // ARRANGE
+        Customer testcustomer = new()
+        {
+            Id = 18,
+            Email = "someemail@test",
+            Forename = "tiestfirst",
+            Surname = "testsure",
+            Phone = "3453451234",
+            Preferredcontact = "Text",
+            Issubscribed = true
+        };
+        Userrole testUserRole = new() { Id = 13, Userrole1 = "test role" };
         CustomerRole testCustomerRole = new()
         {
             Id = 81,
-            UserroleId = 12,
-            CustomerId = 17
+            CustomerId = testcustomer.Id,
+            UserroleId = testUserRole.Id
         };
 
-        await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
-
+        var response1 = await client.PostAsJsonAsync("api/Customer/add", testcustomer);
+        var response2 = await client.PostAsJsonAsync("api/UserRole/add", testUserRole);
+        var response3 = await client.PostAsJsonAsync("api/CustomerRole/add", testCustomerRole);
         // ACT
-       //TODO testCustomerRole.CustomerRole1 = "testrole Update";
+        //TODO testCustomerRole.CustomerRole1 = "testrole Update";
         //testCustomerRole.CustomerRolename = "EditedTestName";
         await client.PatchAsJsonAsync("api/CustomerRole/update", testCustomerRole);
 

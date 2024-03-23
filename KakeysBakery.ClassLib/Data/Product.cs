@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KakeysBakeryClassLib.Data;
-
+namespace KakeysBakeryClassLib.Data; 
 public partial class Product
 {
     public int Id { get; set; }

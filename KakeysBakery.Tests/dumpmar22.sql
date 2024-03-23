@@ -247,7 +247,7 @@ CREATE TABLE "KakeysBakery".basegood (
 	suggestedprice money NULL,
 	pastryid int4 NULL,
 	flavorid int4 NULL,
-	isavalible _bool NULL,
+	isavalible bool NULL,
 	CONSTRAINT basegood_pkey PRIMARY KEY (id),
 	CONSTRAINT basegoodname FOREIGN KEY (pastryid) REFERENCES "KakeysBakery".basegoodtype(id),
 	CONSTRAINT flavorid FOREIGN KEY (flavorid) REFERENCES "KakeysBakery".basegoodflavor(id)
@@ -278,8 +278,8 @@ CREATE TABLE "KakeysBakery".cart (
 
 CREATE TABLE "KakeysBakery".customer_role (
 	id serial4 NOT NULL,
-	userrole_id int4 NOT NULL,
-	customer_id int4 NOT NULL,
+	customer_id int4 NULL,
+	userrole_id int4 NULL,
 	CONSTRAINT customer_role_pkey PRIMARY KEY (id),
 	CONSTRAINT customer_role_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES "KakeysBakery".customer(id),
 	CONSTRAINT customer_role_userrole_id_fkey FOREIGN KEY (userrole_id) REFERENCES "KakeysBakery".userrole(id)

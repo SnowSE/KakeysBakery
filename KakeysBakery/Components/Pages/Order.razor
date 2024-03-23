@@ -42,15 +42,15 @@
 	</FooterTemplate>
 </Modal>
 
-<div class="mt-5 border vh-100 totalPage">
-	<div class="d-flex flex-wrap justify-content-between p-5 mt-5">
+<div class="mt-5 border totalPage">
+	<div class="d-flex flex-wrap justify-content-between">
 		@if (basegoodtypes == null)
 		{
 			<p>Loading products, please wait</p>
 		}
 		else
 		{
-			@foreach (Basegoodtype basegoodtype in basegoodtypes)
+@* 			@foreach (Basegoodtype basegoodtype in basegoodtypes)
 			{
 
 				<div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
@@ -60,6 +60,15 @@
 					<p>@basegoodtype.Basegood</p>
 				</div>
 
+			} *@
+
+			@foreach (Basegoodtype basegoodtype in basegoodtypes)
+			{
+				<div class="p-3 d-flex position-relative order-container">
+					<h3 class="typelabel">Cake</h3>
+					<img class="imgbutton img-fluid img-thumbnail rounded-5 shadow" src="images/SweetnessCupcakes.png">
+					<button @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await OnShowModalClick();}" class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
+				</div>
 			}
 		}
 	</div>
