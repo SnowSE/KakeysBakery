@@ -21,7 +21,7 @@
 				{
 					@if (basegoods.Isavalible)
 					{
-					<option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
+						<option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
 					}
 
 				}
@@ -30,7 +30,7 @@
 
 		<div>
 			<label>Quantity</label>
-			<input type="number" />
+			<input type="number" @onchange="QuantityChanged" />
 		</div>
 
 		<p>Total price: @currentBaseGood?.Suggestedprice</p>
@@ -95,6 +95,12 @@
 			int typeId = Convert.ToInt32(e.Value.ToString());
 			currentBaseGood = await basegood.GetBaseGoodFromFlavorAsync(clickedbasegoodid, typeId);
 		}
+	}
+
+	private void QuantityChanged(ChangeEventArgs e)
+	{
+		int quantity = Convert.ToInt32(e.Value.ToString());
+		//int total = currentBaseGood.Suggestedprice * (decimal)quantity;
 	}
 
 
