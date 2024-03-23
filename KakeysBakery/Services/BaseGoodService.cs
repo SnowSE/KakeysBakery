@@ -55,7 +55,7 @@ public class BaseGoodService : IBaseGoodService
 	public async Task<Basegood?> GetBaseGoodFromFlavorAsync(int id, int flavorid)
 	{
 		return await _context.Basegoods
-				.Where(b => b.Id == id)
+				.Where(b => b.Pastryid == id)
                 .Where(b => b.Flavorid == flavorid)
 				.FirstOrDefaultAsync();
 	}

@@ -14,24 +14,26 @@
 	<BodyTemplate>
 		<p>choose your type</p>
 		<select name="flavor" @onchange="SelectHasChanged">
+			<option> --- </option>
 			@if (baseGoodDetails is not null)
 			{
 				@foreach (Basegood basegoods in baseGoodDetails)
 				{
-					@* @if (basegoods.Isavalible)                      once the database is fixed *@
-
+					@if (basegoods.Isavalible)
+					{
 					<option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
+					}
 
 				}
 			}
 		</select>
 
-		@if (currentBaseGood is not null)
-		{
-			<div>
-				@currentBaseGood.Suggestedprice
-			</div>
-		}
+		<div>
+			<label>Quantity</label>
+			<input type="number" />
+		</div>
+
+		<p>Total price: @currentBaseGood?.Suggestedprice</p>
 
 	</BodyTemplate>
 	<FooterTemplate>
@@ -61,16 +63,6 @@
 			}
 		}
 	</div>
-@* 	@if (baseGoodDetails is not null)
-	{
-		<select>
-			<option> --- </option>
-			@foreach (Basegood basegoods in baseGoodDetails)
-			{
-				<option value="@basegoods.Flavor.Id">@basegoods.Flavor.Flavorname</option>
-			}
-		</select>
-	} *@
 </div>
 
 
