@@ -33,12 +33,26 @@
 			<input type="number" @onchange="QuantityChanged" />
 		</div>
 
-		<p>Total price: @currentBaseGood?.Suggestedprice</p>
+		@if(modalerror is null)
+		{
+			<p>Price of this item: @(currentBaseGood?.Suggestedprice * quantity)</p>
+		}
+		else
+		{
+			<p>Error: @modalerror</p>
+		}
 
 	</BodyTemplate>
 	<FooterTemplate>
 		<Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
-		<Button Color="ButtonColor.Primary">Add To Cart</Button>
+		@if (modalerror is null)
+		{	
+			<Button Color="ButtonColor.Primary">Add To Cart</Button>
+		}
+		else
+		{
+			
+		}
 	</FooterTemplate>
 </Modal>
 
@@ -77,6 +91,11 @@
 
 @code {
 	private Modal modal = default!;
+	Basegood? currentBaseGood;
+	List<Basegood>? baseGoodDetails;
+	int clickedbasegoodid;
+	decimal? quantity = 1;
+	string? modalerror;
 
 	private async Task OnShowModalClick()
 	{
@@ -99,14 +118,25 @@
 
 	private void QuantityChanged(ChangeEventArgs e)
 	{
-		int quantity = Convert.ToInt32(e.Value.ToString());
-		//int total = currentBaseGood.Suggestedprice * (decimal)quantity;
+		int testquantity = 1;
+		try
+		{
+			testquantity = Convert.ToInt32(e.Value?.ToString());
+			quantity = (decimal)testquantity;
+			modalerror = null;
+		}
+		catch
+		{
+			quantity = 1;
+			modalerror = "something went wrong, please try again";
+		}
+		if (testquantity <= 0)
+		{
+			modalerror = "please input a quantity larger than 1";
+			quantity = 1;
+		}
 	}
 
-
-	Basegood? currentBaseGood;
-	List<Basegood>? baseGoodDetails;
-	int clickedbasegoodid;
 
 	public async Task BaseGoodClicked(int basegoodtypeid)
 	{
