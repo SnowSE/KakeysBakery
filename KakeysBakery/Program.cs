@@ -5,8 +5,19 @@ using KakeysBakeryClassLib.Services.Interfaces;
 using KakeysBakeryClassLib.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 using KakeysBakery.Components.PayPalAuth;
+using Auth0.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;        
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
+using KakeysBakery.Components.AuthenticationStateSyncer;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//For Rendering the authorization state
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -27,6 +38,12 @@ builder.Services.AddScoped<IAddonFlavorService, AddonFlavorService>();
 builder.Services.AddScoped<IUserroleService, UserroleService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
+
+builder.Services
+    .AddAuth0WebAppAuthentication(options => {
+        options.Domain = builder.Configuration["Auth0:Domain"];
+        options.ClientId = builder.Configuration["Auth0:ClientId"];
+    });
 
 builder.Services.AddHttpClient();
 
@@ -55,6 +72,26 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+//for OAuth
+app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri = "/") =>
+{
+    var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
+            .WithRedirectUri(redirectUri)
+            .Build();
+
+    await httpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+});
+
+app.MapGet("/Account/Logout", async (HttpContext httpContext, string redirectUri = "/") =>
+{
+    var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
+            .WithRedirectUri(redirectUri)
+            .Build();
+
+    await httpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+    await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+});
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
