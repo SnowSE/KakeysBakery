@@ -7,9 +7,18 @@
 <h3>TestOrder</h3>
 <button @onclick="testorder"> testorder </button>
 
+<button @onclick="captureorder">captureorder</button>
+
 @code {
-    public void testorder()
+    string orderid;
+
+    public async void testorder()
     {
-        paypal.CreateOrder(100m);
+        orderid = await paypal.CreateOrder(100m);
+    }
+
+    public void captureorder()
+    {
+        paypal.CapturePayment(orderid);
     }
 }

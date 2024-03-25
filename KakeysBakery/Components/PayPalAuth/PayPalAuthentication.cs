@@ -1,6 +1,8 @@
 ﻿using MimeKit;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using static System.Net.WebRequestMethods;
 
@@ -9,124 +11,109 @@ namespace KakeysBakery.Components.PayPalAuth;
 
 public class PayPalAuthentication(HttpClient client, IConfiguration config) : IPayPalAuthentication
 {
-    const string baseurl = "https://api-m.sandbox.paypal.com/";
-    ///node.js form 
+	const string baseurl = "https://api-m.sandbox.paypal.com/";
 
-    public async Task<string> GetAuthToken()
-    {
-        
-        var fullUrl = $"{baseurl}v1/oauth2/token";
-        Headers headers = new Headers()
-        {
-            Authorization = "Basic " + config["Test_Client_id"] + ":" + config["Test_Client_secret"]
-        };
-        AuthToken token = new AuthToken()
-        {
-            body = "grant_type=client_credentials",
-            headers = headers,
-        };
+	public async Task<string> GetAuthToken()
+	{
+		var fullUrl = $"{baseurl}v1/oauth2/token";
 
-        var json = JsonSerializer.Serialize(token);
+		var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+		var secrets = config["Test_Client_id"] + ":" + config["Test_Client_secret"];
 
-        var response = await client.PostAsJsonAsync(fullUrl, json);
+		request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(secrets)));
 
-        return await response.Content.ReadAsStringAsync();
+		request.Content = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>("grant_type", "client_credentials") });
 
-        /*
-        const response = await axios(
-        {
-            url :  "v1/oauth2/token",
-            data : "grant_type=client_credentials",
-        auth:{
-            'username' : 'Client_id',
-            'password' : 'app_secret',
-        },
-        });
-         return response.data
-         */
-        //return null;
-    }
+		var response = await client.SendAsync(request);
 
-    public async void CreateOrder(decimal purchaseAmt)
-    {
-        var accessToken = await GetAuthToken();
-        var fullUrl = $"{baseurl}v2/checkout/orders";
+		var authinfo = await response.Content.ReadFromJsonAsync<AuthorizationResponse>();
+		return authinfo.access_token;
+	}
 
-        Headers header = new Headers()
-        {
-            Authorization = $"Bearer {accessToken}"
-        };
-        Amount amount = new Amount()
-        {
-            currency_code = "USD",
-            value = purchaseAmt
-        };
-        Purchase_Units purchase_Units = new Purchase_Units()
-        {
-            amount = amount
-        };
-        Body body = new Body()
-        {
-            intent = "CAPTURE",
-            purchase_units = [purchase_Units],
-        };
+	public class AuthorizationResponse
+	{
+		public string scope { get; set; }
+		public string access_token { get; set; }
+		public string token_type { get; set; }
+		public string app_id { get; set; }
+		public int expires_in { get; set; }
+		public string nonce { get; set; }
+	}
 
-        PaymentOrder baseJSON = new PaymentOrder()
-        {
-            method = "POST",
-            headers = header,
-            body = body
-        };
 
-        var json = JsonSerializer.Serialize(baseJSON);
+	public async Task<string> CreateOrder(decimal purchaseAmt)
+	{
+		var accessToken = await GetAuthToken();
+		var fullUrl = $"{baseurl}v2/checkout/orders";
 
-        var response = await client.PostAsJsonAsync(fullUrl, json);
-        
-        /*
-        await fetch (url,
-        {
-            method: "post",
-            headers:{
-               "Content-type": "application/json",
-               "Authorization": "Bearer ${accesstoken}",
-            },
-            body: {
-                "intent": "CAPTURE",
-                "purchase_units":
-               [
-                    {
-                        "amount": {
-                           "currency_code": "USD", 
-                            "value" : "purchaseAmt",
-                        },
-                    },
-                ],
-            },
-        }
-        );}
-        */
-    }
+		Amount saleamount = new Amount()
+		{
+			currency_code = "USD",
+			value = purchaseAmt
+		};
+		Purchase_Units purchase_Units = new Purchase_Units()
+		{
+			amount = saleamount
+		};
+		OrderBody body = new OrderBody()
+		{
+			intent = "CAPTURE",
+			purchase_units = [purchase_Units],
+		};
 
-    public async void CapturePayment(int orderid)
-    {
-        var accesstoken = await GetAuthToken();
-        var fullUrl = $"{baseurl}v2/checkout/orders/{orderid}/capture";
+		var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
 
-        Headers header = new Headers()
-        {
-            Authorization = $"Bearer {accesstoken}"
-        };
-        PaymentOrder baseJSON = new PaymentOrder()
-        {
-            method = "POST",
-            headers = header
-        };
+		request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var json = JsonSerializer.Serialize(baseJSON);
+		request.Content = new StringContent(JsonSerializer.Serialize(body));
+		request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-        var response = await client.PostAsJsonAsync(fullUrl, json);
-        
-        /*
+		var response = await client.SendAsync(request);
+
+		var authinfo = await response.Content.ReadFromJsonAsync<OrderId>();
+
+		return authinfo.ID;
+	}
+
+	public class OrderId
+	{
+		public string ID { get; set; }
+	}
+
+	public class OrderBody
+	{
+		public string intent { get; set; }
+		public Purchase_Units[] purchase_units { get; set; }
+	}
+
+	public class Purchase_Units
+	{
+		public Amount amount { get; set; }
+	}
+
+	public class Amount
+	{
+		public string currency_code { get; set; }
+		public decimal value { get; set; }
+	}
+
+	public async void CapturePayment(string orderid)
+	{
+		var accessToken = await GetAuthToken();
+		var fullUrl = $"{baseurl}v2/checkout/orders/{orderid}/capture";
+
+		var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+
+		request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        request.Content = new StringContent("");
+        request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+		var response = await client.SendAsync(request);
+
+		var authinfo = await response.Content.ReadAsStringAsync();
+
+		/*
         await fetch (url, {
             method: "post",
             headers:{
@@ -135,5 +122,5 @@ public class PayPalAuthentication(HttpClient client, IConfiguration config) : IP
             },
         });
          */
-    }
+	}
 }

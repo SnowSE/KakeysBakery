@@ -3,6 +3,6 @@
 public interface IPayPalAuthentication
 {
     public  Task<string> GetAuthToken();
-    public  void CreateOrder(decimal purchaseAmt);
-    public  void CapturePayment(int orderid);
+    public  Task<string> CreateOrder(decimal purchaseAmt);
+    public  void CapturePayment(string orderid);
 }
