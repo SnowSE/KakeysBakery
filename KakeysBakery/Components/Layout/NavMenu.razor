@@ -1,5 +1,5 @@
 ﻿@using KakeysBakery.Components.OAuth
-<nav class="navbar navbar-expand-xl border-bottom border-body shadow-xl rounded-bottom" data-bs-theme="dark" style="background-color: #4E362E">
+<nav class="navbar navbar-expand-xl border-bottom border-body shadow-xl" data-bs-theme="dark" style="background-color: #4E362E">
     <div class="container-fluid">
 
         @* <a class="navbar-brand me-5" href="#">Navbar</a> *@
@@ -41,19 +41,20 @@
                     <a class="d-xl-none nav-link" href="cart">Cart</a>
                 </div>
 
-                <div class="nav-item px-1 d-flex justify-content-center">
+                <div class="nav-item px-1 d-flex justify-content-center align-items-center">
                     <CascadingAuthenticationState>
                         <AuthorizeView>
+
                             <Authorized>
-                                <div class="nav-item px-1 d-flex justify-content-center">
-                                    <a class="nav-item" href="Account/Logout">Log out</a>
-                                </div>
+                                <NavLink class="nav-link mx-1 p-3" href="Account/Logout" style="z-index:2" Match="NavLinkMatch.All">
+                                    <span class="nav-item p-3" href="#">Log Out</span>
+                                </NavLink>
                             </Authorized>
                     
                             <NotAuthorized>
-                                <div class="nav-item px-1 d-flex justify-content-center">
-                                    <a class="nav-item" href="Account/Login?redirectUri=/">Log in</a>
-                                </div>
+                                <NavLink class="nav-link mx-1 p-3" href="Account/Login?redirectUri=/" style="z-index:2" Match="NavLinkMatch.All">
+                                    <span class="nav-item p-3" href="#">Log In</span>
+                                </NavLink>
                             </NotAuthorized>
                     
                         </AuthorizeView>
