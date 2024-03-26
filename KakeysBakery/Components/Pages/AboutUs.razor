@@ -1,12 +1,7 @@
 ﻿@page "/AboutUs"
-@attribute [Authorize]
-@attribute [StreamRendering]
-@rendermode InteractiveServer
 
 <div id="totalPage">
 <h3>AboutUs</h3>
-
-<p>Hello @Username!</p>
 
 <p id="aboutus">
     Kakey's Bakery: A Journey of Passion
@@ -18,22 +13,5 @@
 </div>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
 
-    private string Username = "";
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (authenticationState is not null)
-        {
-            var state = await authenticationState;
-
-            Username = state?.User?.Identity?.Name ?? string.Empty;
-
-            StateHasChanged();
-        }
-        await base.OnInitializedAsync();
-
-    }
 }

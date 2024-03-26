@@ -3,6 +3,11 @@
 @inject ICustomerService customer
 @inject IProductService product
 
+@attribute [Authorize]
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+<p>Hello @Username!</p>
 
 <div class="align-content-center p-5" id="totalCart">
     <div class="text-center">
@@ -59,5 +64,22 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
 
+    private string Username = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            var state = await authenticationState;
+
+            Username = state?.User?.Identity?.Name ?? string.Empty;
+
+            StateHasChanged();
+        }
+        await base.OnInitializedAsync();
+
+    }
 }

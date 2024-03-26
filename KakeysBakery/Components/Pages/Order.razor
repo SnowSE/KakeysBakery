@@ -9,6 +9,11 @@
 
 <h3 class="pageTitle">Order</h3>
 
+@attribute [Authorize]
+@attribute [StreamRendering]
+
+<p>Hello @Username!</p>
+
 
 <Modal @ref="modal" Title="Modal Title">
 	<BodyTemplate>
@@ -90,6 +95,39 @@
 
 
 @code {
+	//for authentication
+	HttpClient client = new HttpClient();
+	[CascadingParameter]
+	private Task<AuthenticationState>? authenticationState { get; set; }
+
+	private string Username = "";
+
+	protected override async Task OnInitializedAsync()
+	{
+		basegoodtypes = await basegoodtype.GetBaseGoodTypeListAsync();
+		if (authenticationState is not null)
+		{
+			var state = await authenticationState;
+
+			Customer User = new Customer();
+			User.Email = state.User.FindFirst(c => c.Type == "email")?.Value;
+			User.Forename = state?.User?.Identity?.Name;
+
+			Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
+
+			if (result is null)
+			{ await client.PostAsJsonAsync("api/customer/add", User); };
+
+
+			Username = state?.User?.Identity?.Name ?? string.Empty;
+
+			StateHasChanged();
+		}
+		await base.OnInitializedAsync();
+
+	}
+
+
 	private Modal modal = default!;
 	Basegood? currentBaseGood;
 	List<Basegood>? baseGoodDetails;
@@ -146,9 +184,5 @@
 
 	public List<Basegoodtype>? basegoodtypes;
 
-	override protected async Task OnInitializedAsync()
-	{
-		basegoodtypes = await basegoodtype.GetBaseGoodTypeListAsync();
-	}
 
 }
