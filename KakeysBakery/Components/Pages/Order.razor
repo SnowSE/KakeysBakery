@@ -118,12 +118,12 @@
 	{
 		if (authenticationState is null) { return; }
 		var state = await authenticationState;
-		Username = state.User.Identity.Name;
+		Username = state?.User?.Identity?.Name ?? "";
 		Customer User = new Customer();
 
-		var userEmail = state.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
+		var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
 		User.Forename = state?.User?.Identity?.Name;
-		User.Email = userEmail;
+		User.Email = userEmail ?? "";
 		//check if the customer with this email exists
 		Customer? result = null;
 		try

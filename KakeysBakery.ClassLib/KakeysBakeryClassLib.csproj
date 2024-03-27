@@ -5,12 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>dc6cba3e-344a-4a10-a0b6-f71e5c4f8bb3</UserSecretsId>
+	<NoWarn>$(NoWarn);NETSDK1206</NoWarn> <!--Hehe-->
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.4.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
-    <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
     <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
   </ItemGroup>
 
