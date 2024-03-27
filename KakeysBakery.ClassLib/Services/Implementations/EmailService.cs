@@ -24,8 +24,8 @@ public class EmailService(IConfiguration _config) : IEmailService
     {
         try 
         {
-            string senderEmail = _config["KakeysEmail"];
-            string senderPass = _config["EmailAppPass"];
+            string senderEmail = _config["KakeysEmail"] ?? "";
+            string senderPass = _config["EmailAppPass"] ?? "";
 
             using (var client = new MailKit.Net.Smtp.SmtpClient())
             {

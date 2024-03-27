@@ -27,17 +27,17 @@ public class PayPalAuthentication(HttpClient client, IConfiguration config) : IP
 		var response = await client.SendAsync(request);
 
 		var authinfo = await response.Content.ReadFromJsonAsync<AuthorizationResponse>();
-		return authinfo.access_token;
+		return authinfo!.access_token!;
 	}
 
 	public class AuthorizationResponse
 	{
-		public string scope { get; set; }
-		public string access_token { get; set; }
-		public string token_type { get; set; }
-		public string app_id { get; set; }
+		public string? scope { get; set; }
+		public string? access_token { get; set; }
+		public string? token_type { get; set; }
+		public string? app_id { get; set; }
 		public int expires_in { get; set; }
-		public string nonce { get; set; }
+		public string? nonce { get; set; }
 	}
 
 
@@ -72,28 +72,28 @@ public class PayPalAuthentication(HttpClient client, IConfiguration config) : IP
 
 		var authinfo = await response.Content.ReadFromJsonAsync<OrderId>();
 
-		return authinfo.ID;
+		return authinfo!.ID;
 	}
 
 	public class OrderId
 	{
-		public string ID { get; set; }
+		public string ID { get; set; } = "";
 	}
 
 	public class OrderBody
 	{
-		public string intent { get; set; }
-		public Purchase_Units[] purchase_units { get; set; }
+		public string intent { get; set; } = "";
+		public Purchase_Units[] purchase_units { get; set; } = [];
 	}
 
 	public class Purchase_Units
 	{
-		public Amount amount { get; set; }
+		public Amount? amount { get; set; }
 	}
 
 	public class Amount
 	{
-		public string currency_code { get; set; }
+		public string currency_code { get; set; } = "";
 		public decimal value { get; set; }
 	}
 
