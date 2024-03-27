@@ -114,25 +114,27 @@
 	protected override async Task OnInitializedAsync()
 	{
 		baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync();
+
 		if (authenticationState is not null)
 		{
 			var state = await authenticationState;
 
 			Customer User = new Customer();
-			User.Email = state.User.FindFirst(c => c.Type == "email")?.Value;
+			//User.Email = state.User.FindFirst(c => c.Type == "email")?.Value;
 			User.Forename = state?.User?.Identity?.Name;
 
-			Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
+			//Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
 
-			if (result is null)
-			{ await client.PostAsJsonAsync("api/customer/add", User); };
+			//if (result is null)
+			//{ await client.PostAsJsonAsync("api/customer/add", User); };
 
 
 			Username = state?.User?.Identity?.Name ?? string.Empty;
 
 			StateHasChanged();
 		}
-		await base.OnInitializedAsync();
+
+
 	}
 
 	private async Task OnShowModalClick()
