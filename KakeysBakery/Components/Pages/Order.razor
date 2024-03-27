@@ -11,9 +11,9 @@
 <h3 class="pageTitle">Order</h3>
 
 @attribute [Authorize]
-@attribute [StreamRendering]
 
 <p>Hello @Username!</p>
+<p>Error: @ErrorString</p>
 
 
 <Modal @ref="modal" Title="Modal Title">
@@ -97,27 +97,43 @@
 	string? modalError;
 	public List<Basegoodtype>? baseGoodTypes;
 
+	string ErrorString = "No Error";
+
 
 	protected override async Task OnInitializedAsync()
 	{
-		baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync(); // TODO: This should be calling the controller
+		client.BaseAddress = new Uri("https://localhost:7196/");
 
+		baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
+		await AuthenticateUser();
+
+		StateHasChanged();
+	}
+
+	private async Task AuthenticateUser()
+	{
 		if (authenticationState is null) { return; }
 		var state = await authenticationState;
 
+		Customer User = new();
+		string[] name = state?.User?.Identity?.Name?.Split(' ') ?? [];
+		if (name.Length == 0) { return; }
 
-		Customer User = new Customer();
-		User.Forename = state?.User?.Identity?.Name?.Split(" ")[0];
-		User.Forename = state?.User?.Identity?.Name?.Split(" ")[1];
+		User.Forename = name[0];
+		User.Surname = name.Length == 1 ? "" : name[1];
 
-		//User.Email = state.User.FindFirst(c => c.Type == "email")?.Value;
-		//Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
-		//if (result is null)
-		//{ await client.PostAsJsonAsync("api/customer/add", User); };
+		// User.Email = state.User.FindFirst(c => c.Type == "email")?.Value;
+		Customer? result = null;
+		try
+		{
+			result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
+		}
+		catch {}
+		if (result is null) {
+			await client.PostAsJsonAsync("api/customer/add", User);
+		}
 
-		Username = state?.User?.Identity?.Name ?? string.Empty;
-
-		StateHasChanged();
+		Username = state?.User?.Identity?.Name ?? "";
 	}
 
 	private async Task SelectHasChanged(ChangeEventArgs e)
@@ -125,7 +141,8 @@
 		if (e.Value is null) { return; }
 
 		int typeId = Convert.ToInt32(e.Value.ToString());
-		currentBaseGood = await basegood.GetBaseGoodFromFlavorAsync(clickedBaseGoodId, typeId); // TODO: This should be calling a controller
+		currentBaseGood = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{clickedBaseGoodId}/{typeId}");
+
 	}
 
 	private void QuantityChanged(ChangeEventArgs e)
@@ -152,7 +169,7 @@
 	public async Task BaseGoodClicked(int basegoodtypeid)
 	{
 		clickedBaseGoodId = basegoodtypeid;
-		baseGoodDetails = await basegood.GetBasegoodsFromTypeAsync(basegoodtypeid);
+		baseGoodDetails = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegood/get_from_type/{basegoodtypeid}");
 		if (basegoodtypeid == 1)
 		{
 			//navmanager.NavigateTo("/Customize");
