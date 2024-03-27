@@ -50,7 +50,7 @@
 
 	</BodyTemplate>
 	<FooterTemplate>
-		<Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+		<Button Color="ButtonColor.Secondary" @onclick="async () => { await modal.HideAsync(); }">Close</Button>
 		@if (modalError is null)
 		{	
 			<Button Color="ButtonColor.Primary">Add To Cart</Button>
@@ -70,24 +70,11 @@
 		}
 		else
 		{
-@* 			@foreach (Basegoodtype basegoodtype in basegoodtypes)
-			{
-
-				<div class="p-3 d-flex flex-column position-relative" style="width: 30rem;">
-					<h3 class="typelabel">@basegoodtype.Basegood</h3>
-					<img class="imgbutton img-fluid img-thumbnail rounded-5 shadow" src="images/SweetnessCupcakes.png">
-					<button @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await OnShowModalClick();}" class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button>
-					<p>@basegoodtype.Basegood</p>
-				</div>
-
-			} *@
-
 			@foreach (Basegoodtype basegoodtype in baseGoodTypes)
 			{
-				<div class="m-3 p-3 d-flex position-relative order-container rounded-5" @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await OnShowModalClick();}">
+				<div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await modal.ShowAsync();}">
 					<h3 class="typelabel" style="z-index: 1;">@basegoodtype.Basegood</h3>
 					<img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(basegoodtype.Basegood).jpg">
-					@* <button @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await OnShowModalClick();}" class="btn cartbutton"><i class="bi bi-cart-plus h1 px-3 cart" /></button> *@
 				</div>
 			}
 		}
@@ -97,11 +84,11 @@
 
 @code {
 	//for authentication
-	HttpClient client = new HttpClient();
 	[CascadingParameter]
 	private Task<AuthenticationState>? authenticationState { get; set; }
 	private string Username = "";
-	
+	HttpClient client = new();
+
 	private Modal modal = default!;
 	Basegood? currentBaseGood;
 	List<Basegood>? baseGoodDetails;
@@ -113,47 +100,32 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync();
+		baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync(); // TODO: This should be calling the controller
 
-		if (authenticationState is not null)
-		{
-			var state = await authenticationState;
-
-			Customer User = new Customer();
-			//User.Email = state.User.FindFirst(c => c.Type == "email")?.Value;
-			User.Forename = state?.User?.Identity?.Name;
-
-			//Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
-
-			//if (result is null)
-			//{ await client.PostAsJsonAsync("api/customer/add", User); };
+		if (authenticationState is null) { return; }
+		var state = await authenticationState;
 
 
-			Username = state?.User?.Identity?.Name ?? string.Empty;
+		Customer User = new Customer();
+		User.Forename = state?.User?.Identity?.Name?.Split(" ")[0];
+		User.Forename = state?.User?.Identity?.Name?.Split(" ")[1];
 
-			StateHasChanged();
-		}
+		//User.Email = state.User.FindFirst(c => c.Type == "email")?.Value;
+		//Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
+		//if (result is null)
+		//{ await client.PostAsJsonAsync("api/customer/add", User); };
 
+		Username = state?.User?.Identity?.Name ?? string.Empty;
 
-	}
-
-	private async Task OnShowModalClick()
-	{
-		await modal.ShowAsync();
-	}
-
-	private async Task OnHideModalClick()
-	{
-		await modal.HideAsync();
+		StateHasChanged();
 	}
 
 	private async Task SelectHasChanged(ChangeEventArgs e)
 	{
-		if (e.Value is not null)
-		{
-			int typeId = Convert.ToInt32(e.Value.ToString());
-			currentBaseGood = await basegood.GetBaseGoodFromFlavorAsync(clickedBaseGoodId, typeId);
-		}
+		if (e.Value is null) { return; }
+
+		int typeId = Convert.ToInt32(e.Value.ToString());
+		currentBaseGood = await basegood.GetBaseGoodFromFlavorAsync(clickedBaseGoodId, typeId); // TODO: This should be calling a controller
 	}
 
 	private void QuantityChanged(ChangeEventArgs e)
@@ -186,7 +158,4 @@
 			//navmanager.NavigateTo("/Customize");
 		}
 	}
-
-
-
 }

@@ -42,8 +42,8 @@ builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {
-        options.Domain = builder.Configuration["Auth0Domain"];
-        options.ClientId = builder.Configuration["Auth0ClientId"];
+        options.Domain = builder.Configuration["Auth0Domain"] ?? "";
+        options.ClientId = builder.Configuration["Auth0ClientId"] ?? "";
     });
 
 builder.Services.AddHttpClient();
