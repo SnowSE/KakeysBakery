@@ -1,5 +1,6 @@
 ﻿@page "/Order"
 @using BlazorBootstrap
+@using System.Security.Claims
 @inject IBaseGoodService basegood
 @inject IProductService product
 @inject ICustomerService customer
@@ -101,7 +102,7 @@
 	[CascadingParameter]
 	private Task<AuthenticationState>? authenticationState { get; set; }
 	private string Username = "";
-	
+
 	private Modal modal = default!;
 	Basegood? currentBaseGood;
 	List<Basegood>? baseGoodDetails;
@@ -120,16 +121,18 @@
 			var state = await authenticationState;
 
 			Customer User = new Customer();
-			//User.Email = state.User.FindFirst(c => c.Type == "email")?.Value;
+
+			var userEmail = state.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
 			User.Forename = state?.User?.Identity?.Name;
+			User.Email = userEmail;
+			//check if the customer with this email exists
+			Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{userEmail}");
 
-			//Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
+			//if they dont exist in the database, create it
+			if (result is null)
+			{ await client.PostAsJsonAsync("api/customer/add", User); };
 
-			//if (result is null)
-			//{ await client.PostAsJsonAsync("api/customer/add", User); };
-
-
-			Username = state?.User?.Identity?.Name ?? string.Empty;
+			Customer? result2 = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{userEmail}");
 
 			StateHasChanged();
 		}

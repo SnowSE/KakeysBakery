@@ -15,4 +15,5 @@ public interface ICustomerService
     public Task CreateCustomerAsync(Customer customer);
     public Task DeleteCustomerAsync(int customerId);
     public Task UpdateCustomerAsync(Customer customer);
+    public Task<Customer?> GetCustomerByEmail(string email);
 }

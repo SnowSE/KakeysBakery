@@ -41,7 +41,18 @@ public class CustomerController : ControllerBase
         return Ok(prod); // Return the addon if found
     }
 
-    [HttpPost("add")]
+	[HttpGet("get_by_email/{email}")]
+	public async Task<IActionResult> GetCustomerAsyncByEmail(string email)
+	{
+		var prod = await CustomerService.GetCustomerByEmail(email);
+		if (prod == null)
+		{
+			return NotFound(); // Return 404 Not Found status
+		}
+		return Ok(prod); // Return the addon if found
+	}
+
+	[HttpPost("add")]
     public async Task CreateCustomerAsync(Customer customer)
     {
         await CustomerService.CreateCustomerAsync(customer);
