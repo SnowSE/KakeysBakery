@@ -1,6 +1,5 @@
 ﻿@page "/Order"
 @using BlazorBootstrap
-@using System.Security.Claims
 @inject IBaseGoodService basegood
 @inject IProductService product
 @inject ICustomerService customer
@@ -8,10 +7,12 @@
 @inject NavigationManager navmanager
 
 @rendermode InteractiveServer
+@attribute [Authorize]
+
 
 <h3 class="pageTitle">Order</h3>
 
-@attribute [Authorize]
+
 
 <p>Hello @Username!</p>
 <p>Error: @ErrorString</p>
@@ -105,51 +106,37 @@
 	{
 		baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync();
 
-		if (authenticationState is not null)
-		{
-			var state = await authenticationState;
+		client.BaseAddress = new Uri("https://localhost:7196/");
 
-			Customer User = new Customer();
+		baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
+		await AuthenticateUser();
+		StateHasChanged();
 
-			var userEmail = state.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
-			User.Forename = state?.User?.Identity?.Name;
-			User.Email = userEmail;
-			//check if the customer with this email exists
-			Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{userEmail}");
-
-			//if they dont exist in the database, create it
-			if (result is null)
-			{ await client.PostAsJsonAsync("api/customer/add", User); };
-
-			Customer? result2 = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{userEmail}");
-
-			StateHasChanged();
-		}
+	}
 
 	private async Task AuthenticateUser()
 	{
 		if (authenticationState is null) { return; }
 		var state = await authenticationState;
+		Username = state.User.Identity.Name;
+		Customer User = new Customer();
 
-		Customer User = new();
-		string[] name = state?.User?.Identity?.Name?.Split(' ') ?? [];
-		if (name.Length == 0) { return; }
-
-		User.Forename = name[0];
-		User.Surname = name.Length == 1 ? "" : name[1];
-
-		// User.Email = state.User.FindFirst(c => c.Type == "email")?.Value;
+		var userEmail = state.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
+		User.Forename = state?.User?.Identity?.Name;
+		User.Email = userEmail;
+		//check if the customer with this email exists
 		Customer? result = null;
 		try
 		{
 			result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
 		}
-		catch {}
-		if (result is null) {
+		catch { }
+		if (result is null)
+		{
 			await client.PostAsJsonAsync("api/customer/add", User);
 		}
 
-		Username = state?.User?.Identity?.Name ?? "";
+		Customer? result2 = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{userEmail}");
 	}
 
 	private async Task SelectHasChanged(ChangeEventArgs e)
