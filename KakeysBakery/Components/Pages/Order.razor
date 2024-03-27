@@ -7,8 +7,8 @@
 @inject NavigationManager navmanager
 
 @rendermode InteractiveServer
-@attribute [Authorize]
-
+@* @attribute [Authorize]
+ *@
 
 <h3 class="pageTitle">Order</h3>
 
@@ -20,7 +20,8 @@
 
 <Modal @ref="modal" Title="Modal Title">
 	<BodyTemplate>
-		<p>choose your type</p>
+		<div id="Modal">
+			<label>Choose @baseGoodTypes[clickedBaseGoodId -2].Basegood Type:</label>
 		<select name="flavor" @onchange="SelectHasChanged">
 			<option> --- </option>
 			@if (baseGoodDetails is not null)
@@ -49,7 +50,7 @@
 		{
 			<p>Error: @modalError</p>
 		}
-
+        </div>
 	</BodyTemplate>
 	<FooterTemplate>
 		<Button Color="ButtonColor.Secondary" @onclick="async () => { await modal.HideAsync(); }">Close</Button>
@@ -109,7 +110,7 @@
 		client.BaseAddress = new Uri("https://localhost:7196/");
 
 		baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
-		await AuthenticateUser();
+		//await AuthenticateUser();
 		StateHasChanged();
 
 	}
