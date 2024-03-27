@@ -1,0 +1,122 @@
+﻿@page "/admin/edit-product"
+@inject IAddonFlavorService addonFlavor
+@inject IAddonService addon
+@inject IAddonTypeService addonType
+@inject IBaseGoodFlavorService baseGoodFlavor
+@inject IBaseGoodService baseGood
+@inject IBaseGoodTypeService baseGoodType
+
+@rendermode InteractiveServer
+
+<p>What would you like to edit?</p>
+<button @onclick="ToppingAvailable">Topping</button>
+<button @onclick="ProductAvailable">Product</button>
+
+<div>
+	@if (isEditingProduct)
+	{
+		if (baseGoodTypes is null)
+		{
+			<p> Please wait while we grab the product list</p>
+		}
+		else
+		{
+			<select>
+				@foreach (Basegoodtype good in baseGoodTypes)
+				{
+					<option value="@good.Id">@good.Basegood</option>
+				}
+			</select>
+			<button @onclick="AddNewBaseProduct">Add New Product</button>
+
+			<button @onclick="DeleteBaseProduct">Delete Selected Product</button>
+
+			<button @onclick="EditBaseProduct">Edit Selected Product</button>
+
+		}
+	}
+	@if (isEditingTopping)
+	{
+		if (addonTypes is null)
+		{
+			<p> Please wait while we grab the product list</p>
+		}
+		else
+		{
+		<select>
+			@foreach (Addontype addon in addonTypes)
+			{
+				<option value="@addon.Id">@addon.Basetype</option>
+			}
+		</select>
+		<button @onclick="AddNewtopping">Add New Topping</button>
+
+		<button @onclick="DeleteTopping">Delete Selected Topping</button>
+
+		<button @onclick="EditTopping">Edit Selected Topping</button>
+		}
+	}
+
+</div>
+
+@code {
+	public bool isAvailable;
+	public List<Addon>? addons;
+	public List<Addonflavor>? addonFlavors;
+	public List<Addontype>? addonTypes;
+	public List<Basegood>? baseGoods;
+	public List<Basegoodflavor>? baseGoodFlavors;
+	public List<Basegoodtype>? baseGoodTypes;
+	public Basegood? selectedBaseGood;
+	public bool isEditingTopping = false;
+	public bool isEditingProduct = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		addons = await addon.GetAddonListAsync();
+		addonFlavors = await addonFlavor.GetAddonFlavorListAsync();
+		addonTypes = await addonType.GetAddonTypeListAsync();
+
+		baseGoodFlavors = await baseGoodFlavor.GetBaseGoodFlavorListAsync();
+		baseGoodTypes = await baseGoodType.GetBaseGoodTypeListAsync();
+		baseGoods = await baseGood.GetBaseGoodListAsync();
+	}
+
+	public void AddNewtopping()
+	{
+		throw new NotImplementedException();
+	}
+
+	public void DeleteTopping()
+	{
+		throw new NotImplementedException();
+	}
+	public void EditTopping()
+	{
+		throw new NotImplementedException();
+	}
+
+	public void AddNewBaseProduct()
+	{
+		throw new NotImplementedException();
+	}
+
+	public void DeleteBaseProduct(){
+		throw new NotImplementedException();
+	}
+	public void EditBaseProduct()
+	{
+		throw new NotImplementedException();
+	}
+
+	public void ToppingAvailable()
+	{
+		isEditingTopping = !isEditingTopping;
+		isEditingProduct = false;
+	}
+	public void ProductAvailable()
+	{
+		isEditingProduct = !isEditingProduct;
+		isEditingTopping = false;
+	}
+}

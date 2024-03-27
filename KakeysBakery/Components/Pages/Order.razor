@@ -4,6 +4,7 @@
 @inject IProductService product
 @inject ICustomerService customer
 @inject IBaseGoodTypeService basegoodtype
+@inject NavigationManager navmanager
 
 @rendermode InteractiveServer
 
@@ -38,19 +39,19 @@
 			<input type="number" @onchange="QuantityChanged" />
 		</div>
 
-		@if(modalerror is null)
+		@if(modalError is null)
 		{
 			<p>Price of this item: @(currentBaseGood?.Suggestedprice * quantity)</p>
 		}
 		else
 		{
-			<p>Error: @modalerror</p>
+			<p>Error: @modalError</p>
 		}
 
 	</BodyTemplate>
 	<FooterTemplate>
 		<Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
-		@if (modalerror is null)
+		@if (modalError is null)
 		{	
 			<Button Color="ButtonColor.Primary">Add To Cart</Button>
 		}
@@ -63,7 +64,7 @@
 
 <div class="mt-5 border totalPage">
 	<div class="d-flex flex-wrap justify-content-center">
-		@if (basegoodtypes == null)
+		@if (baseGoodTypes == null)
 		{
 			<p>Loading products, please wait</p>
 		}
@@ -81,7 +82,7 @@
 
 			} *@
 
-			@foreach (Basegoodtype basegoodtype in basegoodtypes)
+			@foreach (Basegoodtype basegoodtype in baseGoodTypes)
 			{
 				<div class="m-3 p-3 d-flex position-relative order-container rounded-5" @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await OnShowModalClick();}">
 					<h3 class="typelabel" style="z-index: 1;">@basegoodtype.Basegood</h3>
@@ -99,12 +100,20 @@
 	HttpClient client = new HttpClient();
 	[CascadingParameter]
 	private Task<AuthenticationState>? authenticationState { get; set; }
-
 	private string Username = "";
+	
+	private Modal modal = default!;
+	Basegood? currentBaseGood;
+	List<Basegood>? baseGoodDetails;
+	int clickedBaseGoodId;
+	decimal? quantity = 1;
+	string? modalError;
+	public List<Basegoodtype>? baseGoodTypes;
+
 
 	protected override async Task OnInitializedAsync()
 	{
-		basegoodtypes = await basegoodtype.GetBaseGoodTypeListAsync();
+		baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync();
 		if (authenticationState is not null)
 		{
 			var state = await authenticationState;
@@ -124,16 +133,7 @@
 			StateHasChanged();
 		}
 		await base.OnInitializedAsync();
-
 	}
-
-
-	private Modal modal = default!;
-	Basegood? currentBaseGood;
-	List<Basegood>? baseGoodDetails;
-	int clickedbasegoodid;
-	decimal? quantity = 1;
-	string? modalerror;
 
 	private async Task OnShowModalClick()
 	{
@@ -150,7 +150,7 @@
 		if (e.Value is not null)
 		{
 			int typeId = Convert.ToInt32(e.Value.ToString());
-			currentBaseGood = await basegood.GetBaseGoodFromFlavorAsync(clickedbasegoodid, typeId);
+			currentBaseGood = await basegood.GetBaseGoodFromFlavorAsync(clickedBaseGoodId, typeId);
 		}
 	}
 
@@ -161,28 +161,30 @@
 		{
 			testquantity = Convert.ToInt32(e.Value?.ToString());
 			quantity = (decimal)testquantity;
-			modalerror = null;
+			modalError = null;
 		}
 		catch
 		{
 			quantity = 1;
-			modalerror = "something went wrong, please try again";
+			modalError = "something went wrong, please try again";
 		}
 		if (testquantity <= 0)
 		{
-			modalerror = "please input a quantity larger than 1";
+			modalError = "please input a quantity larger than 1";
 			quantity = 1;
 		}
 	}
 
-
 	public async Task BaseGoodClicked(int basegoodtypeid)
 	{
-		clickedbasegoodid = basegoodtypeid;
+		clickedBaseGoodId = basegoodtypeid;
 		baseGoodDetails = await basegood.GetBasegoodsFromTypeAsync(basegoodtypeid);
+		if (basegoodtypeid == 1)
+		{
+			//navmanager.NavigateTo("/Customize");
+		}
 	}
 
-	public List<Basegoodtype>? basegoodtypes;
 
 
 }
