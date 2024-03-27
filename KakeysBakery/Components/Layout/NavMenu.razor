@@ -46,14 +46,18 @@
                         <AuthorizeView>
 
                             <Authorized>
-                                <NavLink class="nav-link mx-1 p-3" href="Account/Logout" style="z-index:2" Match="NavLinkMatch.All">
-                                    <span class="nav-item p-3" href="#">Log Out</span>
+                                <NavLink class="nav-link mx-1" href="Account/Logout" style="z-index:2" Match="NavLinkMatch.All">
+                                    <span class="nav-item d-none d-xl-inline p-3" href="#">Log Out</span>
+                                    <span class="nav-item d-xl-none" href="#">Log Out</span>
+
                                 </NavLink>
                             </Authorized>
                     
                             <NotAuthorized>
-                                <NavLink class="nav-link mx-1 p-3" href="Account/Login?redirectUri=/" style="z-index:2" Match="NavLinkMatch.All">
-                                    <span class="nav-item p-3" href="#">Log In</span>
+                                <NavLink class="nav-link mx-1" href="Account/Login?redirectUri=/" style="z-index:2" Match="NavLinkMatch.All">
+                                    <span class="nav-item d-none d-xl-inline p-3" href="#">Log In</span>
+                                    <span class="nav-item d-xl-none" href="#">Log Out</span>
+
                                 </NavLink>
                             </NotAuthorized>
                     

@@ -79,6 +79,5 @@ public class BaseGoodService : IBaseGoodService
             return await _context.Basegoods.Where(i => i.Pastryid==BasegoodTypeId).Include(i => i.Flavor).ToListAsync();
         }
         catch { return new List<Basegood>(); }
-       
     }
 }

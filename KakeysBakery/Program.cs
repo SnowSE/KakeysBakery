@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using KakeysBakery.Components.AuthenticationStateSyncer;
 using Microsoft.AspNetCore.Components;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +54,7 @@ builder.Services.AddScoped<IPayPalAuthentication,PayPalAuthentication>();
 
 builder.Services.AddBlazorBootstrap();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
 builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
 
 builder.Services.AddEndpointsApiExplorer();

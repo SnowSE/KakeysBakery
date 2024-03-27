@@ -1,4 +1,5 @@
 ﻿using KakeysBakery.Services;
+using KakeysBakeryClassLib.Data;
 using KakeysBakeryClassLib.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,8 +31,19 @@ public class BasegoodController : ControllerBase
         return Ok(basegood); // Return the addon if found
     }
 
+    [HttpGet("get_from_type/{id}")]
+    public async Task<List<Basegood>> GetBasegoodsFromTypeAsync(int id)
+	{
+		return await baseGoodService.GetBasegoodsFromTypeAsync(id);
+	}
 
-    [HttpPost("add")]
+	[HttpGet("get_from_flavor/{id}/{flavorId}")]
+	public async Task<Basegood?> GetBasegoodsFromFlavorAsync(int id, int flavorId)
+	{
+		return await baseGoodService.GetBaseGoodFromFlavorAsync(id, flavorId);
+	}
+
+	[HttpPost("add")]
     public async Task CreateBaseGoodAsync(Basegood basegood)
     {
         await baseGoodService.CreateBaseGoodAsync(basegood);
