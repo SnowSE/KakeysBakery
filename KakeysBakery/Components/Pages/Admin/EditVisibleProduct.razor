@@ -8,13 +8,15 @@
 
 @rendermode InteractiveServer
 
-<p>What would you like to edit?</p>
+<p>What would you like to edit or add?</p>
 <button @onclick="ToppingAvailable">Topping</button>
 <button @onclick="ProductAvailable">Product</button>
 
 <div>
 	@if (isEditingProduct)
 	{
+		<button @onclick="AddNewBaseProduct">Add New Product</button>
+
 		if (baseGoodTypes is null)
 		{
 			<p> Please wait while we grab the product list</p>
@@ -27,7 +29,6 @@
 					<option value="@good.Id">@good.Basegood</option>
 				}
 			</select>
-			<button @onclick="AddNewBaseProduct">Add New Product</button>
 
 			<button @onclick="DeleteBaseProduct">Delete Selected Product</button>
 
@@ -37,6 +38,8 @@
 	}
 	@if (isEditingTopping)
 	{
+		<button @onclick="AddNewtopping">Add New Topping</button>
+
 		if (addonTypes is null)
 		{
 			<p> Please wait while we grab the product list</p>
@@ -49,7 +52,6 @@
 				<option value="@addon.Id">@addon.Basetype</option>
 			}
 		</select>
-		<button @onclick="AddNewtopping">Add New Topping</button>
 
 		<button @onclick="DeleteTopping">Delete Selected Topping</button>
 
@@ -60,7 +62,6 @@
 </div>
 
 @code {
-	public bool isAvailable;
 	public List<Addon>? addons;
 	public List<Addonflavor>? addonFlavors;
 	public List<Addontype>? addonTypes;
@@ -70,6 +71,8 @@
 	public Basegood? selectedBaseGood;
 	public bool isEditingTopping = false;
 	public bool isEditingProduct = false;
+	public bool isAddingProduct = false;
+	public bool isAddingTopping = false;
 
 	protected override async Task OnInitializedAsync()
 	{
