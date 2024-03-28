@@ -4,7 +4,7 @@
 @inject IProductService product
 
 @attribute [Authorize]
-@attribute [StreamRendering]
+@* @attribute [StreamRendering] *@
 @rendermode InteractiveServer
 
 <p>Hello @Username!</p>
@@ -68,6 +68,7 @@
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private string Username = "";
+    private string email = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,7 +77,12 @@
             var state = await authenticationState;
 
             Username = state?.User?.Identity?.Name ?? string.Empty;
-
+            try
+            {
+                var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
+                email = userEmail ?? "no email found";
+            }
+            catch { email = "getting email threw error"; }
             StateHasChanged();
         }
         await base.OnInitializedAsync();

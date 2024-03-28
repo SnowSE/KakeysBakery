@@ -90,6 +90,7 @@
 	[CascadingParameter]
 	private Task<AuthenticationState>? authenticationState { get; set; }
 	private string Username = "";
+	private string email = "";
 	HttpClient client = new();
 
 	private Modal modal = default!;
@@ -110,26 +111,27 @@
 		client.BaseAddress = new Uri("https://localhost:7196/");
 
 		baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
-		//await AuthenticateUser();
+		await AuthenticateUser();
 		StateHasChanged();
 
 	}
 
 	private async Task AuthenticateUser()
 	{
-		if (authenticationState is null) { return; }
+		bool canDo = await AuthenticEmail();
+		if (authenticationState is null || !canDo) { return; }
 		var state = await authenticationState;
 		Username = state?.User?.Identity?.Name ?? "";
 		Customer User = new Customer();
 
-		var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
+		
 		User.Forename = state?.User?.Identity?.Name;
-		User.Email = userEmail ?? "";
+		User.Email = email;
 		//check if the customer with this email exists
 		Customer? result = null;
 		try
 		{
-			result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{User.Forename}/{User.Surname}");
+			result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
 		}
 		catch { }
 		if (result is null)
@@ -137,7 +139,7 @@
 			await client.PostAsJsonAsync("api/customer/add", User);
 		}
 
-		Customer? result2 = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{userEmail}");
+		Customer? result2 = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
 	}
 
 	private async Task SelectHasChanged(ChangeEventArgs e)
@@ -178,5 +180,17 @@
 		{
 			//navmanager.NavigateTo("/Customize");
 		}
+	}
+
+	private async  Task<bool> AuthenticEmail()
+	{
+		try
+		{
+			var state = await authenticationState;
+			var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
+			email = userEmail;
+			return true;
+		}
+		catch { return false; }
 	}
 }
