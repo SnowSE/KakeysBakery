@@ -62,4 +62,9 @@ public class BaseGoodTypeService : IBaseGoodTypeService
         catch { }
         return Task.CompletedTask;
     }
+
+	public async Task<Basegoodtype?> GetBaseGoodTypeByBase(string basegood)
+	{
+        return await _context.Basegoodtypes.Where(t => t.Basegood == basegood).FirstOrDefaultAsync();
+	}
 }

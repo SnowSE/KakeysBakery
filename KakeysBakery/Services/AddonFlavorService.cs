@@ -62,4 +62,9 @@ public class AddonFlavorService : IAddonFlavorService
         catch { }
         return Task.CompletedTask;
     }
+
+	public async Task<Addonflavor?> GetAddonFlavorByFlavorAsync(string flavor)
+	{
+        return await _context.Addonflavors.Where(f => f.Flavor == flavor).FirstOrDefaultAsync();
+	}
 }

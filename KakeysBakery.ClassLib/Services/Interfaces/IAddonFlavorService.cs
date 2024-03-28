@@ -14,4 +14,5 @@ public interface IAddonFlavorService
     public Task CreateAddonFlavorAsync(Addonflavor addonFlavor);
     public Task DeleteAddonFlavorAsync(int addonFlavorId);
     public Task UpdateAddonFlavorAsync(Addonflavor addonFlavor);
+    public Task<Addonflavor?> GetAddonFlavorByFlavorAsync(string flavor);
 }
