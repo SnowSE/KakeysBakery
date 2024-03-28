@@ -1,7 +1,5 @@
 ﻿@page "/Cart"
-@inject IPurchaseService purchase
-@inject ICustomerService customer
-@inject IProductService product
+
 
 @attribute [Authorize]
 @* @attribute [StreamRendering] *@
@@ -27,7 +25,7 @@
             <tr><td colspan="4"><hr /></td></tr>
             </thead>
             <tbody>
-                @for (int i = 0; i < 4; i++)
+                @foreach (var product in customerProducts)
                 {
                     <tr class="cartCard flex-row">
                         <td class="pe-4"><img src="images/cookie.jpg" /></td>
@@ -69,13 +67,19 @@
 
     private string Username = "";
     private string email = "";
+    HttpClient client = new HttpClient();
+    Customer currentCustomer = new();
+    List<Product> products = new();
+    List<Product> customerProducts = new();
+    List<Cart> allCartItems = new();
+
 
     protected override async Task OnInitializedAsync()
     {
         if (authenticationState is not null)
         {
             var state = await authenticationState;
-
+            client.BaseAddress = new Uri("https://localhost:7196/");
             Username = state?.User?.Identity?.Name ?? string.Empty;
             try
             {
@@ -83,6 +87,24 @@
                 email = userEmail ?? "no email found";
             }
             catch { email = "getting email threw error"; }
+
+            try
+            {
+                currentCustomer = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+                products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
+
+                //get the cart and then filter itself to only get items connected to the current customer
+                allCartItems = await client.GetFromJsonAsync<List<KakeysBakeryClassLib.Data.Cart>>("api/cart/getall");
+                allCartItems = allCartItems.Where(i => i.Customerid == currentCustomer.Id).ToList();
+
+                foreach(var cart in allCartItems)
+                {
+                    customerProducts.Add(products.Where(c => c.Id == cart.Productid).FirstOrDefault());
+                }
+
+
+            }
+            catch { }
             StateHasChanged();
         }
         await base.OnInitializedAsync();

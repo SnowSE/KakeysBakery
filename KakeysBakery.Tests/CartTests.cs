@@ -15,7 +15,8 @@ public class CartTests : IClassFixture<BakeryFactory>
         // ARRANGE
         Cart testCart = new()
         {
-            Id = 77
+            Id = 77,
+          //  Customerid = 1
         };
 
         await client.PostAsJsonAsync("api/cart/add", testCart);
