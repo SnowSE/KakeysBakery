@@ -18,70 +18,70 @@
 <p>Error: @ErrorString</p>
 
 
-<Modal @ref="modal" Title="Modal Title">
-	<BodyTemplate>
-		<div id="Modal">
-			<label>Choose @baseGoodTypes[clickedBaseGoodId -2].Basegood Type:</label>
-		<select name="flavor" @onchange="SelectHasChanged">
-			<option> --- </option>
-			@if (baseGoodDetails is not null)
-			{
-				@foreach (Basegood basegoods in baseGoodDetails)
-				{
-					@if (basegoods.Isavalible)
-					{
-						<option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
-					}
+<Modal @ref="modal" Title="Customize Your Order">
+    <BodyTemplate>
+        <div class="Modal">
+            <label>Choose @baseGoodTypes?.Where(c => c.Id == clickedBaseGoodId).FirstOrDefault()?.Basegood Type:</label>
+            <select name="flavor" @onchange="SelectHasChanged" id="box">
+                <option> --- </option>
+                @if (baseGoodDetails is not null)
+                {
+                    @foreach (Basegood basegoods in baseGoodDetails)
+                    {
+                        @if (basegoods.Isavalible)
+                        {
+                            <option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
+                        }
 
-				}
-			}
-		</select>
+                    }
+                }
+            </select>
 
-		<div>
-			<label>Quantity</label>
-			<input type="number" @onchange="QuantityChanged" />
-		</div>
-
-		@if(modalError is null)
-		{
-			<p>Price of this item: @(currentBaseGood?.Suggestedprice * quantity)</p>
-		}
-		else
-		{
-			<p>Error: @modalError</p>
-		}
+            <div class="InputBox">
+                <label>Quantity:</label>
+                <input type="number" @onchange="QuantityChanged" id="box"/>
+            </div>
+            <hr />
+            @if (modalError is null)
+            {
+                <h5>Price for this amount: @(currentBaseGood?.Suggestedprice * quantity)</h5>
+            }
+            else
+            {
+                <p>Error: @modalError</p>
+            }
         </div>
-	</BodyTemplate>
-	<FooterTemplate>
-		<Button Color="ButtonColor.Secondary" @onclick="async () => { await modal.HideAsync(); }">Close</Button>
-		@if (modalError is null)
-		{	
-			<Button Color="ButtonColor.Primary">Add To Cart</Button>
-		}
-		else
-		{
-			
-		}
-	</FooterTemplate>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="async () => { await modal.HideAsync(); }">Close</Button>
+        @if (modalError is null)
+        {
+            <Button Color="ButtonColor.Primary">Add To Cart</Button>
+        }
+        else
+        {
+
+        }
+    </FooterTemplate>
 </Modal>
 
 <div class="mt-5 border totalPage">
-	<div class="d-flex flex-wrap justify-content-center">
-		@if (baseGoodTypes == null)
-		{
-			<p>Loading products, please wait</p>
-		}
-		else
-		{
-			@foreach (Basegoodtype basegoodtype in baseGoodTypes)
-			{
-				<div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await modal.ShowAsync();}">
-					<h3 class="typelabel" style="z-index: 1;">@basegoodtype.Basegood</h3>
-					<img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(basegoodtype.Basegood).jpg">
-				</div>
-			}
-		}
-	</div>
+    <div class="d-flex flex-wrap justify-content-center">
+        @if (baseGoodTypes == null)
+        {
+            <p>Loading products, please wait</p>
+        }
+        else
+        {
+            @foreach (Basegoodtype basegoodtype in baseGoodTypes)
+            {
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await modal.ShowAsync();}">
+                    <h3 class="typelabel" style="z-index: 1;">@basegoodtype.Basegood</h3>
+                    <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(basegoodtype.Basegood).jpg">
+                </div>
+            }
+        }
+    </div>
 </div>
 
 
@@ -93,28 +93,28 @@
 	private string email = "";
 	HttpClient client = new();
 
-	private Modal modal = default!;
-	Basegood? currentBaseGood;
-	List<Basegood>? baseGoodDetails;
-	int clickedBaseGoodId;
-	decimal? quantity = 1;
-	string? modalError;
-	public List<Basegoodtype>? baseGoodTypes;
+    private Modal modal = default!;
+    Basegood? currentBaseGood;
+    List<Basegood>? baseGoodDetails;
+    int clickedBaseGoodId;
+    decimal? quantity = 1;
+    string? modalError;
+    public List<Basegoodtype>? baseGoodTypes;
 
-	string ErrorString = "No Error";
+    string ErrorString = "No Error";
 
 
-	protected override async Task OnInitializedAsync()
-	{
-		baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync();
 
-		client.BaseAddress = new Uri("https://localhost:7196/");
+        client.BaseAddress = new Uri("https://localhost:7196/");
 
 		baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 		await AuthenticateUser();
 		StateHasChanged();
 
-	}
+    }
 
 	private async Task AuthenticateUser()
 	{
@@ -142,35 +142,35 @@
 		Customer? result2 = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
 	}
 
-	private async Task SelectHasChanged(ChangeEventArgs e)
-	{
-		if (e.Value is null) { return; }
+    private async Task SelectHasChanged(ChangeEventArgs e)
+    {
+        if (e.Value is null) { return; }
 
-		int typeId = Convert.ToInt32(e.Value.ToString());
-		currentBaseGood = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{clickedBaseGoodId}/{typeId}");
+        int typeId = Convert.ToInt32(e.Value.ToString());
+        currentBaseGood = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{clickedBaseGoodId}/{typeId}");
 
-	}
+    }
 
-	private void QuantityChanged(ChangeEventArgs e)
-	{
-		int testquantity = 1;
-		try
-		{
-			testquantity = Convert.ToInt32(e.Value?.ToString());
-			quantity = (decimal)testquantity;
-			modalError = null;
-		}
-		catch
-		{
-			quantity = 1;
-			modalError = "something went wrong, please try again";
-		}
-		if (testquantity <= 0)
-		{
-			modalError = "please input a quantity larger than 1";
-			quantity = 1;
-		}
-	}
+    private void QuantityChanged(ChangeEventArgs e)
+    {
+        int testquantity = 1;
+        try
+        {
+            testquantity = Convert.ToInt32(e.Value?.ToString());
+            quantity = (decimal)testquantity;
+            modalError = null;
+        }
+        catch
+        {
+            quantity = 1;
+            modalError = "something went wrong, please try again";
+        }
+        if (testquantity <= 0)
+        {
+            modalError = "please input a quantity larger than 1";
+            quantity = 1;
+        }
+    }
 
 	public async Task BaseGoodClicked(int basegoodtypeid)
 	{
