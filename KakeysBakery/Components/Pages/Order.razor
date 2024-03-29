@@ -1,21 +1,11 @@
 ﻿@page "/Order"
-@using BlazorBootstrap
-@inject IBaseGoodService basegood
-@inject IProductService product
-@inject ICustomerService customer
-@inject IBaseGoodTypeService basegoodtype
-@inject NavigationManager navmanager
 
+@using BlazorBootstrap
+@inject NavigationManager navmanager
 @rendermode InteractiveServer
-@* @attribute [Authorize]
- *@
+@* @attribute [Authorize] *@
 
 <h3 class="pageTitle">Order</h3>
-
-
-
-<p>Hello @Username!</p>
-<p>Error: @ErrorString</p>
 
 
 <Modal @ref="modal" Title="Customize Your Order">
@@ -39,7 +29,7 @@
 
             <div class="InputBox">
                 <label>Quantity:</label>
-                <input type="number" @onchange="QuantityChanged" id="box"/>
+                <input type="number" @onchange="QuantityChanged" id="box" />
             </div>
             <hr />
             @if (modalError is null)
@@ -57,10 +47,6 @@
         @if (modalError is null)
         {
             <Button Color="ButtonColor.Primary">Add To Cart</Button>
-        }
-        else
-        {
-
         }
     </FooterTemplate>
 </Modal>
@@ -86,11 +72,8 @@
 
 
 @code {
-    //for authentication
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-    private string Username = "";
-    private string email = "";
     HttpClient client = new();
 
     private Modal modal = default!;
@@ -101,50 +84,19 @@
     string? modalError;
     public List<Basegoodtype>? baseGoodTypes;
 
-    string ErrorString = "No Error";
-
 
     protected override async Task OnInitializedAsync()
     {
-        baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync();
-
         client.BaseAddress = new Uri("https://localhost:7196/");
-
         baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
+
         await AuthenticateUser();
-        StateHasChanged();
-
-    }
-
-    private async Task AuthenticateUser()
-    {
-        bool canDo = await AuthenticEmail();
-        if (authenticationState is null || !canDo) { return; }
-        var state = await authenticationState;
-        Username = state?.User?.Identity?.Name ?? "";
-        Customer User = new Customer();
-
-
-        User.Forename = state?.User?.Identity?.Name;
-        User.Email = email;
-        //check if the customer with this email exists
-        Customer? result = null;
-        try
-        {
-            result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
-        }
-        catch { }
-        if (result is null)
-        {
-            await client.PostAsJsonAsync("api/customer/add", User);
-        }
-
-        Customer? result2 = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
     }
 
     private async Task SelectHasChanged(ChangeEventArgs e)
     {
         if (e.Value is null) { return; }
+        if (e.Value is "---") { return; }
 
         int typeId = Convert.ToInt32(e.Value.ToString());
         currentBaseGood = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{clickedBaseGoodId}/{typeId}");
@@ -182,20 +134,39 @@
         }
     }
 
-    private async Task<bool> AuthenticEmail()
+    private async Task AuthenticateUser()
     {
-        if (authenticationState == null) { return false; }
+        if (authenticationState is null) { return; }
 
-        try
+        var state = await authenticationState;
+        if (state is null) { return; }
+        if (state.User.Identity is null) { return; }
+
+        string? email = GetUserEmail(state);
+        if (email == null) { return; }
+
+
+        Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+
+        if (result is null)
         {
-            var state = await authenticationState;
-            var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
+            Customer User = new Customer()
+                {
+                    Forename = state.User.Identity.Name,
+                    Email = state.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value
+                };
+            await client.PostAsJsonAsync("api/customer/add", User);
+        }
+    }
 
-            if (userEmail is null) { return false; }
 
-			email = userEmail;
-			return true;
-		}
-		catch { return false; }
-	}
+    private string? GetUserEmail(AuthenticationState state)
+    {
+        var user = state.User.Claims
+            .Where(c => c.Type.Contains("emailaddress"))
+            .FirstOrDefault();
+
+        if (user is null) { return null; }
+        return user.Value;
+    }
 }
