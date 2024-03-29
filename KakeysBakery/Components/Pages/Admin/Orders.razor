@@ -1,0 +1,77 @@
+﻿@page "/admin/orders"
+@inject NavigationManager nav
+@inject HttpClient client
+@rendermode InteractiveServer
+<h1>ALL ORDERS</h1>
+<div class="align-content-center bg-light">
+    <button @onclick="() => {showProducts = !showProducts;}">show products</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Product Type</th>
+                <th scope="col">Order Date</th>
+                <th scope="col">Email</th>
+                @if (showProducts)
+                {
+                    <th scope="col">Products</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Purchase _purchase in purchases)
+            {
+                <tr>
+                    <td>@_purchase.Customer.Forename</td>
+                    <td>@_purchase.Customer.Surname</td>
+                    <td>@_purchase.Customer.Email</td>
+                    @if (showProducts)
+                    {
+                        <td><ul>
+                                @foreach (PurchaseProduct prod in _purchase.PurchaseProducts)
+                                {
+                                    <li>@prod.Product.Productname</li>
+                                }
+                        </ul></td>
+                    }
+                </tr>
+            }
+            <tr>
+
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>testEmail@something.com</td>
+            </tr>
+            <tr>
+
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>testEmail@something.com</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+    private List<Purchase> purchases = new();
+    private bool showProducts = false;
+    protected override async Task OnInitializedAsync()
+    {
+        client.BaseAddress = new Uri(nav.BaseUri);
+        purchases = await client.GetFromJsonAsync<List<Purchase>>("api/Purchase/getall") ?? new();
+        List<Customer> Customers = await client.GetFromJsonAsync<List<Customer>>("api/Customer/getall") ?? new();
+        List<Product> products = await client.GetFromJsonAsync<List<Product>>("api/Product/getall") ?? new();
+        List<PurchaseProduct> purchaseProducts = await client.GetFromJsonAsync<List<PurchaseProduct>>("api/PurchaseProduct/getall") ?? new();
+        foreach (PurchaseProduct pp in purchaseProducts)
+        {
+            pp.Product = products.FirstOrDefault(p => p.Id == pp.Productid);
+        }
+        foreach (Purchase p in purchases)
+        {
+            p.Customer = Customers.FirstOrDefault(c => c.Id == p.Customerid);
+            p.PurchaseProducts = purchaseProducts.Where(pp => pp.Purchaseid == p.Id).ToList();
+        }
+
+
+    }
+}
