@@ -4,7 +4,6 @@
 @inject NavigationManager navManager
 @inject HttpClient client
 @rendermode InteractiveServer
-@* @attribute [Authorize] *@
 
 <h3 class="pageTitle">Order</h3>
 
@@ -35,7 +34,7 @@
             <hr />
             @if (modalError is null)
             {
-                <h5>Price for this amount: @(currentBaseGood?.Suggestedprice * quantity)</h5>
+                <h5>Toatl: $@(currentBaseGood?.Suggestedprice * quantity)</h5>
             }
             else
             {
@@ -75,14 +74,16 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
+    private AuthenticationManager? authManager;
 
     private Modal modal = default!;
+    List<Basegood>? baseGoodDetails = null;
+    public List<Basegoodtype>? baseGoodTypes = null;
+
     Basegood? currentBaseGood;
-    List<Basegood>? baseGoodDetails;
     int clickedBaseGoodId;
     decimal? quantity = 1;
     string? modalError;
-    public List<Basegoodtype>? baseGoodTypes = null;
 
 
     protected override async Task OnInitializedAsync()
@@ -90,7 +91,7 @@
         client.BaseAddress = new Uri(navManager.BaseUri);
         baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
-        // await AuthenticateUser();
+        authManager = new(authenticationState, client);
     }
 
     private async Task SelectHasChanged(ChangeEventArgs e)
@@ -100,27 +101,27 @@
 
         int typeId = Convert.ToInt32(e.Value.ToString());
         currentBaseGood = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{clickedBaseGoodId}/{typeId}");
-
     }
 
     private void QuantityChanged(ChangeEventArgs e)
     {
+        if (e.Value == null) { return; }
+        quantity = 1;
+
         int testquantity = 1;
         try
         {
-            testquantity = Convert.ToInt32(e.Value?.ToString());
-            quantity = (decimal)testquantity;
+            quantity = Convert.ToDecimal(e.Value.ToString());
             modalError = null;
         }
         catch
         {
-            quantity = 1;
             modalError = "something went wrong, please try again";
         }
+
         if (testquantity <= 0)
         {
             modalError = "please input a quantity larger than 1";
-            quantity = 1;
         }
     }
 
@@ -132,50 +133,16 @@
 
     public async Task AddToCart()
     {
-        if (!(await AuthenticateUser()))
+        if (!(await authManager!.IsUserLoggedIn()))
         {
             navManager.NavigateTo("Account/Login?redirectUri=/Order");
         }
-    }
 
-    private async Task<bool> AuthenticateUser()
-    {
-        if (authenticationState is null) { return false; }
-
-        var state = await authenticationState;
-        if (state is null) { return false; }
-        if (state.User.Identity is null) { return false; }
-
-        string? email = GetUserEmail(state);
-        if (email == null) { return false; }
-
-
-        Customer? result = null;
-        try {
-            result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
-        }
-        catch { }
-
-        if (result is null)
+        else
         {
-            Customer User = new Customer()
-                {
-                    Forename = state.User.Identity.Name,
-                    Email = state.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value
-                };
-            await client.PostAsJsonAsync("api/customer/add", User);
+            
         }
-
-        return true;
     }
 
-    private string? GetUserEmail(AuthenticationState state)
-    {
-        var user = state.User.Claims
-            .Where(c => c.Type.Contains("emailaddress"))
-            .FirstOrDefault();
-
-        if (user is null) { return null; }
-        return user.Value;
-    }
+    
 }
