@@ -1,8 +1,13 @@
 ﻿@page "/CustomizeV2"
-
+@inject HttpClient client
 
 <h3>CustomizeV2</h3>
 
 @code {
-
+    private List<Basegood> basegoods = new();
+    protected override async Task OnInitializedAsync()
+    {
+        basegoods = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegoodtype/getall");
+        await Task.CompletedTask;
+    }
 }
