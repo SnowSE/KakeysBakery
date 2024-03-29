@@ -152,7 +152,7 @@
 
         Customer? result = null;
         try {
-            await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+            result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
         }
         catch { }
 
