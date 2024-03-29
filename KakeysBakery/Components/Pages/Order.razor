@@ -1,7 +1,8 @@
 ﻿@page "/Order"
 
 @using BlazorBootstrap
-@inject NavigationManager navmanager
+@inject NavigationManager navManager
+@inject HttpClient client
 @rendermode InteractiveServer
 @* @attribute [Authorize] *@
 
@@ -74,7 +75,6 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-    HttpClient client = new();
 
     private Modal modal = default!;
     Basegood? currentBaseGood;
@@ -87,7 +87,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        client.BaseAddress = new Uri("https://localhost:7196/");
+        client.BaseAddress = new Uri(navManager.BaseUri);
         baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
         await AuthenticateUser();
@@ -162,7 +162,6 @@
             await client.PostAsJsonAsync("api/customer/add", User);
         }
     }
-
 
     private string? GetUserEmail(AuthenticationState state)
     {
