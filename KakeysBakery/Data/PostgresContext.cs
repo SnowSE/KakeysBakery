@@ -47,9 +47,6 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Userrole> Userroles { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Name=db");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Addon>(entity =>

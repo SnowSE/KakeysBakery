@@ -30,6 +30,15 @@ CREATE SEQUENCE "KakeysBakery".basegood_id_seq
 	START 1
 	CACHE 1
 	NO CYCLE;
+-- DROP SEQUENCE "KakeysBakery".basegood_size_id_seq;
+
+CREATE SEQUENCE "KakeysBakery".basegood_size_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
 -- DROP SEQUENCE "KakeysBakery".cart_id_seq;
 
 CREATE SEQUENCE "KakeysBakery".cart_id_seq
@@ -145,6 +154,19 @@ CREATE TABLE "KakeysBakery".addontype (
 );
 
 
+-- "KakeysBakery".basegood_size definition
+
+-- Drop table
+
+-- DROP TABLE "KakeysBakery".basegood_size;
+
+CREATE TABLE "KakeysBakery".basegood_size (
+	id serial4 NOT NULL,
+	"size" varchar(50) NULL,
+	CONSTRAINT basegood_size_pkey PRIMARY KEY (id)
+);
+
+
 -- "KakeysBakery".basegoodflavor definition
 
 -- Drop table
@@ -152,7 +174,7 @@ CREATE TABLE "KakeysBakery".addontype (
 -- DROP TABLE "KakeysBakery".basegoodflavor;
 
 CREATE TABLE "KakeysBakery".basegoodflavor (
-	id int4 NOT NULL DEFAULT nextval('"KakeysBakery".flavor_id_seq'::regclass),
+	id int4 DEFAULT nextval('"KakeysBakery".flavor_id_seq'::regclass) NOT NULL,
 	flavorname varchar(50) NULL,
 	CONSTRAINT flavor_pkey PRIMARY KEY (id)
 );
@@ -165,7 +187,7 @@ CREATE TABLE "KakeysBakery".basegoodflavor (
 -- DROP TABLE "KakeysBakery".basegoodtype;
 
 CREATE TABLE "KakeysBakery".basegoodtype (
-	id int4 NOT NULL DEFAULT nextval('"KakeysBakery".base_id_seq'::regclass),
+	id int4 DEFAULT nextval('"KakeysBakery".base_id_seq'::regclass) NOT NULL,
 	basegood varchar(50) NULL,
 	CONSTRAINT base_pkey PRIMARY KEY (id)
 );
@@ -247,8 +269,10 @@ CREATE TABLE "KakeysBakery".basegood (
 	suggestedprice money NULL,
 	pastryid int4 NULL,
 	flavorid int4 NULL,
-	isavalible bool NULL,
+	isavailable bool NULL,
+	goodsize int4 NULL,
 	CONSTRAINT basegood_pkey PRIMARY KEY (id),
+	CONSTRAINT basegood_goodsize_fkey FOREIGN KEY (goodsize) REFERENCES "KakeysBakery".basegood_size(id),
 	CONSTRAINT basegoodname FOREIGN KEY (pastryid) REFERENCES "KakeysBakery".basegoodtype(id),
 	CONSTRAINT flavorid FOREIGN KEY (flavorid) REFERENCES "KakeysBakery".basegoodflavor(id)
 );
@@ -264,6 +288,7 @@ CREATE TABLE "KakeysBakery".cart (
 	id serial4 NOT NULL,
 	customerid int4 NULL,
 	productid int4 NULL,
+	quantity int4 NULL,
 	CONSTRAINT cart_pkey PRIMARY KEY (id),
 	CONSTRAINT cart_customerid_fkey FOREIGN KEY (customerid) REFERENCES "KakeysBakery".customer(id),
 	CONSTRAINT cart_productid_fkey FOREIGN KEY (productid) REFERENCES "KakeysBakery".product(id)
@@ -293,7 +318,7 @@ CREATE TABLE "KakeysBakery".customer_role (
 -- DROP TABLE "KakeysBakery".product_addon_basegood;
 
 CREATE TABLE "KakeysBakery".product_addon_basegood (
-	id int4 NOT NULL DEFAULT nextval('"KakeysBakery".product_addon_id_seq'::regclass),
+	id int4 DEFAULT nextval('"KakeysBakery".product_addon_id_seq'::regclass) NOT NULL,
 	productid int4 NULL,
 	addonid int4 NULL,
 	basegoodid int4 NULL,
