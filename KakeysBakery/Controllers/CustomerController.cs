@@ -20,37 +20,25 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet("get/{id}")]
-    public async Task<IActionResult> GetCustomerAsync(int id)
+    public async Task<Customer?> GetCustomerAsync(int id)
     {
         var prod = await CustomerService.GetCustomerAsync(id);
-        if (prod == null)
-        {
-            return NotFound(); // Return 404 Not Found status
-        }
-        return Ok(prod); // Return the addon if found
+        return prod;
     }
 
     [HttpGet("get_by_name/{forname}/{surname}")]
-    public async Task<IActionResult> GetCustomerAsync(string forname, string surname)
+    public async Task<Customer?> GetCustomerAsync(string forname, string surname)
     {
         var prod = await CustomerService.GetCustomerAsync(forname, surname);
-        if (prod == null)
-        {
-            return NotFound(); // Return 404 Not Found status
-        }
-        return Ok(prod); // Return the addon if found
+        return prod;
     }
 
 	[HttpGet("get_by_email/{email}")]
-	public async Task<IActionResult> GetCustomerAsyncByEmail(string email)
+	public async Task<Customer?> GetCustomerAsyncByEmail(string email)
 	{
 		var prod = await CustomerService.GetCustomerByEmail(email);
-		if (prod == null)
-		{
-			return NotFound(); // Return 404 Not Found status
-		}
-		return Ok(prod); // Return the addon if found
-	}
+        return prod;
+    }
 
 	[HttpPost("add")]
     public async Task CreateCustomerAsync(Customer customer)
