@@ -43,10 +43,10 @@ builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {
-        options.Domain = builder.Configuration["Auth0Domain"] ?? "";
-        options.ClientId = builder.Configuration["Auth0ClientId"] ?? "";
+        options.Domain = builder.Configuration.GetValue<string>("Auth0Domain", "DEFAULT_AUTH0_DOMAIN") ?? "";
+        options.ClientId = builder.Configuration.GetValue<string>("Auth0ClientId", "DEFAULT_AUTH0_CLIENT_ID") ?? "";
 		options.Scope = "openid profile email";
-	});
+    });
 
 builder.Services.AddHttpClient();
 
