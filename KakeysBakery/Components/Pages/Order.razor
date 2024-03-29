@@ -47,7 +47,7 @@
         <Button Color="ButtonColor.Secondary" @onclick="async () => { await modal.HideAsync(); }">Close</Button>
         @if (modalError is null)
         {
-            <Button Color="ButtonColor.Primary">Add To Cart</Button>
+            <Button Color="ButtonColor.Primary" @onclick="async () => { await AddToCart(); }">Add To Cart</Button>
         }
     </FooterTemplate>
 </Modal>
@@ -82,7 +82,7 @@
     int clickedBaseGoodId;
     decimal? quantity = 1;
     string? modalError;
-    public List<Basegoodtype>? baseGoodTypes;
+    public List<Basegoodtype>? baseGoodTypes = null;
 
 
     protected override async Task OnInitializedAsync()
@@ -90,7 +90,7 @@
         client.BaseAddress = new Uri(navManager.BaseUri);
         baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
-        await AuthenticateUser();
+        // await AuthenticateUser();
     }
 
     private async Task SelectHasChanged(ChangeEventArgs e)
@@ -128,22 +128,26 @@
     {
         clickedBaseGoodId = basegoodtypeid;
         baseGoodDetails = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegood/get_from_type/{basegoodtypeid}");
-        if (basegoodtypeid == 1)
+    }
+
+    public async Task AddToCart()
+    {
+        if (!(await AuthenticateUser()))
         {
-            //navmanager.NavigateTo("/Customize");
+            navManager.NavigateTo("Account/Login?redirectUri=/Order");
         }
     }
 
-    private async Task AuthenticateUser()
+    private async Task<bool> AuthenticateUser()
     {
-        if (authenticationState is null) { return; }
+        if (authenticationState is null) { return false; }
 
         var state = await authenticationState;
-        if (state is null) { return; }
-        if (state.User.Identity is null) { return; }
+        if (state is null) { return false; }
+        if (state.User.Identity is null) { return false; }
 
         string? email = GetUserEmail(state);
-        if (email == null) { return; }
+        if (email == null) { return false; }
 
 
         Customer? result = null;
@@ -161,6 +165,8 @@
                 };
             await client.PostAsJsonAsync("api/customer/add", User);
         }
+
+        return true;
     }
 
     private string? GetUserEmail(AuthenticationState state)
