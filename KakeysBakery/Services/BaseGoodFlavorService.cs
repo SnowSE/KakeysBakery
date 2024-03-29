@@ -52,7 +52,13 @@ public class BaseGoodFlavorService : IBaseGoodFlavorService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateBaseGoodFlavorAsync(Basegoodflavor basegoodflavor)
+	public async Task<Basegoodflavor?> GetBaseGoodFlavorByBase(string flavor)
+    {
+        return await _context.Basegoodflavors.Where(b => b.Flavorname == flavor).FirstOrDefaultAsync();
+    }
+
+
+	public Task UpdateBaseGoodFlavorAsync(Basegoodflavor basegoodflavor)
     {
         try
         {
