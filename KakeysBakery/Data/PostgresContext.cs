@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using KakeysBakeryClassLib.Data;
 
 namespace KakeysBakery.Data;
 
@@ -24,6 +23,8 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Basegood> Basegoods { get; set; }
 
+    public virtual DbSet<BasegoodSize> BasegoodSizes { get; set; }
+
     public virtual DbSet<Basegoodflavor> Basegoodflavors { get; set; }
 
     public virtual DbSet<Basegoodtype> Basegoodtypes { get; set; }
@@ -45,6 +46,9 @@ public partial class PostgresContext : DbContext
     public virtual DbSet<Referencephoto> Referencephotos { get; set; }
 
     public virtual DbSet<Userrole> Userroles { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseNpgsql("Name=db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -109,7 +113,8 @@ public partial class PostgresContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Flavorid).HasColumnName("flavorid");
-            entity.Property(e => e.Isavalible).HasColumnName("isavalible");
+            entity.Property(e => e.Goodsize).HasColumnName("goodsize");
+            entity.Property(e => e.Isavailable).HasColumnName("isavailable");
             entity.Property(e => e.Pastryid).HasColumnName("pastryid");
             entity.Property(e => e.Suggestedprice)
                 .HasColumnType("money")
@@ -119,9 +124,25 @@ public partial class PostgresContext : DbContext
                 .HasForeignKey(d => d.Flavorid)
                 .HasConstraintName("flavorid");
 
+            entity.HasOne(d => d.GoodsizeNavigation).WithMany(p => p.Basegoods)
+                .HasForeignKey(d => d.Goodsize)
+                .HasConstraintName("basegood_goodsize_fkey");
+
             entity.HasOne(d => d.Pastry).WithMany(p => p.Basegoods)
                 .HasForeignKey(d => d.Pastryid)
                 .HasConstraintName("basegoodname");
+        });
+
+        modelBuilder.Entity<BasegoodSize>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("basegood_size_pkey");
+
+            entity.ToTable("basegood_size", "KakeysBakery");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Size)
+                .HasMaxLength(50)
+                .HasColumnName("size");
         });
 
         modelBuilder.Entity<Basegoodflavor>(entity =>
@@ -161,6 +182,7 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Customerid).HasColumnName("customerid");
             entity.Property(e => e.Productid).HasColumnName("productid");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.Customerid)

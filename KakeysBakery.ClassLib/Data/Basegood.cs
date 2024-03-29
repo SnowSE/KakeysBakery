@@ -12,9 +12,14 @@ public partial class Basegood
     public int? Pastryid { get; set; }
 
     public int? Flavorid { get; set; }
-    public bool Isavalible { get; set; }
+
+    public bool? Isavailable { get; set; }
+
+    public int? Goodsize { get; set; }
 
     public virtual Basegoodflavor? Flavor { get; set; }
+
+    public virtual BasegoodSize? GoodsizeNavigation { get; set; }
 
     public virtual Basegoodtype? Pastry { get; set; }
 
