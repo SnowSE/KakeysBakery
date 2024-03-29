@@ -1,9 +1,9 @@
 ﻿@page "/Order"
 
 @using BlazorBootstrap
-@inject NavigationManager navmanager
+@inject NavigationManager navManager
+@inject HttpClient client
 @rendermode InteractiveServer
-@* @attribute [Authorize] *@
 
 <h3 class="pageTitle">Order</h3>
 
@@ -34,7 +34,7 @@
             <hr />
             @if (modalError is null)
             {
-                <h5>Price for this amount: @(currentBaseGood?.Suggestedprice * quantity)</h5>
+                <h5>Toatl: $@(currentBaseGood?.Suggestedprice * quantity)</h5>
             }
             else
             {
@@ -46,7 +46,7 @@
         <Button Color="ButtonColor.Secondary" @onclick="async () => { await modal.HideAsync(); }">Close</Button>
         @if (modalError is null)
         {
-            <Button Color="ButtonColor.Primary">Add To Cart</Button>
+            <Button Color="ButtonColor.Primary" @onclick="async () => { await AddToCart(); }">Add To Cart</Button>
         }
     </FooterTemplate>
 </Modal>
@@ -74,23 +74,24 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-    HttpClient client = new();
+    private AuthenticationManager? authManager;
 
     private Modal modal = default!;
+    List<Basegood>? baseGoodDetails = null;
+    public List<Basegoodtype>? baseGoodTypes = null;
+
     Basegood? currentBaseGood;
-    List<Basegood>? baseGoodDetails;
     int clickedBaseGoodId;
     decimal? quantity = 1;
     string? modalError;
-    public List<Basegoodtype>? baseGoodTypes;
 
 
     protected override async Task OnInitializedAsync()
     {
-        client.BaseAddress = new Uri("https://localhost:7196/");
+        client.BaseAddress = new Uri(navManager.BaseUri);
         baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
-        await AuthenticateUser();
+        authManager = new(authenticationState, client);
     }
 
     private async Task SelectHasChanged(ChangeEventArgs e)
@@ -100,27 +101,27 @@
 
         int typeId = Convert.ToInt32(e.Value.ToString());
         currentBaseGood = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{clickedBaseGoodId}/{typeId}");
-
     }
 
     private void QuantityChanged(ChangeEventArgs e)
     {
+        if (e.Value == null) { return; }
+        quantity = 1;
+
         int testquantity = 1;
         try
         {
-            testquantity = Convert.ToInt32(e.Value?.ToString());
-            quantity = (decimal)testquantity;
+            quantity = Convert.ToDecimal(e.Value.ToString());
             modalError = null;
         }
         catch
         {
-            quantity = 1;
             modalError = "something went wrong, please try again";
         }
+
         if (testquantity <= 0)
         {
             modalError = "please input a quantity larger than 1";
-            quantity = 1;
         }
     }
 
@@ -128,45 +129,20 @@
     {
         clickedBaseGoodId = basegoodtypeid;
         baseGoodDetails = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegood/get_from_type/{basegoodtypeid}");
-        if (basegoodtypeid == 1)
+    }
+
+    public async Task AddToCart()
+    {
+        if (!(await authManager!.IsUserLoggedIn()))
         {
-            //navmanager.NavigateTo("/Customize");
+            navManager.NavigateTo("Account/Login?redirectUri=/Order");
+        }
+
+        else
+        {
+            
         }
     }
 
-    private async Task AuthenticateUser()
-    {
-        if (authenticationState is null) { return; }
-
-        var state = await authenticationState;
-        if (state is null) { return; }
-        if (state.User.Identity is null) { return; }
-
-        string? email = GetUserEmail(state);
-        if (email == null) { return; }
-
-
-        Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
-
-        if (result is null)
-        {
-            Customer User = new Customer()
-                {
-                    Forename = state.User.Identity.Name,
-                    Email = state.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value
-                };
-            await client.PostAsJsonAsync("api/customer/add", User);
-        }
-    }
-
-
-    private string? GetUserEmail(AuthenticationState state)
-    {
-        var user = state.User.Claims
-            .Where(c => c.Type.Contains("emailaddress"))
-            .FirstOrDefault();
-
-        if (user is null) { return null; }
-        return user.Value;
-    }
+    
 }

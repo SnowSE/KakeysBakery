@@ -1,0 +1,28 @@
+﻿@page "/CustomizeV2"
+@inject HttpClient client
+@inject NavigationManager nav
+
+<h3>CustomizeV2</h3>
+
+@foreach (Basegood good in basegoods)
+{
+    <p>@good.Flavor.Flavorname</p>
+}
+@code {
+    private List<Basegood> basegoods = new();
+    protected override async Task OnInitializedAsync()
+    {
+        client.BaseAddress = new Uri(nav.BaseUri);
+        basegoods = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegood/getall");
+        if (basegoods is not null)
+        {
+            var flavors = await client.GetFromJsonAsync<List<Basegoodflavor>>("api/BasegoodFlavor/getall");
+            var types = await client.GetFromJsonAsync<List<Basegoodtype>>("api/Basegoodtype/getall");
+            foreach (Basegood good in basegoods)
+            {
+                good.Pastry = types.FirstOrDefault(t => t.Id == good.Pastryid);
+                good.Flavor = flavors.FirstOrDefault(f => f.Id == good.Flavorid);
+            }
+        }
+    }
+}
