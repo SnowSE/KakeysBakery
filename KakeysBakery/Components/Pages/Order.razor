@@ -18,7 +18,7 @@
                 {
                     @foreach (Basegood basegoods in baseGoodDetails)
                     {
-                        @if (basegoods.Isavalible)
+                        @if (basegoods.Isavailable ?? false)
                         {
                             <option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
                         }
