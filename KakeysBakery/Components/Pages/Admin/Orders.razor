@@ -1,58 +1,73 @@
 ﻿@page "/admin/orders"
 @inject NavigationManager nav
 @inject HttpClient client
+@inject IPurchaseService purchaseService
+
+
 @rendermode InteractiveServer
-<h1>ALL ORDERS</h1>
-<div class="align-content-center bg-light">
-    <button @onclick="() => {showProducts = !showProducts;}">show products</button>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Product Type</th>
-                <th scope="col">Order Date</th>
-                <th scope="col">Email</th>
-                @if (showProducts)
-                {
-                    <th scope="col">Products</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Purchase _purchase in purchases)
-            {
+<h1>ORDERS</h1>
+@if (isLoaded)
+{
+    <div class="align-content-center bg-light">
+        <button @onclick="() => {showProducts = !showProducts;}">show products</button>
+        <button @onclick="() => {showFullFilled = !showFullFilled;}">show fullfilled orders</button>
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>@_purchase.Customer.Forename</td>
-                    <td>@_purchase.Customer.Surname</td>
-                    <td>@_purchase.Customer.Email</td>
+                    <th scope="col">Product Type</th>
+                    <th scope="col">Order Date</th>
+                    <th scope="col">FullFilment Data</th>
+                    <th scope="col">Email</th>
                     @if (showProducts)
                     {
-                        <td><ul>
-                                @foreach (PurchaseProduct prod in _purchase.PurchaseProducts)
-                                {
-                                    <li>@prod.Product.Productname</li>
-                                }
-                        </ul></td>
+                        <th scope="col">Products</th>
                     }
+                    <th>FullFill</th>
                 </tr>
-            }
-            <tr>
-
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>testEmail@something.com</td>
-            </tr>
-            <tr>
-
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>testEmail@something.com</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (Purchase _purchase in purchases)
+                {
+                    @if ((_purchase.Isfulfilled ?? false) || showFullFilled)
+                    {
+                        @try
+                        {
+                            
+                        <tr>
+                            <td>@_purchase.Customer.Forename</td>
+                            <td>@_purchase.Orderdate.ToString()</td>
+                            <td>@_purchase.Fulfillmentdate.ToString()</td>
+                            <td>@_purchase.Customer.Email</td>
+                            @if (showProducts)
+                            {
+                                <td>
+                                    <ul>
+                                        @foreach (PurchaseProduct prod in _purchase.PurchaseProducts)
+                                        {
+                                            <li>@prod.Product.Productname</li>
+                                        }
+                                    </ul>
+                                </td>
+                            }
+                                @if ((_purchase.Isfulfilled ?? false))
+                                {
+                                    <td><button @onclick="()=>{updateFullfill(_purchase.Id);}">Fullfill now</button></td>
+                                }
+                                else {<td>Already fullfilled</td>}
+                        </tr>
+                        }
+                        catch {} //this was just incase the database gave us a null customer
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
 
 
 @code {
+    private bool isLoaded = false;
+    private bool showFullFilled = false;
     private List<Purchase> purchases = new();
     private bool showProducts = false;
     protected override async Task OnInitializedAsync()
@@ -72,6 +87,27 @@
             p.PurchaseProducts = purchaseProducts.Where(pp => pp.Purchaseid == p.Id).ToList();
         }
 
+        isLoaded = true;
+    }
+
+    private async Task updateFullfill(int purchaseId)
+    {
+        try
+        {
+
+            var toUpdate = purchases.FirstOrDefault(p => p.Id == purchaseId);
+            purchases.Remove(toUpdate);
+            DateTime now = DateTime.Today;
+            toUpdate.Fulfillmentdate = now;
+            toUpdate.Isfulfilled = true;
+            await client.PatchAsJsonAsync("api/purchase/update", toUpdate);
+          
+            purchases.Add(toUpdate);
+        }
+        catch
+        {
+            //Get a better puchase Id !!!!!
+        }
 
     }
 }
