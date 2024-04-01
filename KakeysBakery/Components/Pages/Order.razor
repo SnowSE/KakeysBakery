@@ -1,21 +1,11 @@
 ﻿@page "/Order"
-@using BlazorBootstrap
-@inject IBaseGoodService basegood
-@inject IProductService product
-@inject ICustomerService customer
-@inject IBaseGoodTypeService basegoodtype
-@inject NavigationManager navmanager
 
+@using BlazorBootstrap
+@inject NavigationManager navManager
+@inject HttpClient client
 @rendermode InteractiveServer
-@* @attribute [Authorize]
- *@
 
 <h3 class="pageTitle">Order</h3>
-
-
-
-<p>Hello @Username!</p>
-<p>Error: @ErrorString</p>
 
 
 <Modal @ref="modal" Title="Customize Your Order">
@@ -28,7 +18,7 @@
                 {
                     @foreach (Basegood basegoods in baseGoodDetails)
                     {
-                        @if (basegoods.Isavalible)
+                        @if (basegoods.Isavailable ?? false)
                         {
                             <option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
                         }
@@ -39,12 +29,12 @@
 
             <div class="InputBox">
                 <label>Quantity:</label>
-                <input type="number" @onchange="QuantityChanged" id="box"/>
+                <input type="number" @onchange="QuantityChanged" id="box" />
             </div>
             <hr />
             @if (modalError is null)
             {
-                <h5>Price for this amount: @(currentBaseGood?.Suggestedprice * quantity)</h5>
+                <h5>Toatl: $@(currentBaseGood?.Suggestedprice * quantity)</h5>
             }
             else
             {
@@ -56,11 +46,7 @@
         <Button Color="ButtonColor.Secondary" @onclick="async () => { await modal.HideAsync(); }">Close</Button>
         @if (modalError is null)
         {
-            <Button Color="ButtonColor.Primary">Add To Cart</Button>
-        }
-        else
-        {
-
+            <Button Color="ButtonColor.Primary" @onclick="async () => { await AddToCart(); }">Add To Cart</Button>
         }
     </FooterTemplate>
 </Modal>
@@ -86,111 +72,77 @@
 
 
 @code {
-	//for authentication
-	[CascadingParameter]
-	private Task<AuthenticationState>? authenticationState { get; set; }
-	private string Username = "";
-	private string email = "";
-	HttpClient client = new();
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    private AuthenticationManager? authManager;
 
     private Modal modal = default!;
+    List<Basegood>? baseGoodDetails = null;
+    public List<Basegoodtype>? baseGoodTypes = null;
+
     Basegood? currentBaseGood;
-    List<Basegood>? baseGoodDetails;
     int clickedBaseGoodId;
     decimal? quantity = 1;
     string? modalError;
-    public List<Basegoodtype>? baseGoodTypes;
-
-    string ErrorString = "No Error";
 
 
     protected override async Task OnInitializedAsync()
     {
-        baseGoodTypes = await basegoodtype.GetBaseGoodTypeListAsync();
+        client.BaseAddress = new Uri(navManager.BaseUri);
+        baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
-        client.BaseAddress = new Uri("https://localhost:7196/");
-
-		baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
-		await AuthenticateUser();
-		StateHasChanged();
-
+        authManager = new(authenticationState, client);
     }
-
-	private async Task AuthenticateUser()
-	{
-		bool canDo = await AuthenticEmail();
-		if (authenticationState is null || !canDo) { return; }
-		var state = await authenticationState;
-		Username = state?.User?.Identity?.Name ?? "";
-		Customer User = new Customer();
-
-		
-		User.Forename = state?.User?.Identity?.Name;
-		User.Email = email;
-		//check if the customer with this email exists
-		Customer? result = null;
-		try
-		{
-			result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
-		}
-		catch { }
-		if (result is null)
-		{
-			await client.PostAsJsonAsync("api/customer/add", User);
-		}
-
-		Customer? result2 = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
-	}
 
     private async Task SelectHasChanged(ChangeEventArgs e)
     {
         if (e.Value is null) { return; }
+        if (e.Value is "---") { return; }
 
         int typeId = Convert.ToInt32(e.Value.ToString());
         currentBaseGood = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{clickedBaseGoodId}/{typeId}");
-
     }
 
     private void QuantityChanged(ChangeEventArgs e)
     {
+        if (e.Value == null) { return; }
+        quantity = 1;
+
         int testquantity = 1;
         try
         {
-            testquantity = Convert.ToInt32(e.Value?.ToString());
-            quantity = (decimal)testquantity;
+            quantity = Convert.ToDecimal(e.Value.ToString());
             modalError = null;
         }
         catch
         {
-            quantity = 1;
             modalError = "something went wrong, please try again";
         }
+
         if (testquantity <= 0)
         {
             modalError = "please input a quantity larger than 1";
-            quantity = 1;
         }
     }
 
-	public async Task BaseGoodClicked(int basegoodtypeid)
-	{
-		clickedBaseGoodId = basegoodtypeid;
-		baseGoodDetails = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegood/get_from_type/{basegoodtypeid}");
-		if (basegoodtypeid == 1)
-		{
-			//navmanager.NavigateTo("/Customize");
-		}
-	}
+    public async Task BaseGoodClicked(int basegoodtypeid)
+    {
+        clickedBaseGoodId = basegoodtypeid;
+        baseGoodDetails = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegood/get_from_type/{basegoodtypeid}");
+    }
 
-	private async  Task<bool> AuthenticEmail()
-	{
-		try
-		{
-			var state = await authenticationState;
-			var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
-			email = userEmail;
-			return true;
-		}
-		catch { return false; }
-	}
+    public async Task AddToCart()
+    {
+        if (!(await authManager!.IsUserLoggedIn()))
+        {
+            navManager.NavigateTo("Account/Login?redirectUri=/Order");
+        }
+
+        else
+        {
+            
+        }
+    }
+
+    
 }

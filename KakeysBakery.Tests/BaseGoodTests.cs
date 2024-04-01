@@ -42,7 +42,7 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         Basegood testBaseGood = new()
         {
             //Basegoodname = "TestName",
-            Id = 78,
+            Id = 1000,
             Suggestedprice = (decimal)100.25,
             //Flavor = "testFlavor"
         };
@@ -85,7 +85,7 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         Basegood testBaseGood = new()
         {
             //Basegoodname = "TestName",
-            Id = 80,
+            Id = 1000,
             Suggestedprice = (decimal)100.25,
             //Flavor = "testFlavor"
         };

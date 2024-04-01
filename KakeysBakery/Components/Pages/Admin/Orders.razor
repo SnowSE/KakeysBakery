@@ -1,0 +1,113 @@
+﻿@page "/admin/orders"
+@inject NavigationManager nav
+@inject HttpClient client
+@inject IPurchaseService purchaseService
+
+
+@rendermode InteractiveServer
+<h1>ORDERS</h1>
+@if (isLoaded)
+{
+    <div class="align-content-center bg-light">
+        <button @onclick="() => {showProducts = !showProducts;}">show products</button>
+        <button @onclick="() => {showFullFilled = !showFullFilled;}">show fullfilled orders</button>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Product Type</th>
+                    <th scope="col">Order Date</th>
+                    <th scope="col">FullFilment Data</th>
+                    <th scope="col">Email</th>
+                    @if (showProducts)
+                    {
+                        <th scope="col">Products</th>
+                    }
+                    <th>FullFill</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Purchase _purchase in purchases)
+                {
+                    @if ((_purchase.Isfulfilled ?? false) || showFullFilled)
+                    {
+                        @try
+                        {
+                            
+                        <tr>
+                            <td>@_purchase.Customer.Forename</td>
+                            <td>@_purchase.Orderdate.ToString()</td>
+                            <td>@_purchase.Fulfillmentdate.ToString()</td>
+                            <td>@_purchase.Customer.Email</td>
+                            @if (showProducts)
+                            {
+                                <td>
+                                    <ul>
+                                        @foreach (PurchaseProduct prod in _purchase.PurchaseProducts)
+                                        {
+                                            <li>@prod.Product.Productname</li>
+                                        }
+                                    </ul>
+                                </td>
+                            }
+                                @if ((_purchase.Isfulfilled ?? false))
+                                {
+                                    <td><button @onclick="()=>{updateFullfill(_purchase.Id);}">Fullfill now</button></td>
+                                }
+                                else {<td>Already fullfilled</td>}
+                        </tr>
+                        }
+                        catch {} //this was just incase the database gave us a null customer
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+@code {
+    private bool isLoaded = false;
+    private bool showFullFilled = false;
+    private List<Purchase> purchases = new();
+    private bool showProducts = false;
+    protected override async Task OnInitializedAsync()
+    {
+        client.BaseAddress = new Uri(nav.BaseUri);
+        purchases = await client.GetFromJsonAsync<List<Purchase>>("api/Purchase/getall") ?? new();
+        List<Customer> Customers = await client.GetFromJsonAsync<List<Customer>>("api/Customer/getall") ?? new();
+        List<Product> products = await client.GetFromJsonAsync<List<Product>>("api/Product/getall") ?? new();
+        List<PurchaseProduct> purchaseProducts = await client.GetFromJsonAsync<List<PurchaseProduct>>("api/PurchaseProduct/getall") ?? new();
+        foreach (PurchaseProduct pp in purchaseProducts)
+        {
+            pp.Product = products.FirstOrDefault(p => p.Id == pp.Productid);
+        }
+        foreach (Purchase p in purchases)
+        {
+            p.Customer = Customers.FirstOrDefault(c => c.Id == p.Customerid);
+            p.PurchaseProducts = purchaseProducts.Where(pp => pp.Purchaseid == p.Id).ToList();
+        }
+
+        isLoaded = true;
+    }
+
+    private async Task updateFullfill(int purchaseId)
+    {
+        try
+        {
+
+            var toUpdate = purchases.FirstOrDefault(p => p.Id == purchaseId);
+            purchases.Remove(toUpdate);
+            DateTime now = DateTime.Today;
+            toUpdate.Fulfillmentdate = now;
+            toUpdate.Isfulfilled = true;
+            await client.PatchAsJsonAsync("api/purchase/update", toUpdate);
+          
+            purchases.Add(toUpdate);
+        }
+        catch
+        {
+            //Get a better puchase Id !!!!!
+        }
+
+    }
+}
