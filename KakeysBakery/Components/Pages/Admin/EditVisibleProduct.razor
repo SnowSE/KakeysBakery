@@ -252,16 +252,16 @@
                 Flavorname = productString
             };
         await baseGoodFlavor.CreateBaseGoodFlavorAsync(newType);
-        var returned = await baseGoodFlavor.GetBaseGoodFlavorByBase(productString);
+        //var returned = await baseGoodFlavor.GetBaseGoodFlavorByBase(productString);
 
 
-        Basegood newAddon = new Basegood()
-            {
-                Suggestedprice = productCost,
-                Pastryid = selectedId,
-                Flavorid = returned?.Id
-            };
-        await baseGood.CreateBaseGoodAsync(newAddon);
+        // Basegood newAddon = new Basegood()
+        //     {
+        //         Suggestedprice = productCost,
+        //         Pastryid = selectedId,
+        //         Flavorid = returned?.Id
+        //     };
+        // await baseGood.CreateBaseGoodAsync(newAddon);
         Reset();
     }
 
