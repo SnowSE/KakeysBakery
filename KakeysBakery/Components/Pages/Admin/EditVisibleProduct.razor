@@ -141,25 +141,25 @@
 </div>
 
 @code {
-	int? selectedId;
-	string productString = "";
-	decimal productCost = 0.0m;
+	public int? selectedId;
+	public string productString = "";
+	public decimal productCost = 0.0m;
 
-	string errorstring;
-	string confirmationstring;
+	public string errorstring;
+	public string confirmationstring;
 
-	public List<Addon>? addons;
-	public List<Addonflavor>? addonFlavors;
-	public List<Addontype>? addonTypes;
-	public List<Basegood>? baseGoods;
-	public List<Basegoodflavor>? baseGoodFlavors;
-	public List<Basegoodtype>? baseGoodTypes;
-	public Basegood? selectedBaseGood;
+	private List<Addon>? addons;
+	private List<Addonflavor>? addonFlavors;
+	private List<Addontype>? addonTypes;
+	private List<Basegood>? baseGoods;
+	private List<Basegoodflavor>? baseGoodFlavors;
+	private List<Basegoodtype>? baseGoodTypes;
+	private Basegood? selectedBaseGood;
 
-	public bool isEditingTopping = false;
-	public bool isEditingProduct = false;
-	public bool isAddingProduct = false;
-	public bool isAddingTopping = false;
+	private bool isEditingTopping = false;
+	private bool isEditingProduct = false;
+	private bool isAddingProduct = false;
+	private bool isAddingTopping = false;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -207,22 +207,30 @@
 		isAddingTopping = false;
 	}
 
-	public void AddNewtopping()
+	public Addonflavor CreateAddonFlavor()
 	{
-		Addonflavor newType = new Addonflavor()
+		return new Addonflavor()
 			{
 				Flavor = productString
 			};
-		addonFlavor.CreateAddonFlavorAsync(newType);
-		var returned = addonFlavor.GetAddonFlavorByFlavorAsync(productString);
+	}
 
-		Addon newAddon = new Addon()
+	public Addon CreateAddon(int productid)
+	{
+		return new Addon()
 			{
 				Suggestedprice = productCost,
 				Addontypeid = selectedId,
-				Addonflavorid = returned.Id
+				Addonflavorid = productid
 			};
-		addon.CreateAddOnAsync(newAddon);
+	}
+
+	public void AddNewtopping()
+	{
+		addonFlavor.CreateAddonFlavorAsync(CreateAddonFlavor());
+		var returned = addonFlavor.GetAddonFlavorByFlavorAsync(productString);
+
+		addon.CreateAddOnAsync(CreateAddon(returned.Id));
 	}
 
 	public void DeleteTopping(int? id)
@@ -234,6 +242,14 @@
 	public void EditTopping(int? id)
 	{
 		throw new NotImplementedException();
+	}
+
+	public Basegoodtype CreateBasegood()
+	{
+		return new Basegoodtype()
+			{
+				Basegood = productString
+			};
 	}
 
 	public void AddNewBaseProduct()
