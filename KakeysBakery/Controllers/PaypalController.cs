@@ -40,14 +40,14 @@ namespace KakeysBakery.Controllers
                     //it is returned by the create function call of the payment class  
                     // Creating a payment  
                     // baseURL is the url on which paypal sendsback the data.  
-                    string baseURI = this.Request.Scheme + "://" + this.Request.Host + "/Home/PaymentWithPayPal?";
+                    string baseURI = "https://localhost:7196/";
                     //here we are generating guid for storing the paymentID received in session  
                     //which will be used in the payment execution  
                     var guidd = Convert.ToString((new Random()).Next(100000));
                     guid = guidd;
                     //CreatePayment function gives us the payment approval url  
                     //on which payer is redirected for paypal account payment  
-                    var createdPayment = this.CreatePayment(apiContext, baseURI + "guid=" + guid, blogId);
+                    var createdPayment = this.CreatePayment(apiContext, baseURI, blogId);
                     //get links returned from paypal in response to Create function call  
                     var links = createdPayment.links.GetEnumerator();
                     string paypalRedirectUrl = null;
@@ -80,7 +80,7 @@ namespace KakeysBakery.Controllers
 
                     
 
-                    return View("PaymentSuccess");
+                    return RedirectToPage("/Confirmation");
                 }
             }
             catch (Exception ex)
@@ -127,8 +127,8 @@ namespace KakeysBakery.Controllers
             // Configure Redirect Urls here with RedirectUrls object  
             var redirUrls = new RedirectUrls()
             {
-                cancel_url = redirectUrl + "&Cancel=true",
-                return_url = redirectUrl
+                cancel_url = redirectUrl,
+                return_url = "https://localhost:7196/Confirmation"
             };
             // Adding Tax, shipping and Subtotal details  
             //var details = new Details()
