@@ -141,25 +141,25 @@
 </div>
 
 @code {
-	public int? selectedId;
-	public string productString = "";
-	public decimal productCost = 0.0m;
+    public int? selectedId;
+    public string productString = "";
+    public decimal productCost = 0.0m;
 
-	public string errorstring;
-	public string confirmationstring;
+    public string errorstring;
+    public string confirmationstring;
 
-	private List<Addon>? addons;
-	private List<Addonflavor>? addonFlavors;
-	private List<Addontype>? addonTypes;
-	private List<Basegood>? baseGoods;
-	private List<Basegoodflavor>? baseGoodFlavors;
-	private List<Basegoodtype>? baseGoodTypes;
-	private Basegood? selectedBaseGood;
+    private List<Addon>? addons;
+    private List<Addonflavor>? addonFlavors;
+    private List<Addontype>? addonTypes;
+    private List<Basegood>? baseGoods;
+    private List<Basegoodflavor>? baseGoodFlavors;
+    private List<Basegoodtype>? baseGoodTypes;
+    private Basegood? selectedBaseGood;
 
-	private bool isEditingTopping = false;
-	private bool isEditingProduct = false;
-	private bool isAddingProduct = false;
-	private bool isAddingTopping = false;
+    private bool isEditingTopping = false;
+    private bool isEditingProduct = false;
+    private bool isAddingProduct = false;
+    private bool isAddingTopping = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -208,37 +208,37 @@
         isAddingTopping = false;
     }
 
-	public Addonflavor CreateAddonFlavor()
-	{
-		return new Addonflavor()
+    public Addonflavor CreateAddonFlavor()
+    {
+        return new Addonflavor()
 			{
 				Flavor = productString
 			};
-	}
+    }
 
-	public Addon CreateAddon(int productid)
-	{
-		return new Addon()
+    public Addon CreateAddon(int productid)
+    {
+        return new Addon()
 			{
 				Suggestedprice = productCost,
 				Addontypeid = selectedId,
 				Addonflavorid = productid
 			};
-	}
+    }
 
-	public void AddNewtopping()
-	{
-		addonFlavor.CreateAddonFlavorAsync(CreateAddonFlavor());
-		var returned = addonFlavor.GetAddonFlavorByFlavorAsync(productString);
+    public void AddNewtopping()
+    {
+        addonFlavor.CreateAddonFlavorAsync(CreateAddonFlavor());
+        var returned = addonFlavor.GetAddonFlavorByFlavorAsync(productString);
 
-		addon.CreateAddOnAsync(CreateAddon(returned.Id));
-	}
+        var madeaddon = CreateAddon(returned.Id);
+
+        addon.CreateAddOnAsync(madeaddon);
+    }
 
     public void DeleteTopping(int? id)
     {
-        if (id is not null)
-            addon.DeleteAddOnAsync((int)id);
-        else errorstring = "Error in deleting topping, make sure product exists first";
+        throw new NotImplementedException();
     }
     public void EditTopping(int? id)
     {
@@ -252,16 +252,16 @@
                 Flavorname = productString
             };
         await baseGoodFlavor.CreateBaseGoodFlavorAsync(newType);
-        //var returned = await baseGoodFlavor.GetBaseGoodFlavorByBase(productString);
+        var returned = await baseGoodFlavor.GetBaseGoodFlavorByBase(productString);
 
 
-        // Basegood newAddon = new Basegood()
-        //     {
-        //         Suggestedprice = productCost,
-        //         Pastryid = selectedId,
-        //         Flavorid = returned?.Id
-        //     };
-        // await baseGood.CreateBaseGoodAsync(newAddon);
+        Basegood newAddon = new Basegood()
+            {
+                Suggestedprice = productCost,
+                Pastryid = selectedId,
+                Flavorid = returned?.Id
+            };
+        await baseGood.CreateBaseGoodAsync(newAddon);
         Reset();
     }
 
@@ -274,9 +274,7 @@
 
     public void DeleteBaseProduct(int? id)
     {
-        if (id is not null)
-            baseGood.DeleteBaseGoodAsync((int)id);
-        else errorstring = "Error in deleting topping, make sure product exists first";
+        throw new NotImplementedException();
     }
     public void EditBaseProduct(int? id)
     {
