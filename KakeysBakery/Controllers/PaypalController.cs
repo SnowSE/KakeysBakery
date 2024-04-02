@@ -40,14 +40,14 @@ namespace KakeysBakery.Controllers
                     //it is returned by the create function call of the payment class  
                     // Creating a payment  
                     // baseURL is the url on which paypal sendsback the data.  
-                    string baseURI = "https://localhost:7196/";
+                    string baseURI = Request.Scheme + "://" + this.Request.Host + "/Home/PaymentWithPayPal?";
                     //here we are generating guid for storing the paymentID received in session  
                     //which will be used in the payment execution  
                     var guidd = Convert.ToString((new Random()).Next(100000));
                     guid = guidd;
                     //CreatePayment function gives us the payment approval url  
                     //on which payer is redirected for paypal account payment  
-                    var createdPayment = this.CreatePayment(apiContext, baseURI, blogId);
+                    var createdPayment = this.CreatePayment(apiContext, baseURI + "guid=" + guid, blogId);
                     //get links returned from paypal in response to Create function call  
                     var links = createdPayment.links.GetEnumerator();
                     string paypalRedirectUrl = null;
@@ -58,6 +58,14 @@ namespace KakeysBakery.Controllers
                         {
                             //saving the payapalredirect URL to which user will be redirected for payment  
                             paypalRedirectUrl = lnk.href;
+
+                            //try this 
+                            httpContextAccessor.HttpContext.Session.SetString("payment", createdPayment.id);
+                            // save the desired redirect URL for confirmation
+                            var confirmationRedirectUrl = "https://localhost:7196/Confirmation"; // Change this to your desired confirmation URL
+                            httpContextAccessor.HttpContext.Session.SetString("confirmationRedirectUrl", confirmationRedirectUrl);
+                            // redirect the user to the PayPal approval URL
+                            return Redirect(paypalRedirectUrl);
                         }
                     }
                     // saving the paymentID in the key guid  
@@ -76,11 +84,8 @@ namespace KakeysBakery.Controllers
 
                         return View("PaymentFailed");
                     }
-                    var blogIds = executedPayment.transactions[0].item_list.items[0].sku;
-
-                    
-
-                    return RedirectToPage("/Confirmation");
+                    var confirmationRedirectUrl = httpContextAccessor.HttpContext.Session.GetString("confirmationRedirectUrl");
+                    return Redirect(confirmationRedirectUrl);
                 }
             }
             catch (Exception ex)
@@ -127,8 +132,8 @@ namespace KakeysBakery.Controllers
             // Configure Redirect Urls here with RedirectUrls object  
             var redirUrls = new RedirectUrls()
             {
-                cancel_url = redirectUrl,
-                return_url = "https://localhost:7196/Confirmation"
+                cancel_url = "https://localhost:7196/",
+                return_url = redirectUrl
             };
             // Adding Tax, shipping and Subtotal details  
             //var details = new Details()
@@ -142,7 +147,7 @@ namespace KakeysBakery.Controllers
             {
                 currency = "USD",
                 total = "100.00", // Total must be equal to sum of tax, shipping and subtotal.  
-                                //details = details
+                                  //details = details
             };
             var transactionList = new List<Transaction>();
             // Adding description about the transaction  
