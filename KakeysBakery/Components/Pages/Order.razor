@@ -11,34 +11,50 @@
 <Modal @ref="modal" Title="Customize Your Order">
     <BodyTemplate>
         <div class="Modal">
-            <label>Choose @baseGoodTypes?.Where(c => c.Id == clickedBaseGoodId).FirstOrDefault()?.Basegood Type:</label>
-            <select name="flavor" @onchange="SelectHasChanged" id="box">
-                <option> --- </option>
-                @if (baseGoodDetails is not null)
-                {
-                    @foreach (Basegood basegoods in baseGoodDetails)
-                    {
-                        @if (basegoods.Isavailable ?? false)
-                        {
-                            <option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
-                        }
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Choose @baseGoodTypes?.Where(c => c.Id == clickedBaseGoodId).FirstOrDefault()?.Basegood Type:</label>
+                        </td>
+                        <td>
+                            <select class="form-select" name="flavor" @onchange="SelectHasChanged" id="box">
+                                <option> --- </option>
+                                @if (baseGoodDetails is not null)
+                                {
+                                    @foreach (Basegood basegoods in baseGoodDetails)
+                                    {
+                                        @if (basegoods.Isavailable ?? false)
+                                        {
+                                            <option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
+                                        }
 
-                    }
-                }
-            </select>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Quantity:</label>
+                        </td>
+                        <td>
+                            <div class="InputBox">
+                                <input class="form-control" min="1" type="number" @onchange="QuantityChanged" id="box" />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <div class="InputBox">
-                <label>Quantity:</label>
-                <input type="number" @onchange="QuantityChanged" id="box" />
-            </div>
             <hr />
             @if (modalError is null)
             {
-                <h5>Toatl: $@(currentBaseGood?.Suggestedprice * quantity)</h5>
+                <h5>Total: $@(currentBaseGood?.Suggestedprice * quantity)</h5>
             }
             else
             {
-                <p>Error: @modalError</p>
+                <p class="text-danger">* Error: @modalError</p>
             }
         </div>
     </BodyTemplate>
@@ -108,7 +124,6 @@
         if (e.Value == null) { return; }
         quantity = 1;
 
-        int testquantity = 1;
         try
         {
             quantity = Convert.ToDecimal(e.Value.ToString());
@@ -116,12 +131,12 @@
         }
         catch
         {
-            modalError = "something went wrong, please try again";
+            modalError = "Something went wrong, please try again";
         }
 
-        if (testquantity <= 0)
+        if (quantity <= 0)
         {
-            modalError = "please input a quantity larger than 1";
+            modalError = "Please input a quantity larger than 0";
         }
     }
 
@@ -139,8 +154,9 @@
             return;
         }
 
-        
-    }
+        else
+        {
 
-    
+        }
+    }
 }
