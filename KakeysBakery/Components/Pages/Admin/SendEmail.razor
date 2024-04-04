@@ -1,0 +1,66 @@
+﻿@page "/admin/hehe"
+
+@using Blazored.TextEditor
+
+<BlazoredTextEditor @ref="@QuillHtml">
+    <ToolbarContent>
+        <select class="ql-header">
+            <option selected=""></option>
+            <option value="1"></option>
+            <option value="2"></option>
+            <option value="3"></option>
+            <option value="4"></option>
+            <option value="5"></option>
+        </select>
+        <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+            <select class="ql-color"></select>
+            <select class="ql-background"></select>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-link"></button>
+        </span>
+    </ToolbarContent>
+    <EditorContent>
+
+    </EditorContent>
+</BlazoredTextEditor>
+
+@code {
+    [Parameter]
+    public string? Success { get; set; }
+
+    BlazoredTextEditor? QuillHtml;
+
+    string? QuillHTMLContent { get; set; }
+    string errorMessage = "";
+
+    string? Title { get; set; }
+    int AuthorId { get; set; } = 0;
+    bool Commentable { get; set; }
+
+    string? Message { get; set; }
+    byte[]? ImageBytes { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+
+
+    public async Task GetHTML()
+    {
+        QuillHTMLContent = await this!.QuillHtml!.GetHTML();
+        StateHasChanged();
+    }
+}
