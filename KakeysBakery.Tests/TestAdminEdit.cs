@@ -49,7 +49,7 @@ public class TestAdminEdit : IClassFixture<BakeryFactory>
 
 		editVisibleProduct.productCost = 1m;
 		editVisibleProduct.selectedId = 1;
-		var addon = editVisibleProduct.CreateAddon(addonflavor.Id);
+		//var addon = editVisibleProduct.CreateAddon(addonflavor.Id);
 
 		//act
 		editVisibleProduct.AddNewtopping();

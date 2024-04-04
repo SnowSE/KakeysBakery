@@ -226,25 +226,6 @@
 			};
     }
 
-    public void AddNewtopping()
-    {
-        addonFlavor.CreateAddonFlavorAsync(CreateAddonFlavor());
-        var returned = addonFlavor.GetAddonFlavorByFlavorAsync(productString);
-
-        var madeaddon = CreateAddon(returned.Id);
-
-        addon.CreateAddOnAsync(madeaddon);
-    }
-
-    public void DeleteTopping(int? id)
-    {
-        throw new NotImplementedException();
-    }
-    public void EditTopping(int? id)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task AddNewBaseProduct()
     {
         Basegoodflavor newType = new Basegoodflavor()
@@ -263,6 +244,34 @@
             };
         await baseGood.CreateBaseGoodAsync(newAddon);
         Reset();
+    }
+
+    public void DeleteTopping(int? id)
+    {
+        throw new NotImplementedException();
+    }
+    public void EditTopping(int? id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task AddNewtopping()
+    {
+        Addonflavor newType = new Addonflavor()
+            {
+                Flavor = productString
+            };
+        await addonFlavor.CreateAddonFlavorAsync(newType);
+        var returned = await addonFlavor.GetAddonFlavorByFlavorAsync(productString);
+
+
+        Addon newAddon = new Addon()
+            {
+                Suggestedprice = productCost,
+                Addontypeid = selectedId,
+                Addonflavorid = returned?.Id
+            };
+        await addon.CreateAddOnAsync(newAddon); 
     }
 
     public void Reset()
