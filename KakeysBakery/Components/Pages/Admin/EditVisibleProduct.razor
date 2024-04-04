@@ -228,6 +228,8 @@
 
     public void AddNewtopping()
     {
+        if (addonFlavor is null) { return; }
+
         addonFlavor.CreateAddonFlavorAsync(CreateAddonFlavor());
         var returned = addonFlavor.GetAddonFlavorByFlavorAsync(productString);
 
