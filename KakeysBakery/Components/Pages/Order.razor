@@ -151,6 +151,7 @@
         if (!(await authManager!.IsUserLoggedIn()))
         {
             navManager.NavigateTo("Account/Login?redirectUri=/Order");
+            return;
         }
 
         else
