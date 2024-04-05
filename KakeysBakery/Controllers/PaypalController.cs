@@ -24,9 +24,9 @@ namespace KakeysBakery.Controllers
         public ActionResult PaymentWithPaypal(string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
             //getting the apiContext  
-            var ClientID = _configuration.GetValue<string>("PayPal:Key");
-            var ClientSecret = _configuration.GetValue<string>("PayPal:Secret");
-            var mode = _configuration.GetValue<string>("PayPal:mode");
+            var ClientID = _configuration.GetValue<string>("PayPalKey");
+            var ClientSecret = _configuration.GetValue<string>("PayPalSecret");
+            var mode = _configuration.GetValue<string>("PayPalmode");
             APIContext apiContext = PaypalConfiguration.GetAPIContext(ClientID, ClientSecret, mode);
             // apiContext.AccessToken="Bearer access_token$production$j27yms5fthzx9vzm$c123e8e154c510d70ad20e396dd28287";
             try
