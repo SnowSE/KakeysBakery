@@ -1,8 +1,11 @@
 ﻿@page "/Order"
 
 @using BlazorBootstrap
+@using KakeysBakery.Data
+@using Microsoft.EntityFrameworkCore
 @inject NavigationManager navManager
 @inject HttpClient client
+@inject PostgresContext context
 @rendermode InteractiveServer
 
 <h3 class="pageTitle">Order</h3>
@@ -98,7 +101,7 @@
 
     Basegood? currentBaseGood;
     int clickedBaseGoodId;
-    decimal? quantity = 1;
+    int? quantity = 1;
     string? modalError;
 
 
@@ -126,7 +129,7 @@
 
         try
         {
-            quantity = Convert.ToDecimal(e.Value.ToString());
+            quantity = Convert.ToInt32(e.Value.ToString());
             modalError = null;
         }
         catch
@@ -154,9 +157,62 @@
             return;
         }
 
+        Product? product = await GetProduct();
+        if (product == null) { return; }
+
+        Cart c = new()
+            {
+                Customerid = 0, // TODO: Get customer id
+                Productid = product.Id,
+                Quantity = quantity
+            };
+
+        // Save to database
+        // context.Carts.Add(c);
+        // await context.SaveChangesAsync();
+    }
+
+    private async Task<Product?> GetProduct()
+    {
+        int bgId = 0; // TODO: Get basegood id
+
+        var pabs = await context.ProductAddonBasegoods
+            .Include(p => p.Basegood)
+            .Where(p => p.Basegood.Pastryid == 0) // TODO: Get pastry id
+            .Where(p => p.Basegoodid == bgId)
+            .Where(p => p.Addon == null)
+            .FirstOrDefaultAsync();
+
+        Product? product;
+        if (pabs is null)
+        {
+            var pCount = context.Products.Count() + 1;
+
+            product = new()
+                {
+                    Id = pCount,
+                    Ispublic = true
+                };
+
+            pabs = new()
+                {
+                    Productid = pCount,
+                    Basegoodid = bgId
+                };
+
+            context.Products.Add(product);
+            context.ProductAddonBasegoods.Add(pabs);
+
+            // await context.SaveChangesAsync();
+        }
+
         else
         {
-
+            product = await context.Products
+                .Where(p => p.Id == pabs.Productid)
+                .FirstOrDefaultAsync();
         }
+
+        return product;
     }
 }
