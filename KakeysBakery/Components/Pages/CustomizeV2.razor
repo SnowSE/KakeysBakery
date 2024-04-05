@@ -4,12 +4,12 @@
 
 <h3>CustomizeV2</h3>
 
-@foreach (Basegood good in basegoods)
+@foreach (Basegood good in basegoods!)
 {
-    <p>@good.Flavor.Flavorname</p>
+    <p>@good.Flavor?.Flavorname</p>
 }
 @code {
-    private List<Basegood> basegoods = new();
+    private List<Basegood>? basegoods = new();
     protected override async Task OnInitializedAsync()
     {
         client.BaseAddress = new Uri(nav.BaseUri);
@@ -20,8 +20,8 @@
             var types = await client.GetFromJsonAsync<List<Basegoodtype>>("api/Basegoodtype/getall");
             foreach (Basegood good in basegoods)
             {
-                good.Pastry = types.FirstOrDefault(t => t.Id == good.Pastryid);
-                good.Flavor = flavors.FirstOrDefault(f => f.Id == good.Flavorid);
+                good.Pastry = types!.FirstOrDefault(t => t.Id == good.Pastryid);
+                good.Flavor = flavors!.FirstOrDefault(f => f.Id == good.Flavorid);
             }
         }
     }

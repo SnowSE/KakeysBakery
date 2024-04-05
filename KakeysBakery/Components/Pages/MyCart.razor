@@ -26,7 +26,7 @@
             <tr><td colspan="4"><hr /></td></tr>
             </thead>
             <tbody>
-                @foreach (var product in customerProducts)
+                @foreach (var product in customerProducts!)
                 {
                     <tr class="cartCard flex-row">
                         <td class="pe-4"><img src="images/cookie.jpg" /></td>
@@ -58,10 +58,10 @@
     private string Username = "";
     private string email = "";
     HttpClient client = new HttpClient();
-    Customer currentCustomer = new();
-    List<Product> products = new();
-    List<Product> customerProducts = new();
-    List<Cart> allCartItems = new();
+    Customer? currentCustomer = new();
+    List<Product>? products = new();
+    List<Product>? customerProducts = new();
+    List<Cart>? allCartItems = new();
 
 
     protected override async Task OnInitializedAsync()
@@ -91,11 +91,11 @@
 
                 //get the cart and then filter itself to only get items connected to the current customer
                 allCartItems = await client.GetFromJsonAsync<List<KakeysBakeryClassLib.Data.Cart>>("api/cart/getall");
-                allCartItems = allCartItems.Where(i => i.Customerid == currentCustomer.Id).ToList();
+                allCartItems = allCartItems!.Where(i => i.Customerid == currentCustomer!.Id).ToList();
 
                 foreach(var cart in allCartItems)
                 {
-                    customerProducts.Add(products.Where(c => c.Id == cart.Productid).FirstOrDefault());
+                    customerProducts!.Add(products!.Where(c => c.Id == cart.Productid).FirstOrDefault()!);
                 }
 
 

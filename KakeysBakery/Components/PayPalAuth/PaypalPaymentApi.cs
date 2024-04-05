@@ -345,7 +345,7 @@ namespace KakeysBakery.Components.PayPalAuth.Payment
     {
 
         [JsonPropertyName("details")]
-        public ICollection<details> Details { get; set; }
+        public ICollection<DetailsPart2> Details { get; set; }
 
         private IDictionary<string, object> _additionalProperties;
 
@@ -2444,7 +2444,7 @@ namespace KakeysBakery.Components.PayPalAuth.Payment
     {
 
         [JsonPropertyName("details")]
-        public ICollection<details> Details { get; set; }
+        public ICollection<DetailsPart2> Details { get; set; }
 
     }
 
@@ -2516,7 +2516,7 @@ namespace KakeysBakery.Components.PayPalAuth.Payment
     {
 
         [JsonPropertyName("details")]
-        public ICollection<details> Details { get; set; }
+        public ICollection<DetailsPart2> Details { get; set; }
 
     }
 
@@ -2561,7 +2561,7 @@ namespace KakeysBakery.Components.PayPalAuth.Payment
     {
 
         [JsonPropertyName("details")]
-        public ICollection<details> Details { get; set; }
+        public ICollection<DetailsPart2> Details { get; set; }
 
     }
 
@@ -2599,7 +2599,7 @@ namespace KakeysBakery.Components.PayPalAuth.Payment
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class details
+    public partial class DetailsPart2
     {
 
         private IDictionary<string, object> _additionalProperties;

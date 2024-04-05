@@ -39,35 +39,35 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (Purchase p in purchases)
+                @foreach (Purchase _purchase in purchases)
                 {
-                    @if (!(p.Isfulfilled ?? false) || showFulfilled)
+                    @if (!(_purchase.Isfulfilled ?? false) || showFulfilled)
                     {
                         <tr>
-                            <td>@p.Customer.Forename</td>
-                            <td>@p.Customer.Email</td>
-                            <td>@p.Orderdate.ToString()</td>
-                            <td>@p.Fulfillmentdate.ToString()</td>
+                            <td>@_purchase.Customer!.Forename</td>
+                            <td>@_purchase.Orderdate.ToString()</td>
+                            <td>@_purchase.Fulfillmentdate.ToString()</td>
+                            <td>@_purchase.Customer.Email</td>
                             @if (showProducts)
                             {
                                 <td>
                                     <ul>
-                                        @foreach (PurchaseProduct prod in p.PurchaseProducts)
+                                        @foreach (PurchaseProduct prod in _purchase.PurchaseProducts)
                                         {
-                                            <li>@prod.Product.Productname</li>
+                                            <li>@prod.Product!.Productname</li>
                                         }
                                     </ul>
                                 </td>
                             }
 
-                            @if (p.Isfulfilled ?? false)
+                            @if (_purchase.Isfulfilled ?? false)
                             {
                                 <td><button class="btn btn-sucess" disabled>Fulfilled</button></td>
 
                             }
                             else
                             {
-                                <td><button class="btn btn-primary" @onclick="async ()=>{ await updateFulfill(p.Id); }">Fulfill now</button></td>
+                                <td><button class="btn btn-primary" @onclick="async ()=>{ await updateFulfill(_purchase.Id); }">Fulfill now</button></td>
                             }
                         </tr>
                     }
