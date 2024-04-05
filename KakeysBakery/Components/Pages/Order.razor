@@ -178,7 +178,7 @@
 
         var pabs = await context.ProductAddonBasegoods
             .Include(p => p.Basegood)
-            .Where(p => p.Basegood.Pastryid == 0) // TODO: Get pastry id
+            .Where(p => p.Basegood!.Pastryid == 0) // TODO: Get pastry id
             .Where(p => p.Basegoodid == bgId)
             .Where(p => p.Addon == null)
             .FirstOrDefaultAsync();
