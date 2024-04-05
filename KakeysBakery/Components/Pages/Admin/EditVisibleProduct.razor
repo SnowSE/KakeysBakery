@@ -57,17 +57,25 @@
 			</div>
 			@if (selectedId2 != -1)
 			{
-				<label> what's the price of this product</label>
-				<input type="number"/>
+				<div>
+					<label> what's the price of this product</label>
+					<input type="number" />
+				</div>
 
-				<label> What's the name of this product</label>
-				<input type="text" placeholder=""/>
+				<div>
+					<label> What's the name of this product</label>
+					<input type="text" placeholder="" />
+				</div>
 
-				<label>Is this product currently available</label>
-				<input type="checkbox"/>
+				<div>
+					<label>Is this product currently available</label>
+					<input type="checkbox" />
+				</div>
 
-				<label>What is the quantity that this product comes in</label>
-				<input type="number"/>
+				<div>
+					<label>What is the quantity that this product comes in</label>
+					<input type="number" />
+				</div>
 			}
 			<div>
 				<button @onclick="() => DeleteBaseProduct(-1)">Delete Selected Product</button>
@@ -97,23 +105,27 @@
 			<div>
 				@if (addons is not null)
 				{
-				<select @onchange="SelectChanged2">
-					<option>---</option>
-					@foreach (Addon addon in addons)
-					{
-						<option value="@addon.Id">@addon.Addonflavor.Flavor</option>
-					}
-				</select>
+					<select @onchange="SelectChanged2">
+						<option>---</option>
+						@foreach (Addon addon in addons)
+						{
+							<option value="@addon.Id">@addon.Addonflavor.Flavor</option>
+						}
+					</select>
 				}
 			</div>
 			<div>
 				@if (selectedId2 != -1)
 				{
-					<label>What is the topping name</label>
-					<input type="text"/>
+					<div>
+						<label>What is the topping name</label>
+						<input type="text" />
+					</div>
 
-					<label>How much does it cost to add</label>
-					<input type="number"/>
+					<div>
+						<label>How much does it cost to add</label>
+						<input type="number" />
+					</div>
 				}
 			</div>
 			<div>
@@ -240,8 +252,8 @@
 		{
 			addons = await addon.GetAddonListFromType(selectedId);
 		}
-        await Task.CompletedTask;
-    }
+		await Task.CompletedTask;
+	}
 
 	public void SelectChanged2(ChangeEventArgs e)
 	{
