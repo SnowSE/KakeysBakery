@@ -63,4 +63,13 @@ public class AddOnService : IAddonService
         catch { }
         return Task.CompletedTask;
     }
+
+	public async Task<List<Addon>> GetAddonListFromType(int id)
+	{
+		try
+		{
+			return await _context.Addons.Where(t => t.Addontypeid == id).ToListAsync();
+		}
+		catch { return new List<Addon>(); }
+	}
 }

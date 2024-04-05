@@ -1,24 +1,28 @@
 ﻿@page "/OrderTest"
 
-@inject IPayPalAuthentication paypal
+@using KakeysBakery.Components.PayPalAuth.Orders
+@using Refit
+
 
 @rendermode InteractiveServer
 
 <h3>TestOrder</h3>
 <button @onclick="testorder"> testorder </button>
 
-<button @onclick="captureorder">captureorder</button>
+<a class="btn btn-primary" href="/Home/PaymentWithPaypal">Pay Now</a>
 
 @code {
     string orderid = "";
+    //var paypalapi = RestService.For<IPayments>("https://api-m.sandbox.paypal.com/");
+
 
     public async void testorder()
     {
-        orderid = await paypal.CreateOrder(100m);
+        var paypalapi = RestService.For<IOrders>("https://api-m.sandbox.paypal.com/");
+        //paypalapi.OrdersCreate();
     }
 
     public void captureorder()
     {
-        paypal.CapturePayment(orderid);
     }
 }

@@ -9,30 +9,40 @@
 @if (isLoaded)
 {
     <div class="align-content-center bg-light">
-        <button @onclick="() => {showProducts = !showProducts;}">show products</button>
-        <button @onclick="() => {showFullFilled = !showFullFilled;}">show fullfilled orders</button>
+        <div class="d-flex flex-row ms-auto">
+            <div class="form-check ms-auto m-3">
+                <input class="form-check-input" type="checkbox" @bind="showProducts" id="showProductCheckbox">
+                <label class="form-check-label" for="showProductCheckbox">
+                    Show Products
+                </label>
+            </div>
+            <div class="form-check m-3">
+                <input class="form-check-input" type="checkbox" @bind="showFulfilled" id="showFulfilledCheckbox">
+                <label class="form-check-label" for="showFulfilledCheckbox">
+                    Show Fulfilled Orders
+                </label>
+            </div>
+        </div>
+
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col">Product Type</th>
-                    <th scope="col">Order Date</th>
-                    <th scope="col">FullFilment Data</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Email</th>
+                    <th scope="col">Order Date</th>
+                    <th scope="col">Fulfillment Date</th>
                     @if (showProducts)
                     {
                         <th scope="col">Products</th>
                     }
-                    <th>FullFill</th>
+                    <th>FulFill</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (Purchase _purchase in purchases)
+                @foreach (Purchase p in purchases)
                 {
-                    @if ((_purchase.Isfulfilled ?? false) || showFullFilled)
+                    @if (!(p.Isfulfilled ?? false) || showFulfilled)
                     {
-                        @try
-                        {
-                            
                         <tr>
                             <td>@_purchase.Customer!.Forename</td>
                             <td>@_purchase.Orderdate.ToString()</td>
@@ -42,21 +52,24 @@
                             {
                                 <td>
                                     <ul>
-                                        @foreach (PurchaseProduct prod in _purchase.PurchaseProducts)
+                                        @foreach (PurchaseProduct prod in p.PurchaseProducts)
                                         {
                                             <li>@prod.Product!.Productname</li>
                                         }
                                     </ul>
                                 </td>
                             }
-                                @if ((_purchase.Isfulfilled ?? false))
-                                {
-                                    <td><button @onclick="async ()=>{await updateFullfill(_purchase.Id);}">Fullfill now</button></td>
-                                }
-                                else {<td>Already fullfilled</td>}
+
+                            @if (p.Isfulfilled ?? false)
+                            {
+                                <td><button class="btn btn-sucess" disabled>Fulfilled</button></td>
+
+                            }
+                            else
+                            {
+                                <td><button class="btn btn-primary" @onclick="async ()=>{ await updateFulfill(p.Id); }">Fulfill now</button></td>
+                            }
                         </tr>
-                        }
-                        catch {} //this was just incase the database gave us a null customer
                     }
                 }
             </tbody>
@@ -67,20 +80,25 @@
 
 @code {
     private bool isLoaded = false;
-    private bool showFullFilled = false;
+    private bool showFulfilled = false;
+    private bool showProducts = true;
     private List<Purchase> purchases = new();
-    private bool showProducts = false;
+
+
     protected override async Task OnInitializedAsync()
     {
         client.BaseAddress = new Uri(nav.BaseUri);
+
         purchases = await client.GetFromJsonAsync<List<Purchase>>("api/Purchase/getall") ?? new();
         List<Customer> Customers = await client.GetFromJsonAsync<List<Customer>>("api/Customer/getall") ?? new();
         List<Product> products = await client.GetFromJsonAsync<List<Product>>("api/Product/getall") ?? new();
         List<PurchaseProduct> purchaseProducts = await client.GetFromJsonAsync<List<PurchaseProduct>>("api/PurchaseProduct/getall") ?? new();
+
         foreach (PurchaseProduct pp in purchaseProducts)
         {
             pp.Product = products.FirstOrDefault(p => p.Id == pp.Productid);
         }
+
         foreach (Purchase p in purchases)
         {
             p.Customer = Customers.FirstOrDefault(c => c.Id == p.Customerid);
@@ -90,24 +108,13 @@
         isLoaded = true;
     }
 
-    private async Task updateFullfill(int purchaseId)
+    private async Task updateFulfill(int purchaseId)
     {
-        try
-        {
+        var toUpdate = purchases.FirstOrDefault(p => p.Id == purchaseId);
+        if (toUpdate is null) { return; }
 
-            var toUpdate = purchases.FirstOrDefault(p => p.Id == purchaseId) ?? new();
-            purchases.Remove(toUpdate);
-            DateTime now = DateTime.Today;
-            toUpdate.Fulfillmentdate = now;
-            toUpdate.Isfulfilled = true;
-            await client.PatchAsJsonAsync("api/purchase/update", toUpdate);
-          
-            purchases.Add(toUpdate);
-        }
-        catch
-        {
-            //Get a better puchase Id !!!!!
-        }
-
+        toUpdate.Fulfillmentdate = DateTime.Today;
+        toUpdate.Isfulfilled = true;
+        await client.PatchAsJsonAsync("api/purchase/update", toUpdate);
     }
 }

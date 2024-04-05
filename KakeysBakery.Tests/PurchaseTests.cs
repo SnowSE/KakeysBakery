@@ -143,4 +143,52 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
             Assert.Fail("Expected no exception, but got:" + ex.Message);
         }
     }
+
+    [Fact]
+    public async Task PurchaseUpdatesFulfilledFlag_When_Fulfilled()
+    {
+        Purchase testPurchase = new()
+        {
+            Id = 251,
+            Actualprice = (decimal)100.40
+        };
+
+        await client.PostAsJsonAsync("api/purchase/add", testPurchase);
+
+        // ACT
+        var toUpdate = await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
+
+        toUpdate!.Isfulfilled = true;
+        await client.PatchAsJsonAsync("api/purchase/update", toUpdate);
+        // ASSERT
+        var result = await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
+        Assert.True( result!.Isfulfilled );
+
+
+
+    }
+    [Fact]
+    public async Task PurchaseUpdatesFulfilledFlagAndDate_When_Fulfilled()
+    {
+        Purchase testPurchase = new()
+        {
+            Id = 252,
+            Actualprice = (decimal)100.40
+        };
+
+        await client.PostAsJsonAsync("api/purchase/add", testPurchase);
+
+        // ACT
+        var toUpdate = await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
+        toUpdate!.Fulfillmentdate = DateTime.MaxValue;
+        toUpdate!.Isfulfilled = true;
+        await client.PatchAsJsonAsync("api/purchase/update", toUpdate);
+        // ASSERT
+        var result = await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
+        Assert.True(result!.Isfulfilled);
+        Assert.Equal(toUpdate.Fulfillmentdate, DateTime.MaxValue);
+
+
+
+    }
 }

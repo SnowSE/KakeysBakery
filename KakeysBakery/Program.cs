@@ -25,6 +25,15 @@ builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAu
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddControllersWithViews();
+builder.Services.AddMvc().AddSessionStateTempDataProvider();
+builder.Services.AddSession();
+builder.Services.AddRazorPages();
+builder.Services.AddHttpContextAccessor();
+
+
+
+
 builder.Services.AddScoped<IAddonService, AddOnService>();
 builder.Services.AddScoped<IBaseGoodService, BaseGoodService>();
 builder.Services.AddScoped<IPurchaseService, PurchaseService>();
@@ -43,8 +52,8 @@ builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {
-        options.Domain = builder.Configuration.GetValue<string>("Auth0Domain", "DEFAULT_AUTH0_DOMAIN") ?? "";
-        options.ClientId = builder.Configuration.GetValue<string>("Auth0ClientId", "DEFAULT_AUTH0_CLIENT_ID") ?? "";
+        options.Domain = builder.Configuration.GetValue<string>("Auth0:Domain", "DEFAULT_AUTH0_DOMAIN") ?? "";
+        options.ClientId = builder.Configuration.GetValue<string>("Auth0:ClientId", "DEFAULT_AUTH0_CLIENT_ID") ?? "";
 		options.Scope = "openid profile email";
     });
 
@@ -75,6 +84,10 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseRouting();
+app.UseAntiforgery();
+app.UseSession();
+app.UseAuthorization();
 
 //for OAuth
 app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri = "/") =>
@@ -95,6 +108,11 @@ app.MapGet("/Account/Logout", async (HttpContext httpContext, string redirectUri
     await httpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
     await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 });
+
+app.MapControllerRoute(
+name: "default",
+pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
