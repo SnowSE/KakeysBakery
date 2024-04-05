@@ -34,7 +34,7 @@
                         {
                             
                         <tr>
-                            <td>@_purchase.Customer.Forename</td>
+                            <td>@_purchase.Customer!.Forename</td>
                             <td>@_purchase.Orderdate.ToString()</td>
                             <td>@_purchase.Fulfillmentdate.ToString()</td>
                             <td>@_purchase.Customer.Email</td>
@@ -44,14 +44,14 @@
                                     <ul>
                                         @foreach (PurchaseProduct prod in _purchase.PurchaseProducts)
                                         {
-                                            <li>@prod.Product.Productname</li>
+                                            <li>@prod.Product!.Productname</li>
                                         }
                                     </ul>
                                 </td>
                             }
                                 @if ((_purchase.Isfulfilled ?? false))
                                 {
-                                    <td><button @onclick="()=>{updateFullfill(_purchase.Id);}">Fullfill now</button></td>
+                                    <td><button @onclick="async ()=>{await updateFullfill(_purchase.Id);}">Fullfill now</button></td>
                                 }
                                 else {<td>Already fullfilled</td>}
                         </tr>
@@ -95,7 +95,7 @@
         try
         {
 
-            var toUpdate = purchases.FirstOrDefault(p => p.Id == purchaseId);
+            var toUpdate = purchases.FirstOrDefault(p => p.Id == purchaseId) ?? new();
             purchases.Remove(toUpdate);
             DateTime now = DateTime.Today;
             toUpdate.Fulfillmentdate = now;
