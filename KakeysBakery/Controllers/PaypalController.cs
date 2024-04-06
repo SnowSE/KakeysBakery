@@ -21,13 +21,13 @@ namespace KakeysBakery.Controllers
             return View();
         }
 
-        public ActionResult PaymentWithPaypal(string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
+        public ActionResult PaymentWithPaypal(string? Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
             //getting the apiContext  
             var ClientID = _configuration.GetValue<string>("PayPalKey");
             var ClientSecret = _configuration.GetValue<string>("PayPalSecret");
             var mode = _configuration.GetValue<string>("PayPalmode");
-            APIContext apiContext = PaypalConfiguration.GetAPIContext(ClientID, ClientSecret, mode);
+            APIContext apiContext = PaypalConfiguration.GetAPIContext(ClientID!, ClientSecret!, mode!);
             // apiContext.AccessToken="Bearer access_token$production$j27yms5fthzx9vzm$c123e8e154c510d70ad20e396dd28287";
             try
             {
@@ -50,7 +50,7 @@ namespace KakeysBakery.Controllers
                     var createdPayment = this.CreatePayment(apiContext, baseURI + "guid=" + guid, blogId);
                     //get links returned from paypal in response to Create function call  
                     var links = createdPayment.links.GetEnumerator();
-                    string paypalRedirectUrl = null;
+                    string? paypalRedirectUrl = null;
                     while (links.MoveNext())
                     {
                         Links lnk = links.Current;
@@ -60,7 +60,7 @@ namespace KakeysBakery.Controllers
                             paypalRedirectUrl = lnk.href;
 
                             //try this 
-                            httpContextAccessor.HttpContext.Session.SetString("payment", createdPayment.id);
+                            httpContextAccessor.HttpContext!.Session.SetString("payment", createdPayment.id);
                             // save the desired redirect URL for confirmation
                             var confirmationRedirectUrl = "https://localhost:7196/Confirmation"; // Change this to your desired confirmation URL
                             httpContextAccessor.HttpContext.Session.SetString("confirmationRedirectUrl", confirmationRedirectUrl);
@@ -69,15 +69,15 @@ namespace KakeysBakery.Controllers
                         }
                     }
                     // saving the paymentID in the key guid  
-                    httpContextAccessor.HttpContext.Session.SetString("payment", createdPayment.id);
-                    return Redirect(paypalRedirectUrl);
+                    httpContextAccessor.HttpContext!.Session.SetString("payment", createdPayment.id);
+                    return Redirect(paypalRedirectUrl!);
                 }
                 else
                 {
                     // This function exectues after receving all parameters for the payment  
 
-                    var paymentId = httpContextAccessor.HttpContext.Session.GetString("payment");
-                    var executedPayment = ExecutePayment(apiContext, payerId, paymentId as string);
+                    var paymentId = httpContextAccessor.HttpContext!.Session.GetString("payment");
+                    var executedPayment = ExecutePayment(apiContext, payerId, paymentId! as string);
                     //If executed payment failed then we will show payment failure message to user  
                     if (executedPayment.state.ToLower() != "approved")
                     {
@@ -85,7 +85,7 @@ namespace KakeysBakery.Controllers
                         return View("PaymentFailed");
                     }
                     var confirmationRedirectUrl = httpContextAccessor.HttpContext.Session.GetString("confirmationRedirectUrl");
-                    return Redirect(confirmationRedirectUrl);
+                    return Redirect(confirmationRedirectUrl!);
                 }
             }
             catch (Exception ex)
@@ -93,7 +93,7 @@ namespace KakeysBakery.Controllers
                 return View("PaymentFailed");
             }
             //on successful payment, show success page to user.  
-            return View("SuccessView");
+            //return View("SuccessView");
         }
         private PayPal.Api.Payment payment;
         private Payment ExecutePayment(APIContext apiContext, string payerId, string paymentId)

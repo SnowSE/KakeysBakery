@@ -50,7 +50,7 @@
 						<option>---</option>
 						@foreach (Basegood flavor in baseGoods)
 						{
-							<option value="@flavor.Id">@flavor.Flavor.Flavorname</option>
+							<option value="@flavor.Id">@flavor.Flavor!.Flavorname</option>
 						}
 					</select>
 				}
@@ -109,7 +109,7 @@
 						<option>---</option>
 						@foreach (Addon addon in addons)
 						{
-							<option value="@addon.Id">@addon.Addonflavor.Flavor</option>
+							<option value="@addon.Id">@addon.Addonflavor!.Flavor</option>
 						}
 					</select>
 				}

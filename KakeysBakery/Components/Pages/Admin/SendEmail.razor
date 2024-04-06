@@ -62,9 +62,9 @@
     string MyText = "";
 
 
-    protected override async Task OnInitializedAsync()
-    {
-    }
+    // protected override async Task OnInitializedAsync()
+    // {
+    // }
 
     public async Task GetHTML()
     {
@@ -82,7 +82,7 @@
     {
         string QuillContent = "";
 
-        await this.QuillHtml.LoadHTMLContent(QuillContent);
+        await this.QuillHtml!.LoadHTMLContent(QuillContent);
         StateHasChanged();
     }
 }
