@@ -5,7 +5,7 @@
 @using Microsoft.EntityFrameworkCore
 @inject NavigationManager navManager
 @inject HttpClient client
-@inject PostgresContext context
+@inject IDbContextFactory<PostgresContext> factory
 @rendermode InteractiveServer
 
 <h3 class="pageTitle">Order</h3>
@@ -25,11 +25,11 @@
                                 <option> --- </option>
                                 @if (baseGoodDetails is not null)
                                 {
-                                    @foreach (Basegood basegoods in baseGoodDetails)
+                                    @foreach (Basegood basegood in baseGoodDetails)
                                     {
-                                        @if (basegoods.Isavailable ?? false)
+                                        @if (basegood.Isavailable ?? false)
                                         {
-                                            <option value="@basegoods.Flavor?.Id">@basegoods.Flavor?.Flavorname</option>
+                                            <option value="@basegood.Flavor?.Id">@basegood.Flavor?.Flavorname</option>
                                         }
 
                                     }
@@ -43,7 +43,7 @@
                         </td>
                         <td>
                             <div class="InputBox">
-                                <input class="form-control" min="1" type="number" @onchange="QuantityChanged" id="box" />
+                                <input class="form-control" min="1" type="number" @bind="quantity" id="box" />
                             </div>
                         </td>
                     </tr>
@@ -51,22 +51,12 @@
             </table>
 
             <hr />
-            @if (modalError is null)
-            {
-                <h5>Total: $@(currentBaseGood?.Suggestedprice * quantity)</h5>
-            }
-            else
-            {
-                <p class="text-danger">* Error: @modalError</p>
-            }
+            <h5>Total: $@(currentBaseGood?.Suggestedprice * quantity)</h5>
         </div>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Secondary" @onclick="async () => { await modal.HideAsync(); }">Close</Button>
-        @if (modalError is null)
-        {
-            <Button Color="ButtonColor.Primary" @onclick="async () => { await AddToCart(); }">Add To Cart</Button>
-        }
+        <Button Color="ButtonColor.Primary" @onclick="async () => { await AddToCart(); }">Add To Cart</Button>
     </FooterTemplate>
 </Modal>
 
@@ -94,19 +84,21 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
     private AuthenticationManager? authManager;
-
     private Modal modal = default!;
+
+    Basegood? currentBaseGood;
     List<Basegood>? baseGoodDetails = null;
     public List<Basegoodtype>? baseGoodTypes = null;
 
-    Basegood? currentBaseGood;
     int clickedBaseGoodId;
     int? quantity = 1;
-    string? modalError;
 
+    PostgresContext context;
 
     protected override async Task OnInitializedAsync()
     {
+        context = factory.CreateDbContext(); // TODO: Extract out
+
         client.BaseAddress = new Uri(navManager.BaseUri);
         baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
@@ -115,32 +107,11 @@
 
     private async Task SelectHasChanged(ChangeEventArgs e)
     {
-        if (e.Value is null) { return; }
+        if (e.Value is null)  { return; }
         if (e.Value is "---") { return; }
 
         int typeId = Convert.ToInt32(e.Value.ToString());
         currentBaseGood = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{clickedBaseGoodId}/{typeId}");
-    }
-
-    private void QuantityChanged(ChangeEventArgs e)
-    {
-        if (e.Value == null) { return; }
-        quantity = 1;
-
-        try
-        {
-            quantity = Convert.ToInt32(e.Value.ToString());
-            modalError = null;
-        }
-        catch
-        {
-            modalError = "Something went wrong, please try again";
-        }
-
-        if (quantity <= 0)
-        {
-            modalError = "Please input a quantity larger than 0";
-        }
     }
 
     public async Task BaseGoodClicked(int basegoodtypeid)
@@ -157,59 +128,68 @@
             return;
         }
 
+        if (quantity == null) { return; }
+
         Product? product = await GetProduct();
         if (product == null) { return; }
 
+        string email = authManager.GetUserEmail(await authenticationState!)!;
+        Customer? customer = await client.GetFromJsonAsync<Customer>($"api/Customer/get_by_email/{email}");
+        if (customer is null) { return; }
+
         Cart c = new()
             {
-                Customerid = 0, // TODO: Get customer id
+                Customerid = customer.Id,
                 Productid = product.Id,
                 Quantity = quantity
             };
 
         // Save to database
-        // context.Carts.Add(c);
-        // await context.SaveChangesAsync();
+        context.Carts.Add(c);   
+        await context.SaveChangesAsync();
     }
 
     private async Task<Product?> GetProduct()
     {
-        int bgId = 0; // TODO: Get basegood id
+        int bgId = clickedBaseGoodId;
 
-        var pabs = await context.ProductAddonBasegoods
+        var pab = await context.ProductAddonBasegoods
             .Include(p => p.Basegood)
-            .Where(p => p.Basegood.Pastryid == 0) // TODO: Get pastry id
+            .Where(p => p.Basegood!.Pastryid == currentBaseGood!.Pastryid)
             .Where(p => p.Basegoodid == bgId)
             .Where(p => p.Addon == null)
             .FirstOrDefaultAsync();
 
         Product? product;
-        if (pabs is null)
+        if (pab is null)
         {
-            var pCount = context.Products.Count() + 1;
+            var bgType = await client.GetFromJsonAsync<Basegoodtype>($"api/Basegoodtype/get/{currentBaseGood!.Pastryid}");
+            var flavor = await client.GetFromJsonAsync<Basegoodflavor>($"api/Basegoodflavor/get/{currentBaseGood!.Flavorid}");
 
             product = new()
                 {
-                    Id = pCount,
-                    Ispublic = true
+                    Id = context.Products.Count() * 2, // TODO HELP FIX ME WHAT
+                    Ispublic = true,
+                    Productname = $"{bgType!.Basegood} {flavor!.Flavorname}"
                 };
+            
+            context.Products.Add(product);
+            await context.SaveChangesAsync();
 
-            pabs = new()
+            pab = new()
                 {
-                    Productid = pCount,
+                    Productid = product.Id,
                     Basegoodid = bgId
                 };
 
-            context.Products.Add(product);
-            context.ProductAddonBasegoods.Add(pabs);
-
-            // await context.SaveChangesAsync();
+            context.ProductAddonBasegoods.Add(pab);
+            await context.SaveChangesAsync();
         }
 
         else
         {
             product = await context.Products
-                .Where(p => p.Id == pabs.Productid)
+                .Where(p => p.Id == pab.Productid)
                 .FirstOrDefaultAsync();
         }
 
