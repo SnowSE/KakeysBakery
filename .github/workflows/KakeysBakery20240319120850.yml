@@ -48,3 +48,25 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.KakeysBakery20240319120850_0A13 }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+  notify:
+    runs-on: self-hosted
+    needs: build
+    steps:
+    - name: Microsoft Teams Notification
+      uses: skitionek/notify-microsoft-teams@master
+      if: success()
+      with:
+        webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        steps: ${{ toJson(steps) }}
+    - name: Microsoft Teams Notification (On Failure)
+      if: failure()
+      uses: skitionek/notify-microsoft-teams@master
+      with:
+        webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        steps: ${{ toJson(steps) }}
+        overwrite: "{title: `Runner failed! ${workflow_link}`}"  
