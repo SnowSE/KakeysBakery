@@ -46,42 +46,42 @@ public class EmailService(IConfiguration _config) : IEmailService
             return "Bad Exception Happend";
         }
     }
-    public string sendEmail(string SenderEmail,
-                            string SenderPass,
-                            string ReceiverEmail)
-    {
-        try
-        {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Auto Emailer", SenderEmail));
-            message.To.Add(new MailboxAddress("An Email in need of a Message", ReceiverEmail));
-            message.Subject = "Automated Message System";
+    //public string sendEmail(string SenderEmail,
+    //                        string SenderPass,
+    //                        string ReceiverEmail)
+    //{
+    //    try
+    //    {
+    //        var message = new MimeMessage();
+    //        message.From.Add(new MailboxAddress("Auto Emailer", SenderEmail));
+    //        message.To.Add(new MailboxAddress("An Email in need of a Message", ReceiverEmail));
+    //        message.Subject = "Automated Message System";
 
-            message.Body = new TextPart("plain")
-            {
-                Text = @"Dear Customer,
+    //        message.Body = new TextPart("plain")
+    //        {
+    //            Text = @"Dear Customer,
 
-                   This Is A test Email
+    //               This Is A test Email
 
-                    -- The Bakery"
-            };
+    //                -- The Bakery"
+    //        };
 
-            using (var client = new MailKit.Net.Smtp.SmtpClient())
-            {
-                client.Connect("smtp.gmail.com", 587, false);
+    //        using (var client = new MailKit.Net.Smtp.SmtpClient())
+    //        {
+    //            client.Connect("smtp.gmail.com", 587, false);
 
-                // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(SenderEmail, SenderPass);
+    //            // Note: only needed if the SMTP server requires authentication
+    //            client.Authenticate(SenderEmail, SenderPass);
 
-                client.Send(message);
-                client.Disconnect(true);
-            }
-            return "Email Sent";
-        }
-        catch
-        {
-            return "Bad Exception Happend";
-        }
-    }
+    //            client.Send(message);
+    //            client.Disconnect(true);
+    //        }
+    //        return "Email Sent";
+    //    }
+    //    catch
+    //    {
+    //        return "Bad Exception Happend";
+    //    }
+    //}
 
 }
