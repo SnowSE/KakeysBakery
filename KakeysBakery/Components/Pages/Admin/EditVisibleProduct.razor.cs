@@ -28,23 +28,39 @@ namespace KakeysBakery.Components.Pages.Admin
 			addon = addonService;
 		}
 
+		private Addonflavor CreateAddonFlavor(string productString)
+		{
+            return new Addonflavor()
+            {
+                Flavor = productString
+            };
+        }
+
+		private Addon CreateAddon(decimal productCost, int selectedId, int flavorId)
+		{
+            return new Addon()
+            {
+                Suggestedprice = productCost,
+                Addontypeid = selectedId,
+                Addonflavorid = flavorId
+            };
+        }
+
 		public override async Task<string> Create(string productString, decimal productCost, int selectedId)
 		{
-			Addonflavor newType = new Addonflavor()
-			{
-				Flavor = productString
-			};
-			await addonFlavor.CreateAddonFlavorAsync(newType);
+			try{
+			var newFlavor = CreateAddonFlavor(productString);
+			await addonFlavor.CreateAddonFlavorAsync(newFlavor);
 			var returned = await addonFlavor.GetAddonFlavorByFlavorAsync(productString);
 
-			Addon newAddon = new Addon()
-			{
-				Suggestedprice = productCost,
-				Addontypeid = selectedId,
-				Addonflavorid = returned?.Id
-			};
+			var newAddon = CreateAddon(productCost, selectedId, returned.Id);
 			await addon.CreateAddOnAsync(newAddon);
 			return "Successfully Added Topping";
+			}
+			catch
+			{
+				return "Something happened, please check connection and try again";
+			}
 		}
 
 		public override async Task<string> Edit(int id)
@@ -67,32 +83,51 @@ namespace KakeysBakery.Components.Pages.Admin
 
 		public CEDProducts(IBaseGoodFlavorService baseGoodFlavorService, IBaseGoodService baseGoodService)
 		{
+            baseGoodFlavor = baseGoodFlavorService;
+			baseGood = baseGoodService;
+		}
 
+		private Basegoodflavor CreateBaseFlavor(string productString)
+		{
+            return new Basegoodflavor()
+            {
+                Flavorname = productString
+            };
+        }
+
+
+		private Basegood CreateBaseGood(decimal productCost, int selectedId, int flavorId)
+		{
+			return new Basegood()
+			{
+                Suggestedprice = productCost,
+                Pastryid = selectedId,
+                Flavorid = flavorId
+            };
 		}
 		public override async Task<string> Create(string productString, decimal productCost, int selectedId)
 		{
-			Basegoodflavor newType = new Basegoodflavor()
-			{
-				Flavorname = productString
-			};
-			await baseGoodFlavor.CreateBaseGoodFlavorAsync(newType);
+			try{
+			var newFlavor = CreateBaseFlavor(productString);
+			await baseGoodFlavor.CreateBaseGoodFlavorAsync(newFlavor);
 			var returned = await baseGoodFlavor.GetBaseGoodFlavorByBase(productString);
 
-			Basegood newAddon = new Basegood()
-			{
-				Suggestedprice = productCost,
-				Pastryid = selectedId,
-				Flavorid = returned?.Id
-			};
+			var newAddon = CreateBaseGood(productCost, selectedId, returned.Id);
 			await baseGood.CreateBaseGoodAsync(newAddon);
 
 			return "Successfully Added Product";
+			}
+			catch
+			{
+				return "Something went wrong, please check connection and try again";
+			}
 
 		}
 		public override async Task<string> Edit(int id)
 		{
 			throw new NotImplementedException();
 		}
+
 		public override async Task<string> Delete(int id)
 		{
 			await baseGood.DeleteBaseGoodAsync(id);
