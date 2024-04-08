@@ -51,7 +51,6 @@ jobs:
 
   notify:
     runs-on: self-hosted
-    needs: build
     steps:
     - name: Microsoft Teams Notification
       uses: skitionek/notify-microsoft-teams@master
