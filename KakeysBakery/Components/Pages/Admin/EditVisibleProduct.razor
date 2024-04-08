@@ -21,6 +21,10 @@
 {
 	<p>@errorstring</p>
 }
+@if (confirmationstring is not null)
+{
+	<>@confirmationstring</>
+}
 
 <div>
 	@if (isEditingProduct)
@@ -78,8 +82,8 @@
 				</div>
 			}
 			<div>
-				<button @onclick="() => DeleteBaseProduct(-1)">Delete Selected Product</button>
-				<button @onclick="() => EditBaseProduct(-1)">Edit Selected Product</button>
+				<button @onclick="() => Delete(selectedId2)">Delete Selected Product</button>
+				<button @onclick="() => Edit(selectedId2)">Edit Selected Product</button>
 			</div>
 		}
 	}
@@ -129,8 +133,8 @@
 				}
 			</div>
 			<div>
-				<button @onclick="() => DeleteTopping(-1)">Delete Selected Topping</button>
-				<button @onclick="() => EditTopping(-1)">Edit Selected Topping</button>
+				<button @onclick="() => Delete(selectedId2)">Delete Selected Topping</button>
+				<button @onclick="() => Edit(selectedId2)">Edit Selected Topping</button>
 			</div>
 		}
 	}
@@ -194,10 +198,6 @@
 			</div>
 		}
 		<button @onclick="AddNewtopping">Add</button>
-		if (confirmationstring is not null)
-		{
-			<p>@confirmationstring</p>
-		}
 	}
 	@if (isEditingProduct || isEditingTopping || isAddingProduct || isAddingTopping)
 	{
@@ -293,24 +293,6 @@
 		confirmationstring = null;
 	}
 
-	public Addonflavor CreateAddonFlavor()
-	{
-		return new Addonflavor()
-			{
-				Flavor = productString
-			};
-	}
-
-	public Addon CreateAddon(int productid)
-	{
-		return new Addon()
-			{
-				Suggestedprice = productCost,
-				Addontypeid = selectedId,
-				Addonflavorid = productid
-			};
-	}
-
 	public async Task AddNewBaseProduct()
 	{
 		Basegoodflavor newType = new Basegoodflavor()
@@ -327,16 +309,8 @@
 				Flavorid = returned?.Id
 			};
 		await baseGood.CreateBaseGoodAsync(newAddon);
-		ResetForm();
-	}
-
-	public void DeleteTopping(int? id)
-	{
-		throw new NotImplementedException();
-	}
-	public void EditTopping(int? id)
-	{
-		throw new NotImplementedException();
+		ResetViews();
+		confirmationstring = "Successfully Added Product";
 	}
 
 	public async Task AddNewtopping()
@@ -348,7 +322,6 @@
 		await addonFlavor.CreateAddonFlavorAsync(newType);
 		var returned = await addonFlavor.GetAddonFlavorByFlavorAsync(productString);
 
-
 		Addon newAddon = new Addon()
 			{
 				Suggestedprice = productCost,
@@ -356,6 +329,8 @@
 				Addonflavorid = returned?.Id
 			};
 		await addon.CreateAddOnAsync(newAddon);
+		ResetViews();
+		confirmationstring = "Successfully Added Topping";
 	}
 
 	public void ResetForm()
@@ -364,11 +339,19 @@
 		productCost = 0.0m;
 	}
 
-	public void DeleteBaseProduct(int? id)
+	public async void Delete(int id)
 	{
-		throw new NotImplementedException();
+		if (isEditingProduct)
+			await baseGood.DeleteBaseGoodAsync(id);
+
+		if (isEditingTopping)
+			await addon.DeleteAddOnAsync(id);
+
+		ResetViews();
+		confirmationstring = "Successfully Added Deleted";
 	}
-	public void EditBaseProduct(int? id)
+
+	public void Edit(int id)
 	{
 		throw new NotImplementedException();
 	}
