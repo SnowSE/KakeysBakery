@@ -93,7 +93,7 @@
     int clickedBaseGoodId;
     int? quantity = 1;
 
-    PostgresContext context;
+    PostgresContext? context;
 
     protected override async Task OnInitializedAsync()
     {
@@ -128,6 +128,7 @@
             return;
         }
 
+        if (context == null) { return; }
         if (quantity == null) { return; }
 
         Product? product = await GetProduct();
@@ -151,6 +152,8 @@
 
     private async Task<Product?> GetProduct()
     {
+        if (context is null) { return null; }
+
         int bgId = clickedBaseGoodId;
 
         var pab = await context.ProductAddonBasegoods

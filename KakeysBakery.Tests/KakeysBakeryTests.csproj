@@ -7,7 +7,6 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-	<NoWarn>$(NoWarn);NETSDK1206</NoWarn> <!--Hehe-->
   </PropertyGroup>
 
   <ItemGroup>

@@ -19,9 +19,9 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
     }
 
 
-    [Fact]
-    public async Task CanAddFinishedProductToCart()
-    {
+    //[Fact]
+    //public async Task CanAddFinishedProductToCart()
+    //{
         ///TODO this is the big test or the goal
         //// ARRANGE
         //CartLogic testCart = new CartLogic(client);
@@ -54,13 +54,13 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         //Assert.NotNull(cart);
 
         ////Assert.NotNull(client);
-    }
+    //}
 
-    [Fact]
-    public async Task GivenBaseGoodExists_WhenBaseGoodIsNotALoneProduct_ThenCreateProductWithBaseGood()
-    {
-        //TODO
-    }
+    //[Fact]
+    //public async Task GivenBaseGoodExists_WhenBaseGoodIsNotALoneProduct_ThenCreateProductWithBaseGood()
+    //{
+    //    //TODO
+    //}
 
     [Fact]
     public async Task CanCheckIfProductIsALoneProduct()
