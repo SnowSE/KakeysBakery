@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace KakeysBakery.Data;
+namespace KakeysBakeryClassLib.Data;
 
 public partial class PostgresContext : DbContext
 {

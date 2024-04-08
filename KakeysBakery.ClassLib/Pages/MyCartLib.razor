@@ -1,10 +1,11 @@
 ﻿@page "/Cart"
-@using KakeysBakery.Components.PayPalAuth.Payment
-@using Refit
-
-
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
-@rendermode InteractiveServer
+
+
+@using KakeysBakeryClassLib.Data
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Authorization
+@using Refit
 
 <p>Hello @Username!</p>
 
@@ -69,7 +70,7 @@
         //https://github.com/paypal/paypal-rest-api-specifications/blob/main/openapi/payments_payment_v2.json
         //https://github.com/christianhelle/refitter
 
-        var paypalapi = RestService.For<IPayments>("https://api-m.sandbox.paypal.com/");
+
         //var octocat = await paypalapi.();
 
         if (authenticationState is not null)
@@ -93,7 +94,7 @@
                 allCartItems = await client.GetFromJsonAsync<List<KakeysBakeryClassLib.Data.Cart>>("api/cart/getall");
                 allCartItems = allCartItems!.Where(i => i.Customerid == currentCustomer!.Id).ToList();
 
-                foreach(var cart in allCartItems)
+                foreach (var cart in allCartItems)
                 {
                     customerProducts!.Add(products!.Where(c => c.Id == cart.Productid).FirstOrDefault()!);
                 }
