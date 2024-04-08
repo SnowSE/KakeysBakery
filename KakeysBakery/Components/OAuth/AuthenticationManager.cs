@@ -62,7 +62,7 @@ public class AuthenticationManager
         return User;
     }
 
-    private string? GetUserEmail(AuthenticationState state)
+    public string? GetUserEmail(AuthenticationState state)
     {
         var user = state.User.Claims
             .Where(c => c.Type.Contains("emailaddress"))
