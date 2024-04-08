@@ -14,7 +14,7 @@ public class AddonFlavorService : IAddonFlavorService
     {
         try
         {
-            addonFlavor.Id = _context.Addonflavors.Count() + 1;
+            addonFlavor.Id = addonFlavor.Id;
             _context.Addonflavors.Add(addonFlavor);
             _context.SaveChanges();
         }

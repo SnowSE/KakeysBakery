@@ -127,7 +127,6 @@ public class AddonFlavorTests : IClassFixture<BakeryFactory>
 
         // ACT
         testAddonFlavor.Flavor = "Flavor Update";
-        //testAddonFlavor.Addonflavorname = "EditedTestName";
         await client.PatchAsJsonAsync("api/AddonFlavor/update", testAddonFlavor);
 
         Addonflavor? result = await client.GetFromJsonAsync<Addonflavor>($"api/AddonFlavor/get/{testAddonFlavor.Id}");
