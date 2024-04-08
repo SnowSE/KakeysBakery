@@ -1,17 +1,16 @@
 using KakeysBakery.Components;
 using KakeysBakery.Data;
 using KakeysBakery.Services;
-using KakeysBakeryClassLib.Services.Interfaces;
 using KakeysBakeryClassLib.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
-using KakeysBakery.Components.PayPalAuth;
 using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication;        
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using KakeysBakery.Components.AuthenticationStateSyncer;
-using Microsoft.AspNetCore.Components;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +28,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddMvc().AddSessionStateTempDataProvider();
 builder.Services.AddSession();
 builder.Services.AddRazorPages();
+builder.Services.AddHealthChecks();
 builder.Services.AddHttpContextAccessor();
 
 
@@ -108,6 +108,17 @@ app.MapGet("/Account/Logout", async (HttpContext httpContext, string redirectUri
 
     await httpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
     await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+});
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    AllowCachingResponses = false,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
 });
 
 app.MapControllerRoute(
