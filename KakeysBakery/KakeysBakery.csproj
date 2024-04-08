@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>5d8e2092-5bba-45a7-92eb-c087f950b86d</UserSecretsId>
-	  <NoWarn>NU1701</NoWarn> <!--Suppress PayPal warning-->
+	<NoWarn>NU1701;NETSDK1206</NoWarn> <!--Suppress PayPal, Alpine warning-->
   </PropertyGroup>
 
   <ItemGroup>
