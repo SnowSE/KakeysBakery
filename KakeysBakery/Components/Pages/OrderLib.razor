@@ -104,7 +104,7 @@
         client.BaseAddress = new Uri(navManager.BaseUri);
         baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
-        // authManager = new AuthenticationManager(authenticationState, client);
+        authManager = new AuthenticationManager(authenticationState, client);
     }
 
     private async Task SelectHasChanged(ChangeEventArgs e)
@@ -148,7 +148,7 @@
             };
 
         // Save to database
-        context.Carts.Add(c);
+        context.Carts.Add(c); //We are duplicating the products, fail to check if product exists before creating
         await context.SaveChangesAsync();
     }
 
