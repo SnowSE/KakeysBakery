@@ -1,4 +1,4 @@
-﻿@font-face {
+@font-face {
     font-family: testFont;
     src: url(Fonts/cartFont2.otf) format('opentype');
 }
@@ -24,7 +24,6 @@
 .cartCard {
     padding: 50px;
     vertical-align: middle;
-
 }
 
 .price {
@@ -33,7 +32,7 @@
 
 #total {
     text-align: right;
-    font-weight: bold; 
+    font-weight: bold;
 }
 
 #totalCart {
@@ -51,4 +50,3 @@
     font-size: 200%;
     font: bold;
 }
-
