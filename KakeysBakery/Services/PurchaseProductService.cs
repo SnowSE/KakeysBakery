@@ -1,12 +1,13 @@
 ﻿
 using KakeysBakery.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class PurchaseProductService : IPurchaseProductService
 {
-    private PostgresContext _context;
+    private readonly PostgresContext _context;
     public PurchaseProductService(PostgresContext pc)
     {
         _context = pc;
@@ -64,4 +65,3 @@ public class PurchaseProductService : IPurchaseProductService
         return Task.CompletedTask;
     }
 }
-

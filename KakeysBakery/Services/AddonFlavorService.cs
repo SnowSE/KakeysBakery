@@ -1,11 +1,12 @@
 ﻿using KakeysBakery.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class AddonFlavorService : IAddonFlavorService
 {
-    private PostgresContext _context;
+    private readonly PostgresContext _context;
     public AddonFlavorService(PostgresContext pc)
     {
         _context = pc;
@@ -14,7 +15,7 @@ public class AddonFlavorService : IAddonFlavorService
     {
         try
         {
-            addonFlavor.Id = _context.Addonflavors.Count() + 1;
+            addonFlavor.Id = addonFlavor.Id;
             _context.Addonflavors.Add(addonFlavor);
             _context.SaveChanges();
         }
@@ -64,8 +65,8 @@ public class AddonFlavorService : IAddonFlavorService
         return Task.CompletedTask;
     }
 
-	public async Task<Addonflavor?> GetAddonFlavorByFlavorAsync(string flavor)
-	{
+    public async Task<Addonflavor?> GetAddonFlavorByFlavorAsync(string flavor)
+    {
         return await _context.Addonflavors.Where(f => f.Flavor == flavor).FirstOrDefaultAsync();
-	}
+    }
 }

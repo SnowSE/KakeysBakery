@@ -1,11 +1,12 @@
 ﻿using KakeysBakery.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class ProductAddonBasegoodService : IProductAddonBasegoodService
 {
-    private PostgresContext _context;
+    private readonly PostgresContext _context;
     public ProductAddonBasegoodService(PostgresContext pc)
     {
         _context = pc;

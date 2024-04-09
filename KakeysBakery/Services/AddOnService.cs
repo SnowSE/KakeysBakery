@@ -1,13 +1,15 @@
 ﻿using KakeysBakery.Data;
+
 using KakeysBakeryClassLib.Data;
 using KakeysBakeryClassLib.Services.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class AddOnService : IAddonService
 {
-    PostgresContext _context;
+    readonly PostgresContext _context;
     public AddOnService(PostgresContext context)
     {
         _context = context;
@@ -64,12 +66,12 @@ public class AddOnService : IAddonService
         return Task.CompletedTask;
     }
 
-	public async Task<List<Addon>> GetAddonListFromType(int id)
-	{
-		try
-		{
-			return await _context.Addons.Where(t => t.Addontypeid == id).ToListAsync();
-		}
-		catch { return new List<Addon>(); }
-	}
+    public async Task<List<Addon>> GetAddonListFromType(int id)
+    {
+        try
+        {
+            return await _context.Addons.Where(t => t.Addontypeid == id).ToListAsync();
+        }
+        catch { return new List<Addon>(); }
+    }
 }

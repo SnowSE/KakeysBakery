@@ -1,11 +1,12 @@
 ﻿using KakeysBakery.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class AddonTypeService : IAddonTypeService
 {
-    private PostgresContext _context;
+    private readonly PostgresContext _context;
     public AddonTypeService(PostgresContext pc)
     {
         _context = pc;

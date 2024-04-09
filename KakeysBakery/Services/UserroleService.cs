@@ -1,12 +1,14 @@
-﻿using KakeysBakeryClassLib.Services.Interfaces;
-using KakeysBakery.Data;
+﻿using KakeysBakery.Data;
+
+using KakeysBakeryClassLib.Services.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class UserroleService : IUserroleService
 {
-    PostgresContext _context;
+    readonly PostgresContext _context;
     public UserroleService(PostgresContext context)
     {
         _context = context;

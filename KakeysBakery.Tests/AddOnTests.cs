@@ -161,7 +161,7 @@ public class AddOnTests : IClassFixture<BakeryFactory>
 
     [Fact]
     public async Task Delete_AddOn()
-    { 
+    {
         // ARRANGE
         Addon testaddon = new Addon()
         {

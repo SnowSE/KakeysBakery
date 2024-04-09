@@ -1,11 +1,13 @@
-﻿using KakeysBakeryTests;
-using KakeysBakeryClassLib.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+
+using KakeysBakeryClassLib.Data;
+
+using KakeysBakeryTests;
 
 namespace KakeysBakeryTests;
 
@@ -52,7 +54,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 245,
-           // Basegoodid = 1,
+            // Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };
@@ -113,7 +115,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 255,
-           // Basegoodid = 1,
+            // Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };
@@ -141,7 +143,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 245,
-           // Basegoodid = 1,
+            // Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };
@@ -171,7 +173,7 @@ public class ProductTests : IClassFixture<BakeryFactory>
         Product testProduct = new()
         {
             Id = 245,
-           // Basegoodid = 1,
+            // Basegoodid = 1,
             Description = "Test",
             Productname = "TestName",
         };

@@ -1,11 +1,12 @@
 ﻿using KakeysBakery.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class BaseGoodTypeService : IBaseGoodTypeService
 {
-    private PostgresContext _context;
+    private readonly PostgresContext _context;
     public BaseGoodTypeService(PostgresContext pc)
     {
         _context = pc;
@@ -63,8 +64,8 @@ public class BaseGoodTypeService : IBaseGoodTypeService
         return Task.CompletedTask;
     }
 
-	public async Task<Basegoodtype?> GetBaseGoodTypeByBase(string basegood)
-	{
+    public async Task<Basegoodtype?> GetBaseGoodTypeByBase(string basegood)
+    {
         return await _context.Basegoodtypes.Where(t => t.Basegood == basegood).FirstOrDefaultAsync();
-	}
+    }
 }

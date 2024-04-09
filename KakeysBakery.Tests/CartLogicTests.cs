@@ -1,11 +1,13 @@
-﻿using KakeysBakery.Services.nonDBServices;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+
+using KakeysBakery.Services.nonDBServices;
+
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace KakeysBakeryTests;
 
@@ -22,38 +24,38 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
     //[Fact]
     //public async Task CanAddFinishedProductToCart()
     //{
-        ///TODO this is the big test or the goal
-        //// ARRANGE
-        //CartLogic testCart = new CartLogic(client);
+    ///TODO this is the big test or the goal
+    //// ARRANGE
+    //CartLogic testCart = new CartLogic(client);
 
-        //Basegood testGood = new Basegood()
-        //{
-        //    Id = 2000,
-        //};
-        ////Product testProduct = new Product()
-        ////{
-        ////    Id = 4000
-        ////};
-        ////ProductAddonBasegood finishedProduct = new ProductAddonBasegood()
-        ////{
-        ////    Id = 3000,
-        ////    Productid = 4000
-        ////};
-        //Customer testCustomer = new Customer()
-        //{
-        //    Id = 5000
-        //};
+    //Basegood testGood = new Basegood()
+    //{
+    //    Id = 2000,
+    //};
+    ////Product testProduct = new Product()
+    ////{
+    ////    Id = 4000
+    ////};
+    ////ProductAddonBasegood finishedProduct = new ProductAddonBasegood()
+    ////{
+    ////    Id = 3000,
+    ////    Productid = 4000
+    ////};
+    //Customer testCustomer = new Customer()
+    //{
+    //    Id = 5000
+    //};
 
-        ////Act
-        //Product productInCart = await testCart.addBaseGoodAsync(testGood, testCustomer);
-        //List<Cart>? carts = await client.GetFromJsonAsync<List<Cart>>("api/cart/getall");
-        //Cart cart = carts.FirstOrDefault(c => c.Productid == productInCart.Id);
-        ////Cart cart = await client.GetFromJsonAsync<Cart>("api/Cart/get")
+    ////Act
+    //Product productInCart = await testCart.addBaseGoodAsync(testGood, testCustomer);
+    //List<Cart>? carts = await client.GetFromJsonAsync<List<Cart>>("api/cart/getall");
+    //Cart cart = carts.FirstOrDefault(c => c.Productid == productInCart.Id);
+    ////Cart cart = await client.GetFromJsonAsync<Cart>("api/Cart/get")
 
-        ////Assert
-        //Assert.NotNull(cart);
+    ////Assert
+    //Assert.NotNull(cart);
 
-        ////Assert.NotNull(client);
+    ////Assert.NotNull(client);
     //}
 
     //[Fact]
@@ -88,7 +90,7 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
     [Fact]
     public async Task WhenGivenNonExistingBaseGood_ThenWillThrowException()
     {
-        Customer testCustomer = new Customer() { Id = 23456};
+        Customer testCustomer = new Customer() { Id = 23456 };
         Basegood basegood = new Basegood() { Id = 1234567890 };
         CartLogic testCart = new CartLogic(client);
         await Assert.ThrowsAsync<InputFormatterException>(async () =>

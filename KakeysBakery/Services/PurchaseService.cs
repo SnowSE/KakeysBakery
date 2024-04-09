@@ -1,13 +1,15 @@
 ﻿using KakeysBakery.Data;
+
 using KakeysBakeryClassLib.Data;
 using KakeysBakeryClassLib.Services.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class PurchaseService : IPurchaseService
 {
-    PostgresContext _context;
+    readonly PostgresContext _context;
     public PurchaseService(PostgresContext context)
     {
         _context = context;

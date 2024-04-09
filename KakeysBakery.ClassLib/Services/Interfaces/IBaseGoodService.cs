@@ -11,7 +11,7 @@ public interface IBaseGoodService
     public Task<Basegood?> GetBaseGoodFromFlavorAsync(int id, int flavorid);
 
 
-	public Task CreateBaseGoodAsync(Basegood basegood);
+    public Task CreateBaseGoodAsync(Basegood basegood);
     public Task DeleteBaseGoodAsync(int basegoodId);
     public Task UpdateBaseGoodAsync(Basegood basegood);
 }

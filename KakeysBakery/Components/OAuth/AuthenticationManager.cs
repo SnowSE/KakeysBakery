@@ -4,8 +4,8 @@ namespace KakeysBakery.Components.OAuth;
 
 public class AuthenticationManager
 {
-    private Task<AuthenticationState>? authenticationState;
-    private HttpClient client;
+    private readonly Task<AuthenticationState>? authenticationState;
+    private readonly HttpClient client;
     public Customer? Customer { get; set; } = null;
 
     public AuthenticationManager(Task<AuthenticationState>? authState, HttpClient httpClient)

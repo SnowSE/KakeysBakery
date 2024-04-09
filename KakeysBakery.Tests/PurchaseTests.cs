@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace KakeysBakeryTests;
 
@@ -98,7 +99,7 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
         // ACT
         testPurchase.Actualprice = (decimal)123.50;
         await client.PatchAsJsonAsync("api/purchase/update", testPurchase);
-        
+
         Purchase? result = await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
 
 
@@ -162,7 +163,7 @@ public class PurchaseTests : IClassFixture<BakeryFactory>
         await client.PatchAsJsonAsync("api/purchase/update", toUpdate);
         // ASSERT
         var result = await client.GetFromJsonAsync<Purchase>($"api/purchase/get/{testPurchase.Id}");
-        Assert.True( result!.Isfulfilled );
+        Assert.True(result!.Isfulfilled);
 
 
 

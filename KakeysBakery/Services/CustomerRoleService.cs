@@ -1,11 +1,12 @@
 ﻿using KakeysBakery.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class CustomerRoleService : ICustomerRoleService
 {
-    PostgresContext _context;
+    readonly PostgresContext _context;
     public CustomerRoleService(PostgresContext context)
     {
         _context = context;
