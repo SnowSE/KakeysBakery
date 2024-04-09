@@ -1,6 +1,9 @@
 ﻿@page "/admin/send_subscription_email"
-
+@inject IEmailService emailService
+@inject PostgresContext Context
 @using Blazored.TextEditor
+@using KakeysBakery.Data
+@using Microsoft.EntityFrameworkCore
 
 <div class="my-5 p-3" style="background-color: white;">
     <BlazoredTextEditor @ref="@QuillHtml">
@@ -37,17 +40,27 @@
     </BlazoredTextEditor>
 
     <div>
-        <button class="btn btn-primary d-flex ms-auto mt-3" @onclick="async () => { await SetText(); }">Send</button>
+        <button class="btn btn-primary d-flex ms-auto mt-3" @onclick="async () => { await SentText(); }">Send</button>
     </div>
 </div>
 
-<p>@MyText</p>
+<script>
+    function showSuccess() {
+        alert("Emails were Sent!");
+    }
+</script>
 
 @code {
+
     [Parameter]
     public string? Success { get; set; }
 
     BlazoredTextEditor? QuillHtml;
+
+    [Inject]
+    #pragma warning disable CS8618
+    private IJSRuntime JSRuntime { get; set; }
+    #pragma warning restore CS8618
 
     string? QuillHTMLContent { get; set; }
     string errorMessage = "";
@@ -61,10 +74,7 @@
 
     string MyText = "";
 
-
-    // protected override async Task OnInitializedAsync()
-    // {
-    // }
+    
 
     public async Task GetHTML()
     {
@@ -72,10 +82,13 @@
         StateHasChanged();
     }
 
-    private async Task SetText()
+    private async Task SentText()
     {
         MyText = await this!.QuillHtml!.GetHTML();
         await ClearQuillText();
+        await SendEmailToSubscribed(MyText);
+        await JSRuntime.InvokeVoidAsync("showSuccess");
+
     }
 
     private async Task ClearQuillText()
@@ -85,4 +98,5 @@
         await this.QuillHtml!.LoadHTMLContent(QuillContent);
         StateHasChanged();
     }
+
 }
