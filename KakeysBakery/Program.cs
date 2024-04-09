@@ -83,13 +83,15 @@ if (!app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
-app.MapControllers();
+//app.MapControllers();
 app.UseStaticFiles();
-app.UseAntiforgery();
 app.UseRouting();
-app.UseAntiforgery();
+//app.UseAntiforgery();
 app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseAntiforgery();
+
 
 //for OAuth
 app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri = "/") =>
@@ -111,14 +113,14 @@ app.MapGet("/Account/Logout", async (HttpContext httpContext, string redirectUri
     await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 });
 
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies(typeof(HomeLib).Assembly);
 app.MapControllerRoute(
 name: "default",
 pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddAdditionalAssemblies(typeof(HomeLib).Assembly);
 
 
 app.Run();
