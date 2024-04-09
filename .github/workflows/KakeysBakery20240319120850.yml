@@ -65,6 +65,20 @@ jobs:
         steps: ${{ toJson(steps) }}
         overwrite: "{title: `Runner failed! ${workflow_link}`}"  
 
+  docker:
+    runs-on: self-hosted
+    needs: build
+    steps:
+    - name: Docker Down
+      run: |
+          cd ./docker-staging 
+          docker compose down -v
+    - name: Docker Up
+      run: |
+        cd ./docker-staging 
+        docker compose up --build -d
+  
+
   deploy:
     runs-on: self-hosted
     needs: build
