@@ -18,6 +18,8 @@ using System.Text.Json.Serialization;
 using KakeysBakeryClassLib.Pages;
 using KakeysBakeryClassLib.PayPalAuth;
 using Auth0.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,6 +79,8 @@ builder.Services.AddDbContextFactory<PostgresContext>(options => options.UseNpgs
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddServerSideBlazor().AddCircuitOptions(option => { option.DetailedErrors = true; });
 
 var app = builder.Build();
 
