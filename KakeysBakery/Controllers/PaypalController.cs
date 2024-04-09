@@ -1,5 +1,7 @@
 ﻿using KakeysBakery.Data;
+
 using Microsoft.AspNetCore.Mvc;
+
 using PayPal.Api;
 
 namespace KakeysBakery.Controllers
@@ -7,8 +9,8 @@ namespace KakeysBakery.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IHttpContextAccessor httpContextAccessor;
-        IConfiguration _configuration;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        readonly IConfiguration _configuration;
         public HomeController(ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
         {
             _logger = logger;

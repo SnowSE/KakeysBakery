@@ -1,9 +1,13 @@
-﻿using KakeysBakeryClassLib.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
+﻿using System.Net.Mail;
+
+using KakeysBakeryClassLib.Services.Interfaces;
+
 using MailKit;
 using MailKit.Net.Smtp;
+
+using Microsoft.Extensions.Configuration;
+
 using MimeKit;
-using System.Net.Mail;
 
 namespace KakeysBakeryClassLib.Services.Implementations;
 public class EmailService(IConfiguration _config) : IEmailService
@@ -22,7 +26,7 @@ public class EmailService(IConfiguration _config) : IEmailService
 
     public string sendEmail(string recipiantEmail, MimeMessage message)
     {
-        try 
+        try
         {
             string senderEmail = _config["KakeysEmail"] ?? "";
             string senderPass = _config["EmailAppPass"] ?? "";

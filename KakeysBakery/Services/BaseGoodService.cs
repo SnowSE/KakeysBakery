@@ -1,11 +1,12 @@
 ﻿using KakeysBakery.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class BaseGoodService : IBaseGoodService
 {
-    private PostgresContext _context;
+    private readonly PostgresContext _context;
     public BaseGoodService(PostgresContext pc)
     {
         _context = pc;
@@ -31,8 +32,8 @@ public class BaseGoodService : IBaseGoodService
                 _context.Basegoods.Remove(basegood);
                 _context.SaveChanges();
             }
-        } 
-        catch {  } 
+        }
+        catch { }
         return Task.CompletedTask;
     }
 
@@ -52,15 +53,15 @@ public class BaseGoodService : IBaseGoodService
                 .FirstOrDefaultAsync();
     }
 
-	public async Task<Basegood?> GetBaseGoodFromFlavorAsync(int id, int flavorid)
-	{
-		return await _context.Basegoods
-				.Where(b => b.Pastryid == id)
+    public async Task<Basegood?> GetBaseGoodFromFlavorAsync(int id, int flavorid)
+    {
+        return await _context.Basegoods
+                .Where(b => b.Pastryid == id)
                 .Where(b => b.Flavorid == flavorid)
-				.FirstOrDefaultAsync();
-	}
+                .FirstOrDefaultAsync();
+    }
 
-	public Task UpdateBaseGoodAsync(Basegood basegood)
+    public Task UpdateBaseGoodAsync(Basegood basegood)
     {
         try
         {
@@ -76,7 +77,7 @@ public class BaseGoodService : IBaseGoodService
     {
         try
         {
-            return await _context.Basegoods.Where(i => i.Pastryid==BasegoodTypeId).Include(i => i.Flavor).ToListAsync();
+            return await _context.Basegoods.Where(i => i.Pastryid == BasegoodTypeId).Include(i => i.Flavor).ToListAsync();
         }
         catch { return new List<Basegood>(); }
     }

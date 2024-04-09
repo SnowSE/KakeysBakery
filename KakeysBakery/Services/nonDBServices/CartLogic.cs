@@ -1,11 +1,13 @@
 ﻿using AngleSharp.Diffing.Strategies.AttributeStrategies;
+
 using KakeysBakery.Components;
+
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace KakeysBakery.Services.nonDBServices;
 public class CartLogic
 {
-    HttpClient client;
+    readonly HttpClient client;
     public CartLogic(HttpClient Client)
     {
         client = Client;
@@ -24,12 +26,12 @@ public class CartLogic
     public async Task<int> FindProductForSingleBaseGoodAsync(int basegoodId)
     {
         List<ProductAddonBasegood> result = await client.GetFromJsonAsync<List<ProductAddonBasegood>>("api/productAddonBasegood/getall");
-        
+
         //where there is a line that exists without an addon
         ProductAddonBasegood? result2 = result
             .Where(c => c.Basegoodid == basegoodId)
             .Where(c => c.Addonid is null).FirstOrDefault();
-        
+
         //all the lines with addons and the same basegood
         List<ProductAddonBasegood> result3
              = result
@@ -61,7 +63,7 @@ public class CartLogic
         Basegood? result = null;
         try
         {
-            result  = await client.GetFromJsonAsync<Basegood>($"api/basegood/get/{basegoodId}");
+            result = await client.GetFromJsonAsync<Basegood>($"api/basegood/get/{basegoodId}");
         }
         catch { return false; }
         if (result == null) return false;

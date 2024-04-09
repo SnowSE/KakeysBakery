@@ -108,10 +108,10 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         // ARRANGE
         Basegood existing = new()
         {
-//Basegoodname = "TestName",
+            //Basegoodname = "TestName",
             Id = 101,
             Suggestedprice = (decimal)100.25,
-           // Flavor = "testFlavor"
+            // Flavor = "testFlavor"
         };
 
         // ACT
@@ -134,10 +134,10 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         // ARRANGE
         Basegood testBaseGood = new()
         {
-           // Basegoodname = "TestName",
+            // Basegoodname = "TestName",
             Id = 81,
             Suggestedprice = (decimal)100.25,
-           // Flavor = "testFlavor"
+            // Flavor = "testFlavor"
         };
 
         await client.PostAsJsonAsync("api/basegood/add", testBaseGood);
@@ -146,7 +146,7 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
         testBaseGood.Suggestedprice = (decimal)111.25;
         //testBaseGood.Basegoodname = "EditedTestName";
         await client.PatchAsJsonAsync("api/basegood/update", testBaseGood);
-        
+
         Basegood? result = await client.GetFromJsonAsync<Basegood>($"api/basegood/get/{testBaseGood.Id}");
 
 

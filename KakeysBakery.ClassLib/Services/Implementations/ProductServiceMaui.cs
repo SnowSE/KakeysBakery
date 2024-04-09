@@ -9,11 +9,11 @@
 
 //namespace KakeysBakeryClassLib.Services.Implementations
 //{
-    
+
 //    internal class ProductServiceMaui : IProductService
 //    {
 
-        
+
 //        public Task CreateProductAsync(Product product)
 //        {
 //            throw new NotImplementedException();

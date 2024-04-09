@@ -1,12 +1,13 @@
 ﻿
 using KakeysBakery.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class ProductService : IProductService
 {
-    private PostgresContext _context;
+    private readonly PostgresContext _context;
     public ProductService(PostgresContext pc)
     {
         _context = pc;

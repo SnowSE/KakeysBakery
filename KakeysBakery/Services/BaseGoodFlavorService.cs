@@ -1,11 +1,12 @@
 ﻿using KakeysBakery.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class BaseGoodFlavorService : IBaseGoodFlavorService
 {
-    private PostgresContext _context;
+    private readonly PostgresContext _context;
     public BaseGoodFlavorService(PostgresContext pc)
     {
         _context = pc;
@@ -52,14 +53,14 @@ public class BaseGoodFlavorService : IBaseGoodFlavorService
                 .FirstOrDefaultAsync();
     }
 
-	public async Task<Basegoodflavor> GetBaseGoodFlavorByBase(string flavor)
+    public async Task<Basegoodflavor> GetBaseGoodFlavorByBase(string flavor)
     {
-        Basegoodflavor? basegoodflavor =  await _context.Basegoodflavors.Where(b => b.Flavorname == flavor).FirstOrDefaultAsync();
+        Basegoodflavor? basegoodflavor = await _context.Basegoodflavors.Where(b => b.Flavorname == flavor).FirstOrDefaultAsync();
         return basegoodflavor!;
     }
 
 
-	public Task UpdateBaseGoodFlavorAsync(Basegoodflavor basegoodflavor)
+    public Task UpdateBaseGoodFlavorAsync(Basegoodflavor basegoodflavor)
     {
         try
         {

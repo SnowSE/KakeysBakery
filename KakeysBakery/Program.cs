@@ -1,15 +1,19 @@
+using System.Text.Json.Serialization;
+
+using Auth0.AspNetCore.Authentication;
+
 using KakeysBakery.Components;
+using KakeysBakery.Components.AuthenticationStateSyncer;
 using KakeysBakery.Data;
 using KakeysBakery.Services;
+
 using KakeysBakeryClassLib.Services.Implementations;
-using Microsoft.EntityFrameworkCore;
-using Auth0.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication;        
+
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
-using KakeysBakery.Components.AuthenticationStateSyncer;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,19 +55,20 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
 
 builder.Services
-    .AddAuth0WebAppAuthentication(options => {
+    .AddAuth0WebAppAuthentication(options =>
+    {
         options.Domain = builder.Configuration.GetValue<string>("Auth0Domain", "DEFAULT_AUTH0_DOMAIN") ?? "";
         options.ClientId = builder.Configuration.GetValue<string>("Auth0ClientId", "DEFAULT_AUTH0_CLIENT_ID") ?? "";
-		options.Scope = "openid profile email";
+        options.Scope = "openid profile email";
     });
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddScoped<IPayPalAuthentication,PayPalAuthentication>();
+builder.Services.AddScoped<IPayPalAuthentication, PayPalAuthentication>();
 
 builder.Services.AddBlazorBootstrap();
 
-builder.Services.AddControllers().AddJsonOptions(x =>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
+builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
 //builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
 builder.Services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
 

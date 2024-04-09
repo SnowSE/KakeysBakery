@@ -22,6 +22,8 @@ jobs:
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Lint
+      run: dotnet format --verify-no-changes --severity warn
     - name: Run Test Suite
       run: |
         cd ./KakeysBakery.Tests/

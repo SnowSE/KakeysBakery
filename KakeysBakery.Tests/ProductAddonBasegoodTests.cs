@@ -35,7 +35,7 @@ public class ProductAddonBasegoodTests : IClassFixture<BakeryFactory>
         // ARRANGE
         ProductAddonBasegood testProductAddonBasegood = new()
         {
-            
+
             Id = 78
         };
 
