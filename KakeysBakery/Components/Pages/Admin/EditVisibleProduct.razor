@@ -5,6 +5,7 @@
 @inject IBaseGoodFlavorService baseGoodFlavor
 @inject IBaseGoodService baseGood
 @inject IBaseGoodTypeService baseGoodType
+@inject IBasegoodSizeService baseGoodSize
 
 @rendermode InteractiveServer
 
@@ -63,22 +64,22 @@
 			{
 				<div>
 					<label> what's the price of this product</label>
-					<input type="number" />
+					<input @bind="productCost" type="number" />
 				</div>
 
 				<div>
 					<label> What's the name of this product</label>
-					<input type="text" placeholder="" />
+					<input @bind="productString" type="text" placeholder="" />
 				</div>
 
 				<div>
 					<label>Is this product currently available</label>
-					<input type="checkbox" />
+					<input @bind="isAvailable" type="checkbox" />
 				</div>
 
 				<div>
 					<label>What is the quantity that this product comes in</label>
-					<input type="number" />
+					<input @bind="quantity" type="number" />
 				</div>
 			}
 			<div>
@@ -109,6 +110,7 @@
 			<div>
 				@if (addons is not null)
 				{
+					<label>Select the flavor</label>
 					<select @onchange="SecondarySelectChanged">
 						<option>---</option>
 						@foreach (Addon addon in addons)
@@ -123,12 +125,12 @@
 				{
 					<div>
 						<label>What is the topping name</label>
-						<input type="text" />
+						<input @bind="productString" type="text" />
 					</div>
 
 					<div>
 						<label>How much does it cost to add</label>
-						<input type="number" />
+						<input @bind="productCost" type="number" />
 					</div>
 				}
 			</div>
@@ -210,6 +212,8 @@
 	public int secondarySelectId = -1;
 	public string productString = "";
 	public decimal productCost = 0.0m;
+	public bool isAvailable;
+	public string quantity;
 
 	public string? errorString;
 	public string? confirmationString;
@@ -221,9 +225,6 @@
 	private List<Basegoodflavor>? baseGoodFlavors;
 	private List<Basegoodtype>? baseGoodTypes;
 	private Basegood? selectedBaseGood;
-
-	private CEDToppings? toppings;
-	private CEDProducts? products;
 
 	private bool isEditingTopping = false;
 	private bool isEditingProduct = false;
@@ -238,7 +239,7 @@
 		baseGoodFlavors = await baseGoodFlavor.GetBaseGoodFlavorListAsync();
 		baseGoodTypes = await baseGoodType.GetBaseGoodTypeListAsync();
 		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
-		CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood);
+
 	}
 
 	public async Task SelectChanged(ChangeEventArgs e)
@@ -260,10 +261,34 @@
 		await Task.CompletedTask;
 	}
 
-	public void SecondarySelectChanged(ChangeEventArgs e)
+	public async Task SecondarySelectChanged(ChangeEventArgs e)
 	{
 		if (e.Value is null) { return; }
 		secondarySelectId = Convert.ToInt32(e.Value.ToString());
+
+		if (isEditingProduct)
+		{
+			try
+			{
+				var product = await baseGood.GetBaseGoodAsync(secondarySelectId);
+
+				productString = product.Flavor.Flavorname;
+				productCost = (decimal)product.Suggestedprice;
+				isAvailable = (bool)product.Isavailable;
+				//quantity = product.GoodsizeNavigation.Size;
+			}
+			catch
+			{
+
+			}
+
+		}
+		if (isEditingTopping)
+		{
+			var addons = await addon.GetAddonAsync(secondarySelectId);
+			productString = addons.Addonflavor.Flavor;
+			productCost = (decimal)addons.Suggestedprice;
+		}
 	}
 
 	public void ShowOption(string option)
@@ -295,18 +320,18 @@
 		isEditingProduct = false;
 		isAddingProduct = false;
 		isAddingTopping = false;
-		secondarySelectId = -1;
-		selectedId = -1;
 	}
 
 	public async Task AddNewBaseProduct()
 	{
-		confirmationString = await products.Create(productString, productCost, selectedId);
+		CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood);
+		confirmationString = await products.Create(productString, productCost, selectedId, isAvailable);
 		ResetViews();
 	}
 
 	public async Task AddNewTopping()
 	{
+		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
 		confirmationString = await toppings.Create(productString, productCost, selectedId);
 		ResetViews();
 	}
@@ -319,6 +344,8 @@
 
 	public async Task DeleteProduct(int id)
 	{
+		CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood);
+
 		confirmationString = await products.Delete(id);
 
 		ResetViews();
@@ -326,6 +353,8 @@
 
 	public async Task DeleteTopping(int id)
 	{
+		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
+
 		confirmationString = await toppings.Delete(id);
 
 		ResetViews();
@@ -333,11 +362,33 @@
 
 	public async Task EditProduct(int id)
 	{
-		confirmationString = await products.Edit(id);
+		var product = await baseGood.GetBaseGoodAsync(secondarySelectId);
+
+		var size = await baseGoodSize.GetBasegoodSizeByAsync(quantity.ToString());
+
+		if (size is null)
+		{
+			BasegoodSize basegoodsize = new BasegoodSize()
+				{
+					Size = quantity
+				};
+			await baseGoodSize.CreateBasegoodSizeAsync(basegoodsize);
+		}
+
+		var sizeUpdated = await baseGoodSize.GetBasegoodSizeByAsync(quantity.ToString());
+
+		product.Flavor.Flavorname = productString;
+		product.Suggestedprice = productCost;
+		product.Isavailable = isAvailable;
+		product.Goodsize = sizeUpdated.Id;
+
+		await baseGood.UpdateBaseGoodAsync(product);
 	}
 
-	public async void EditTopping(int id)
+	public async Task EditTopping(int id)
 	{
-		confirmationString = await toppings.Edit(id);
+		var addons = await addon.GetAddonAsync(secondarySelectId);
+		addons.Addonflavor.Flavor =  productString;
+		addons.Suggestedprice = productCost;
 	}
 }

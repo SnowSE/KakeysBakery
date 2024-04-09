@@ -32,8 +32,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
 
-
-
 builder.Services.AddScoped<IAddonService, AddOnService>();
 builder.Services.AddScoped<IBaseGoodService, BaseGoodService>();
 builder.Services.AddScoped<IPurchaseService, PurchaseService>();
@@ -49,6 +47,8 @@ builder.Services.AddScoped<IAddonFlavorService, AddonFlavorService>();
 builder.Services.AddScoped<IUserroleService, UserroleService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
+builder.Services.AddScoped<IBasegoodSizeService, BaseGoodSizeService>();
+
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {
