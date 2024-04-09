@@ -19,8 +19,47 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         client = Factory.CreateDefaultClient();
 
     }
+    private async Task setUpTest(int customerId, int BasegoodId, int allOtherId)
+    {
+        Customer testCustomer = new Customer()
+        {
+            Id = customerId
+        };
+        await client.PostAsJsonAsync("api/Cutomer/add", testCustomer);
+        Basegoodflavor testflavor = new Basegoodflavor() { Id = allOtherId, Flavorname = "test Flavor Name" };
+        BasegoodSize testSize = new BasegoodSize() { Id = allOtherId, Size = "test pan size" };
+        Basegoodtype testType = new Basegoodtype() { Id = allOtherId, Basegood = "a test cake" };
+        Basegood testGood = new Basegood() { Id = BasegoodId, Flavorid = allOtherId, Goodsize = allOtherId, Pastryid = allOtherId };
+        await client.PostAsJsonAsync("api/Basegoodflavor/add", testflavor);
+        await client.PostAsJsonAsync("api/BasegoodSize/add", testSize);
+        await client.PostAsJsonAsync("api/Basegoodtype/add", testType);
+        await client.PostAsJsonAsync("api/Basegood/add", testGood);
+    }
+    //A First Step
+    [Fact]
+    public async Task GivenThatProductForBaseGoodExists_WhenAddToCart_ThenAddThatProductToCart()
+    {
+        //ARRANGE
+        int customerId = 1001;
+        int BasegoodId = 1002;
+        int allOtherId = 1235;
+        int prodId = 1212;
+        await setUpTest(customerId, BasegoodId, allOtherId);
 
-    // 
+        ProductAddonBasegood testProdAddBase = new ProductAddonBasegood() { Id=allOtherId, Addonid=null, Basegoodid=BasegoodId,Productid=prodId};
+        Product testProduct = new Product() { Id =prodId, Description="test product to add to cart", Ispublic=true, Productname="A nice cake that we are testing" };
+        await client.PostAsJsonAsync("api/Product/add", testProduct);
+        await client.PostAsJsonAsync("api/ProductAddonBasegood/add", testProdAddBase);
+
+        //ACT
+        int testCartID = await client.GetFromJsonAsync<int>($"api/cart/addToCart/{customerId}/{BasegoodId}");
+        Cart? testCart = await client.GetFromJsonAsync<Cart>($"api/cart/get/{testCartID}");
+
+        //ASSERT
+        Assert.NotNull(testCart);
+        Assert.Equal(testCart.Id, testCartID);
+        Assert.Equal(customerId, testCart.Customerid);
+    }
 
     //THIS IS THE GOAL
     [Fact]
@@ -29,27 +68,17 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         //ARRANGE
         int customerId = 1000;
         int BasegoodId = 1001;
-        Customer testCustomer = new Customer()
-        {
-            Id = 5000
-        };
-        await client.PostAsJsonAsync("api/Cutomer/add",testCustomer);
-        Basegoodflavor testflavor = new Basegoodflavor() { Id=1234, Flavorname="test Flavor Name"};
-        BasegoodSize testSize = new BasegoodSize() { Id=1234, Size="test pan size"};
-        Basegoodtype testType = new Basegoodtype() { Id=1234, Basegood="a test cake"};
-        Basegood testGood = new Basegood() { Id = 1234, Flavorid = 1234, Goodsize=1234,Pastryid=1234};
-        await client.PostAsJsonAsync("api/Basegoodflavor/add", testflavor);
-        await client.PostAsJsonAsync("api/BasegoodSize/add", testSize);
-        await client.PostAsJsonAsync("api/Basegoodtype/add", testType);
-        await client.PostAsJsonAsync("api/Basegood/add", testGood);
+        int allOtherId = 1234;
+        await setUpTest(customerId, BasegoodId, allOtherId);
 
         //ACT
         int testCartID = await client.GetFromJsonAsync<int>($"api/cart/addToCart/{customerId}/{BasegoodId}");
         Cart? testCart = await client.GetFromJsonAsync<Cart>($"api/cart/get/{testCartID}");
 
+        //ASSERT
         Assert.NotNull(testCart );
         Assert.Equal( testCart.Id, testCartID );
-        Assert.Equal(testCustomer.Id, testCart.Customerid );        
+        Assert.Equal(customerId, testCart.Customerid );        
     }
 
 
