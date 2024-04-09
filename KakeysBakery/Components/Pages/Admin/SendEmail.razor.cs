@@ -1,8 +1,11 @@
 ﻿using KakeysBakery.Data;
+
 using KakeysBakeryClassLib.Services.Implementations;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MimeKit;
 using Microsoft.EntityFrameworkCore;
+
+using MimeKit;
 
 namespace KakeysBakery.Components.Pages.Admin;
 
@@ -43,7 +46,7 @@ public partial class SendEmail
     private async Task SendEmailToSubscribed(string messageIn)
     {
         List<string> emails = Context.Customers.Where(c => c.Issubscribed == true).Select(c => c.Email).ToList();
-        foreach(var email in emails)
+        foreach (var email in emails)
         {
             receaverEmail = email;
             await sender(messageIn);
