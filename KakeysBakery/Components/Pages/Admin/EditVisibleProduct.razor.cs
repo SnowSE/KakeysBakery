@@ -1,4 +1,5 @@
 ﻿using Org.BouncyCastle.Bcpg.OpenPgp;
+
 using static KakeysBakery.Components.Pages.Admin.EditVisibleProduct;
 
 namespace KakeysBakery.Components.Pages.Admin
@@ -98,26 +99,27 @@ namespace KakeysBakery.Components.Pages.Admin
         }
 
 
-		private Basegood CreateBaseGood(decimal productCost, int selectedId, int flavorId, bool isAvailable)
-		{
-			return new Basegood()
-			{
+        private Basegood CreateBaseGood(decimal productCost, int selectedId, int flavorId, bool isAvailable)
+        {
+            return new Basegood()
+            {
                 Suggestedprice = productCost,
                 Pastryid = selectedId,
                 Flavorid = flavorId,
-				Isavailable = isAvailable,
-				
-            };
-		}
-		public async Task<string> Create(string productString, decimal productCost, int selectedId, bool isAvailabe)
-		{
-			try{
-			var newFlavor = CreateBaseFlavor(productString);
-			await baseGoodFlavor.CreateBaseGoodFlavorAsync(newFlavor);
-			var returned = await baseGoodFlavor.GetBaseGoodFlavorByBase(productString);
+                Isavailable = isAvailable,
 
-			var newAddon = CreateBaseGood(productCost, selectedId, returned.Id, isAvailabe);
-			await baseGood.CreateBaseGoodAsync(newAddon);
+            };
+        }
+        public async Task<string> Create(string productString, decimal productCost, int selectedId, bool isAvailabe)
+        {
+            try
+            {
+                var newFlavor = CreateBaseFlavor(productString);
+                await baseGoodFlavor.CreateBaseGoodFlavorAsync(newFlavor);
+                var returned = await baseGoodFlavor.GetBaseGoodFlavorByBase(productString);
+
+                var newAddon = CreateBaseGood(productCost, selectedId, returned.Id, isAvailabe);
+                await baseGood.CreateBaseGoodAsync(newAddon);
 
                 return "Successfully Added Product";
             }
