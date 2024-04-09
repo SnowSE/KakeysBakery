@@ -1,0 +1,19 @@
+.bi {
+    display: inline-block;
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+    top: -1px;
+    background-size: cover;
+}
+
+.i {
+    font-family: Trebuchet MS;
+    font-size: 1.6rem;
+    color: #dee2e6;
+}
+
+.footer {
+    background-color: #4E362E
+}
