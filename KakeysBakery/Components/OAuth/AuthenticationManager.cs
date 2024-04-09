@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using KakeysBakeryClassLib.OAuth;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace KakeysBakery.Components.OAuth;
 
-public class AuthenticationManager
+public class AuthenticationManager : IAuthenticationManager
 {
     private readonly Task<AuthenticationState>? authenticationState;
     private readonly HttpClient client;
@@ -30,7 +31,7 @@ public class AuthenticationManager
         return true;
     }
 
-    private async Task<Customer> GetUserFromEmail(string email, AuthenticationState state)
+    public async Task<Customer> GetUserFromEmail(string email, AuthenticationState state)
     {
         Customer? result = null;
         try
@@ -47,7 +48,7 @@ public class AuthenticationManager
         return result;
     }
 
-    private async Task<Customer> CreateUser(AuthenticationState state)
+    public async Task<Customer> CreateUser(AuthenticationState state)
     {
         Customer User = new Customer()
         {

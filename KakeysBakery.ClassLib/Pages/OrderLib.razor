@@ -1,15 +1,18 @@
 ﻿@page "/Order"
 
 @using BlazorBootstrap
-@using KakeysBakery.Data
+@using KakeysBakeryClassLib.Data
+@using KakeysBakeryClassLib.OAuth
+@using KakeysBakeryClassLib.Pages
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.EntityFrameworkCore
+@using System.Net.Http.Json
+
 @inject NavigationManager navManager
 @inject HttpClient client
 @inject IDbContextFactory<PostgresContext> factory
-@rendermode InteractiveServer
 
 <h3 class="pageTitle">Order</h3>
-
 
 <Modal @ref="modal" Title="Customize Your Order">
     <BodyTemplate>
@@ -79,11 +82,10 @@
     </div>
 </div>
 
-
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-    private AuthenticationManager? authManager;
+    private IAuthenticationManager? authManager;
     private Modal modal = default!;
 
     Basegood? currentBaseGood;
@@ -102,12 +104,12 @@
         client.BaseAddress = new Uri(navManager.BaseUri);
         baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
-        authManager = new(authenticationState, client);
+        // authManager = new AuthenticationManager(authenticationState, client);
     }
 
     private async Task SelectHasChanged(ChangeEventArgs e)
     {
-        if (e.Value is null)  { return; }
+        if (e.Value is null) { return; }
         if (e.Value is "---") { return; }
 
         int typeId = Convert.ToInt32(e.Value.ToString());
@@ -124,7 +126,7 @@
     {
         if (!(await authManager!.IsUserLoggedIn()))
         {
-            navManager.NavigateTo("Account/Login?redirectUri=/Order", forceLoad:true);
+            navManager.NavigateTo("Account/Login?redirectUri=/Order", forceLoad: true);
             return;
         }
 
@@ -146,7 +148,7 @@
             };
 
         // Save to database
-        context.Carts.Add(c);   
+        context.Carts.Add(c);
         await context.SaveChangesAsync();
     }
 
@@ -174,7 +176,7 @@
                     Ispublic = true,
                     Productname = $"{bgType!.Basegood} {flavor!.Flavorname}"
                 };
-            
+
             context.Products.Add(product);
             await context.SaveChangesAsync();
 

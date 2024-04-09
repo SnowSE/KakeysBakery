@@ -8,13 +8,16 @@ using KakeysBakery.Data;
 using KakeysBakery.Services;
 
 using KakeysBakeryClassLib.Services.Implementations;
-
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;        
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+using KakeysBakery.Components.AuthenticationStateSyncer;
+using Microsoft.AspNetCore.Components;
+using System.Text.Json.Serialization;
+using KakeysBakeryClassLib.Pages;
+using KakeysBakeryClassLib.PayPalAuth;
+using Auth0.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,13 +90,15 @@ if (!app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
-app.MapControllers();
+//app.MapControllers();
 app.UseStaticFiles();
-app.UseAntiforgery();
 app.UseRouting();
-app.UseAntiforgery();
+//app.UseAntiforgery();
 app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseAntiforgery();
+
 
 //for OAuth
 app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri = "/") =>
@@ -130,9 +135,9 @@ app.MapControllerRoute(
 name: "default",
 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies(typeof(HomeLib).Assembly);
 
 
 app.Run();
