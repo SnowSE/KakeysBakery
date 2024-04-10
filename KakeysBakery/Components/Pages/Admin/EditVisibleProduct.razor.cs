@@ -22,6 +22,9 @@ namespace KakeysBakery.Components.Pages.Admin
         {
 
         }
+        public virtual async Task Edit(int id, string productString, decimal productCost, string quantity, bool isAvailable)
+        {
+        }
 
     }
 
@@ -146,18 +149,15 @@ namespace KakeysBakery.Components.Pages.Admin
 
                 if (returned == null)
                 {
-
                     await baseGoodFlavor.CreateBaseGoodFlavorAsync(CreateBaseFlavor(productString));
                     returned = await baseGoodFlavor.GetBaseGoodFlavorByBase(productString);
                 }
 
                 if (returnedSize == null)
                 {
-
                     await baseGoodSize.CreateBasegoodSizeAsync(CreateBaseGoodSize(quantity));
                     returnedSize = await baseGoodSize.GetBasegoodSizeByAsync(quantity);
                 }
-
 
                 var newAddon = CreateBaseGood(productCost, selectedId, returned.Id, isAvailabe, returnedSize.Id);
                 await baseGood.CreateBaseGoodAsync(newAddon);
@@ -170,9 +170,30 @@ namespace KakeysBakery.Components.Pages.Admin
             }
 
         }
-        public override async Task<string> Edit(int id, string productString, decimal productCost)
+        public async override Task<string> Edit(int id, string productString, decimal productCost, string quantity, bool isAvailable)
         {
-            throw new NotImplementedException();
+            var product = await baseGood.GetBaseGoodAsync(id);
+            var size = await baseGoodSize.GetBasegoodSizeByAsync(quantity);
+
+            if (size is null)
+            {
+                BasegoodSize basegoodsize = new BasegoodSize()
+                {
+                    Size = quantity
+                };
+                await baseGoodSize.CreateBasegoodSizeAsync(basegoodsize);
+            }
+
+            var sizeUpdated = await baseGoodSize.GetBasegoodSizeByAsync(quantity.ToString());
+
+            product.Flavor.Flavorname = productString;
+            product.Suggestedprice = productCost;
+            product.Isavailable = isAvailable;
+            product.Goodsize = sizeUpdated.Id;
+
+            await baseGood.UpdateBaseGoodAsync(product);
+
+            return "Successfully edited the product";
         }
 
         public override async Task<string> Delete(int id)

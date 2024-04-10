@@ -376,26 +376,9 @@
 
 	public async Task EditProduct(int id)
 	{
-		var product = await baseGood.GetBaseGoodAsync(secondarySelectId);
-		var size = await baseGoodSize.GetBasegoodSizeByAsync(quantity.ToString());
+		CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood, baseGoodSize);
 
-		if (size is null)
-		{
-			BasegoodSize basegoodsize = new BasegoodSize()
-				{
-					Size = quantity
-				};
-			await baseGoodSize.CreateBasegoodSizeAsync(basegoodsize);
-		}
-
-		var sizeUpdated = await baseGoodSize.GetBasegoodSizeByAsync(quantity.ToString());
-
-		product.Flavor.Flavorname = productString;
-		product.Suggestedprice = productCost;
-		product.Isavailable = isAvailable;
-		product.Goodsize = sizeUpdated.Id;
-
-		await baseGood.UpdateBaseGoodAsync(product);
+		confirmationString = await products.Edit(id, productString, productCost, quantity.ToString(), isAvailable);
 		ResetViews();
 	}
 
