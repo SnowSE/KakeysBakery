@@ -215,11 +215,6 @@
 	{
 		<button @onclick="ResetViews">Cancel</button>
 	}
-
-@* 	else
-	{
-		<p>We hit here!</p>
-	} *@
 </div>
 
 @code {
@@ -228,7 +223,7 @@
 	public string productString = "";
 	public decimal productCost = 0.0m;
 	public bool isAvailable;
-	public string quantity;
+	public string quantity = "";
 
 	public string? errorString;
 	public string? confirmationString;
@@ -285,10 +280,10 @@
 			{
 				var product = await baseGood.GetBaseGoodAsync(secondarySelectId);
 
-				productString = product.Flavor.Flavorname;
-				productCost = (decimal)product.Suggestedprice;
-				isAvailable = (bool)product.Isavailable;
-				//quantity = product.GoodsizeNavigation.Size; --TODO: still need to figure this out, it only ever comes back null
+				productString = product!.Flavor!.Flavorname!;
+				productCost = (decimal)product!.Suggestedprice!;
+				isAvailable = (bool)product!.Isavailable!;
+				//quantity = product.GoodsizeNavigation.Size;
 			}
 			catch
 			{
@@ -299,8 +294,8 @@
 		if (isEditingTopping)
 		{
 			var addons = await addon.GetAddonAsync(secondarySelectId);
-			productString = addons.Addonflavor.Flavor;
-			productCost = (decimal)addons.Suggestedprice;
+			productString = addons!.Addonflavor!.Flavor!;
+			productCost = (decimal)addons.Suggestedprice!;
 		}
 	}
 

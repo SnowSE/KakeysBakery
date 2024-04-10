@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace KakeysBakeryTests;
+namespace KakeysBakeryTests.CRUD_Tests;
 
 public class PurchaseTests : IClassFixture<BakeryFactory>
 {

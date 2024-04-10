@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KakeysBakeryTests;
+namespace KakeysBakeryTests.CRUD_Tests;
 
 public class CustomerTests : IClassFixture<BakeryFactory>
 {

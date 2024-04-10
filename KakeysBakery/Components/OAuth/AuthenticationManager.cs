@@ -1,4 +1,5 @@
 ﻿using KakeysBakeryClassLib.OAuth;
+
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace KakeysBakery.Components.OAuth;
@@ -11,12 +12,14 @@ public class AuthenticationManager(Task<AuthenticationState>? authState) : IAuth
 
     private async Task GetAuthState()
     {
-        if (authenticationState == null) {
+        if (authenticationState == null)
+        {
             return;
         }
 
-        if (state is null) { 
-            state = await authenticationState; 
+        if (state is null)
+        {
+            state = await authenticationState;
         }
     }
 
@@ -29,7 +32,7 @@ public class AuthenticationManager(Task<AuthenticationState>? authState) : IAuth
 
         string email = await GetUserEmail();
         Customer = await GetUserFromEmail(email);
-        
+
         return true;
     }
 

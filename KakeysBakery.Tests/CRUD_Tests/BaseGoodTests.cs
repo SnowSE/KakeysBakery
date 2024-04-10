@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 
-namespace KakeysBakeryTests;
+namespace KakeysBakeryTests.CRUD_Tests;
 
 public class BaseGoodTests : IClassFixture<BakeryFactory>
 {

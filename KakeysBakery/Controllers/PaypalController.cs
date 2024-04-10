@@ -11,6 +11,7 @@ namespace KakeysBakery.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IHttpContextAccessor httpContextAccessor;
         readonly IConfiguration _configuration;
+
         public HomeController(ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
         {
             _logger = logger;
@@ -90,25 +91,24 @@ namespace KakeysBakery.Controllers
                     return Redirect(confirmationRedirectUrl!);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View("PaymentFailed");
             }
             //on successful payment, show success page to user.  
             //return View("SuccessView");
         }
-        private PayPal.Api.Payment payment;
         private Payment ExecutePayment(APIContext apiContext, string payerId, string paymentId)
         {
             var paymentExecution = new PaymentExecution()
             {
                 payer_id = payerId
             };
-            this.payment = new Payment()
+            Payment payment = new Payment()
             {
                 id = paymentId
             };
-            return this.payment.Execute(apiContext, paymentExecution);
+            return payment.Execute(apiContext, paymentExecution);
         }
         private Payment CreatePayment(APIContext apiContext, string redirectUrl, string blogId)
         {
@@ -160,7 +160,7 @@ namespace KakeysBakery.Controllers
                 amount = amount,
                 item_list = itemList
             });
-            this.payment = new Payment()
+            Payment payment = new Payment()
             {
                 intent = "sale",
                 payer = payer,
@@ -168,7 +168,7 @@ namespace KakeysBakery.Controllers
                 redirect_urls = redirUrls
             };
             // Create a payment using a APIContext  
-            return this.payment.Create(apiContext);
+            return payment.Create(apiContext);
         }
 
 

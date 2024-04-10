@@ -4,9 +4,10 @@ using Auth0.AspNetCore.Authentication;
 
 using KakeysBakery.Components;
 using KakeysBakery.Components.AuthenticationStateSyncer;
-using KakeysBakery.Data;
 using KakeysBakery.Services;
 
+using KakeysBakeryClassLib.Pages;
+using KakeysBakeryClassLib.PayPalAuth;
 using KakeysBakeryClassLib.Services.Implementations;
 
 using Microsoft.AspNetCore.Authentication;
