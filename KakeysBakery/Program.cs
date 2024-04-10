@@ -4,7 +4,6 @@ using Auth0.AspNetCore.Authentication;
 
 using KakeysBakery.Components;
 using KakeysBakery.Components.AuthenticationStateSyncer;
-using KakeysBakery.Data;
 using KakeysBakery.Services;
 
 using KakeysBakeryClassLib.Services.Implementations;
@@ -12,12 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication;        
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
-using KakeysBakery.Components.AuthenticationStateSyncer;
-using Microsoft.AspNetCore.Components;
-using System.Text.Json.Serialization;
 using KakeysBakeryClassLib.Pages;
 using KakeysBakeryClassLib.PayPalAuth;
-using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 

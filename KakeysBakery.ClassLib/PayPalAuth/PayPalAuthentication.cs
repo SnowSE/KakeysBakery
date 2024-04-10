@@ -7,12 +7,6 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
-using MimeKit;
-
-using Newtonsoft.Json.Linq;
-
-using static System.Net.WebRequestMethods;
-
 namespace KakeysBakeryClassLib.PayPalAuth;
 
 public class PayPalAuthentication(HttpClient client, IConfiguration config) : IPayPalAuthentication
