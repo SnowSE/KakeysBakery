@@ -1,9 +1,10 @@
 ﻿@page "/admin/send_subscription_email"
 @inject IEmailService emailService
-@inject PostgresContext Context
+@inject  KakeysBakery.Data.PostgresContext Context
 @using Blazored.TextEditor
 @using KakeysBakery.Data
 @using Microsoft.EntityFrameworkCore
+@using KakeysBakeryClassLib.Data
 
 <div class="my-5 p-3" style="background-color: white;">
     <BlazoredTextEditor @ref="@QuillHtml">

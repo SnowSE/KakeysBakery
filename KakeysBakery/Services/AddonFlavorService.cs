@@ -6,20 +6,18 @@ namespace KakeysBakery.Services;
 
 public class AddonFlavorService : IAddonFlavorService
 {
-    private readonly PostgresContext _context;
-    public AddonFlavorService(PostgresContext pc)
-    {
+    private readonly KakeysBakery.Data.PostgresContext _context;
+    public AddonFlavorService(KakeysBakery.Data.PostgresContext pc)
+    {   
         _context = pc;
     }
     public Task CreateAddonFlavorAsync(Addonflavor addonFlavor)
     {
         try
         {
-            int tempCounter = 100;
-            addonFlavor.Id = tempCounter;
+            addonFlavor.Id = addonFlavor.Id;
             _context.Addonflavors.Add(addonFlavor);
             _context.SaveChanges();
-            tempCounter++;
         }
         catch { }
         return Task.CompletedTask;

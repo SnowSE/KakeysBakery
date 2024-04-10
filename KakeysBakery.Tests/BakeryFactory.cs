@@ -41,9 +41,9 @@ public class BakeryFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(DbContextOptions<PostgresContext>));
+            services.RemoveAll(typeof(DbContextOptions<KakeysBakery.Data.PostgresContext>));
             //services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql(testConnection));
-            services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql(_dbContainer.GetConnectionString()));
+            services.AddDbContextFactory<KakeysBakery.Data.PostgresContext>(options => options.UseNpgsql(_dbContainer.GetConnectionString()));
         });
     }
 

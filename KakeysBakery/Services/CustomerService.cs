@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 namespace KakeysBakery.Services;
 public class CustomerService : ICustomerService
 {
-    private readonly PostgresContext _context;
-    public CustomerService(PostgresContext pc)
+    private readonly KakeysBakery.Data.PostgresContext _context;
+    public CustomerService(KakeysBakery.Data.PostgresContext pc)
     {
         _context = pc;
     }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Microsoft.EntityFrameworkCore;
 
-namespace KakeysBakeryClassLib.Data;
+namespace KakeysBakery.Data;
 
 public partial class PostgresContext : DbContext
 {
@@ -68,11 +67,11 @@ public partial class PostgresContext : DbContext
 
             entity.HasOne(d => d.Addonflavor).WithMany(p => p.Addons)
                 .HasForeignKey(d => d.Addonflavorid)
-                .HasConstraintName("addontype");
+                .HasConstraintName("addon_addonflavor_fk");
 
             entity.HasOne(d => d.Addontype).WithMany(p => p.Addons)
                 .HasForeignKey(d => d.Addontypeid)
-                .HasConstraintName("addonflavor");
+                .HasConstraintName("addon_addontype_fk");
         });
 
         modelBuilder.Entity<Addonflavor>(entity =>
@@ -81,9 +80,7 @@ public partial class PostgresContext : DbContext
 
             entity.ToTable("addonflavor", "KakeysBakery");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Flavor)
                 .HasMaxLength(50)
                 .HasColumnName("flavor");
@@ -111,23 +108,23 @@ public partial class PostgresContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Flavorid).HasColumnName("flavorid");
-            entity.Property(e => e.Goodsize).HasColumnName("goodsize");
             entity.Property(e => e.Isavailable).HasColumnName("isavailable");
-            entity.Property(e => e.Pastryid).HasColumnName("pastryid");
+            entity.Property(e => e.Sizeid).HasColumnName("sizeid");
             entity.Property(e => e.Suggestedprice)
                 .HasColumnType("money")
                 .HasColumnName("suggestedprice");
+            entity.Property(e => e.Typeid).HasColumnName("typeid");
 
             entity.HasOne(d => d.Flavor).WithMany(p => p.Basegoods)
                 .HasForeignKey(d => d.Flavorid)
                 .HasConstraintName("flavorid");
 
-            entity.HasOne(d => d.GoodsizeNavigation).WithMany(p => p.Basegoods)
-                .HasForeignKey(d => d.Goodsize)
+            entity.HasOne(d => d.Size).WithMany(p => p.Basegoods)
+                .HasForeignKey(d => d.Sizeid)
                 .HasConstraintName("basegood_goodsize_fkey");
 
-            entity.HasOne(d => d.Pastry).WithMany(p => p.Basegoods)
-                .HasForeignKey(d => d.Pastryid)
+            entity.HasOne(d => d.Type).WithMany(p => p.Basegoods)
+                .HasForeignKey(d => d.Typeid)
                 .HasConstraintName("basegoodname");
         });
 

@@ -6,8 +6,8 @@ namespace KakeysBakery.Services;
 
 public class CustomerRoleService : ICustomerRoleService
 {
-    readonly PostgresContext _context;
-    public CustomerRoleService(PostgresContext context)
+    readonly KakeysBakery.Data.PostgresContext _context;
+    public CustomerRoleService(KakeysBakery.Data.PostgresContext context)
     {
         _context = context;
     }

@@ -8,17 +8,12 @@ using KakeysBakery.Data;
 using KakeysBakery.Services;
 
 using KakeysBakeryClassLib.Services.Implementations;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication;        
+
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
-using KakeysBakery.Components.AuthenticationStateSyncer;
-using Microsoft.AspNetCore.Components;
-using System.Text.Json.Serialization;
-using KakeysBakeryClassLib.Pages;
-using KakeysBakeryClassLib.PayPalAuth;
-using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,12 +70,10 @@ builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
 //builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
-builder.Services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
+builder.Services.AddDbContextFactory<KakeysBakery.Data.PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddServerSideBlazor().AddCircuitOptions(option => { option.DetailedErrors = true; });
 
 var app = builder.Build();
 
@@ -94,15 +87,13 @@ if (!app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
-//app.MapControllers();
+app.MapControllers();
 app.UseStaticFiles();
-app.UseRouting();
-//app.UseAntiforgery();
-app.UseSession();
-app.UseAuthentication();
-app.UseAuthorization();
 app.UseAntiforgery();
-
+app.UseRouting();
+app.UseAntiforgery();
+app.UseSession();
+app.UseAuthorization();
 
 //for OAuth
 app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri = "/") =>
@@ -139,9 +130,9 @@ app.MapControllerRoute(
 name: "default",
 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddAdditionalAssemblies(typeof(HomeLib).Assembly);
+    .AddInteractiveServerRenderMode();
 
 
 app.Run();

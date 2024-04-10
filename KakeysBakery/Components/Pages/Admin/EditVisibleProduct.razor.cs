@@ -126,10 +126,10 @@ namespace KakeysBakery.Components.Pages.Admin
             return new Basegood()
             {
                 Suggestedprice = productCost,
-                Pastryid = selectedId,
+                Typeid = selectedId,
                 Flavorid = flavorId,
                 Isavailable = isAvailable,
-                Goodsize = quantityId
+                Sizeid = quantityId
             };
         }
 
@@ -189,7 +189,7 @@ namespace KakeysBakery.Components.Pages.Admin
             product.Flavor.Flavorname = productString;
             product.Suggestedprice = productCost;
             product.Isavailable = isAvailable;
-            product.Goodsize = sizeUpdated.Id;
+            product.Sizeid = sizeUpdated.Id;
 
             await baseGood.UpdateBaseGoodAsync(product);
 

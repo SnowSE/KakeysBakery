@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace KakeysBakeryClassLib.Data;
-
 public partial class Purchase
 {
     public int Id { get; set; }

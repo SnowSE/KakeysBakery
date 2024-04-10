@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace KakeysBakeryClassLib.Data;
-
 public partial class Cart
 {
     public int Id { get; set; }
