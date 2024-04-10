@@ -11,7 +11,7 @@ namespace KakeysBakeryClassLib.OAuth;
 public interface IAuthenticationManager
 {
     public Task<bool> IsUserLoggedIn();
-    public Task<Customer> GetUserFromEmail(string email, AuthenticationState state);
-    public Task<Customer> CreateUser(AuthenticationState state);
-    public string? GetUserEmail(AuthenticationState state);
+    public Task<Customer> GetUserFromEmail(string email);
+    public Task<Customer> CreateUser();
+    public Task<string> GetUserEmail();
 }

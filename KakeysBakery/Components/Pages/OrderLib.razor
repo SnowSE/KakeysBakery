@@ -21,14 +21,14 @@
                 <tbody>
                     <tr>
                         <td>
-                            <label>Choose @baseGoodTypes?.Where(c => c.Id == clickedBaseGoodId).FirstOrDefault()?.Basegood Type:</label>
+                            <label>Choose @AvailableGoodTypes?.Where(c => c.Id == CurrentId).First()?.Basegood Type:</label>
                         </td>
                         <td>
-                            <select class="form-select" name="flavor" @onchange="SelectHasChanged" id="box">
+                            <select class="form-select" name="flavor" @onchange="UpdateSelection" id="box">
                                 <option> --- </option>
-                                @if (baseGoodDetails is not null)
+                                @if (CurrentDetails is not null)
                                 {
-                                    @foreach (Basegood basegood in baseGoodDetails)
+                                    @foreach (Basegood basegood in CurrentDetails)
                                     {
                                         @if (basegood.Isavailable ?? false)
                                         {
@@ -54,7 +54,7 @@
             </table>
 
             <hr />
-            <h5>Total: $@(currentBaseGood?.Suggestedprice * quantity)</h5>
+            <h5>Total: $@(Selected?.Suggestedprice * quantity)</h5>
         </div>
     </BodyTemplate>
     <FooterTemplate>
@@ -65,17 +65,20 @@
 
 <div class="mt-5 border totalPage">
     <div class="d-flex flex-wrap justify-content-center">
-        @if (baseGoodTypes == null)
+        @if (AvailableGoodTypes == null)
         {
             <p>Loading products, please wait</p>
         }
         else
         {
-            @foreach (Basegoodtype basegoodtype in baseGoodTypes)
+            @foreach (Basegoodtype type in AvailableGoodTypes)
             {
-                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => {await BaseGoodClicked(basegoodtype.Id); await modal.ShowAsync();}">
-                    <h3 class="typelabel" style="z-index: 1;">@basegoodtype.Basegood</h3>
-                    <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(basegoodtype.Basegood).jpg">
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => {
+                    await CardSelected(type.Id);
+                    await modal.ShowAsync();
+                }">
+                    <h3 class="typelabel" style="z-index: 1;">@type.Basegood</h3>
+                    <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(type.Basegood).jpg">
                 </div>
             }
         }
@@ -88,11 +91,11 @@
     private IAuthenticationManager? authManager;
     private Modal modal = default!;
 
-    Basegood? currentBaseGood;
-    List<Basegood>? baseGoodDetails = null;
-    public List<Basegoodtype>? baseGoodTypes = null;
+    Basegood? Selected;
+    List<Basegood>? CurrentDetails = null;
+    public List<Basegoodtype>? AvailableGoodTypes = null;
 
-    int clickedBaseGoodId;
+    int CurrentId;
     int? quantity = 1;
 
     PostgresContext? context;
@@ -102,24 +105,24 @@
         context = factory.CreateDbContext(); // TODO: Extract out
 
         client.BaseAddress = new Uri(navManager.BaseUri);
-        baseGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
+        AvailableGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
-        authManager = new AuthenticationManager(authenticationState, client);
+        authManager = new AuthenticationManager(authenticationState);
     }
 
-    private async Task SelectHasChanged(ChangeEventArgs e)
+    public async Task CardSelected(int basegoodtypeid)
+    {
+        CurrentId = basegoodtypeid;
+        CurrentDetails = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegood/get_from_type/{basegoodtypeid}");
+    }
+
+    private async Task UpdateSelection(ChangeEventArgs e)
     {
         if (e.Value is null) { return; }
         if (e.Value is "---") { return; }
 
         int typeId = Convert.ToInt32(e.Value.ToString());
-        currentBaseGood = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{clickedBaseGoodId}/{typeId}");
-    }
-
-    public async Task BaseGoodClicked(int basegoodtypeid)
-    {
-        clickedBaseGoodId = basegoodtypeid;
-        baseGoodDetails = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegood/get_from_type/{basegoodtypeid}");
+        Selected = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{CurrentId}/{typeId}");
     }
 
     public async Task AddToCart()
@@ -136,7 +139,7 @@
         Product? product = await GetProduct();
         if (product == null) { return; }
 
-        string email = authManager.GetUserEmail(await authenticationState!)!;
+        string email = await authManager.GetUserEmail();
         Customer? customer = await client.GetFromJsonAsync<Customer>($"api/Customer/get_by_email/{email}");
         if (customer is null) { return; }
 
@@ -156,11 +159,11 @@
     {
         if (context is null) { return null; }
 
-        int bgId = clickedBaseGoodId;
+        int bgId = CurrentId;
 
         var pab = await context.ProductAddonBasegoods
             .Include(p => p.Basegood)
-            .Where(p => p.Basegood!.Pastryid == currentBaseGood!.Pastryid)
+            .Where(p => p.Basegood!.Pastryid == Selected!.Pastryid)
             .Where(p => p.Basegoodid == bgId)
             .Where(p => p.Addon == null)
             .FirstOrDefaultAsync();
@@ -168,8 +171,8 @@
         Product? product;
         if (pab is null)
         {
-            var bgType = await client.GetFromJsonAsync<Basegoodtype>($"api/Basegoodtype/get/{currentBaseGood!.Pastryid}");
-            var flavor = await client.GetFromJsonAsync<Basegoodflavor>($"api/Basegoodflavor/get/{currentBaseGood!.Flavorid}");
+            var bgType = await client.GetFromJsonAsync<Basegoodtype>($"api/Basegoodtype/get/{Selected!.Pastryid}");
+            var flavor = await client.GetFromJsonAsync<Basegoodflavor>($"api/Basegoodflavor/get/{Selected!.Flavorid}");
 
             product = new()
                 {

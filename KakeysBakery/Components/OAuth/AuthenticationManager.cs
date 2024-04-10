@@ -3,54 +3,60 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace KakeysBakery.Components.OAuth;
 
-public class AuthenticationManager : IAuthenticationManager
+public class AuthenticationManager(Task<AuthenticationState>? authState) : IAuthenticationManager
 {
-    private readonly Task<AuthenticationState>? authenticationState;
-    private readonly HttpClient client;
+    private readonly Task<AuthenticationState>? authenticationState = authState;
+    private AuthenticationState? state;
     public Customer? Customer { get; set; } = null;
 
-    public AuthenticationManager(Task<AuthenticationState>? authState, HttpClient httpClient)
+    private async Task GetAuthState()
     {
-        authenticationState = authState;
-        client = httpClient;
+        if (authenticationState == null) {
+            return;
+        }
+
+        if (state is null) { 
+            state = await authenticationState; 
+        }
     }
 
     public async Task<bool> IsUserLoggedIn()
     {
-        if (authenticationState is null) { return false; }
+        await GetAuthState();
 
-        var state = await authenticationState;
         if (state is null) { return false; }
         if (state.User.Identity is null) { return false; }
 
-        string? email = GetUserEmail(state);
-        if (email == null) { return false; }
-
-
-        Customer = await GetUserFromEmail(email, state);
+        string email = await GetUserEmail();
+        Customer = await GetUserFromEmail(email);
+        
         return true;
     }
 
-    public async Task<Customer> GetUserFromEmail(string email, AuthenticationState state)
+    public async Task<Customer> GetUserFromEmail(string email)
     {
         Customer? result = null;
         try
         {
+            using var client = new HttpClient();
             result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
         }
         catch { }
 
         if (result is null)
         {
-            return await CreateUser(state);
+            return await CreateUser();
         }
 
         return result;
     }
 
-    public async Task<Customer> CreateUser(AuthenticationState state)
+    public async Task<Customer> CreateUser()
     {
-        Customer User = new Customer()
+        await GetAuthState();
+        if (state is null) { throw new NullReferenceException("Error: User is not logged in!"); }
+
+        Customer user = new()
         {
             Forename = state!.User!.Identity!.Name,
             Email = state.User.Claims
@@ -58,18 +64,22 @@ public class AuthenticationManager : IAuthenticationManager
                         .FirstOrDefault()!.Value
         };
 
-        await client.PostAsJsonAsync("api/customer/add", User);
+        using var client = new HttpClient();
+        await client.PostAsJsonAsync("api/customer/add", user);
 
-        return User;
+        return user;
     }
 
-    public string? GetUserEmail(AuthenticationState state)
+    public async Task<string> GetUserEmail()
     {
+        await GetAuthState();
+        if (state is null) { throw new NullReferenceException("Error: User is not logged in!"); }
+
         var user = state.User.Claims
             .Where(c => c.Type.Contains("emailaddress"))
             .FirstOrDefault();
 
-        if (user is null) { return null; }
+        if (user is null) { throw new NullReferenceException("Error: User has no email!"); }
         return user.Value;
     }
 }
