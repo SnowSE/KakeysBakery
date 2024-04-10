@@ -3,10 +3,10 @@
 @using BlazorBootstrap
 @using KakeysBakeryClassLib.OAuth
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using System.Net.Http.Json
 @using KakeysBakeryClassLib.Data
-
 
 @inject NavigationManager navManager
 @inject HttpClient client
@@ -74,10 +74,7 @@
         {
             @foreach (Basegoodtype type in AvailableGoodTypes)
             {
-                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => {
-                    await CardSelected(type.Id);
-                    await modal.ShowAsync();
-                }">
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => { await CardSelected(type.Id); await modal.ShowAsync(); }">
                     <h3 class="typelabel" style="z-index: 1;">@type.Basegood</h3>
                     <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(type.Basegood).jpg">
                 </div>
