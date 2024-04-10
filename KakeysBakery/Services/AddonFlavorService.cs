@@ -15,9 +15,11 @@ public class AddonFlavorService : IAddonFlavorService
     {
         try
         {
-            addonFlavor.Id = addonFlavor.Id;
+            int tempCounter = 100;
+            addonFlavor.Id = tempCounter;
             _context.Addonflavors.Add(addonFlavor);
             _context.SaveChanges();
+            tempCounter++;
         }
         catch { }
         return Task.CompletedTask;

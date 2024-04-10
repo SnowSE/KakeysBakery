@@ -24,7 +24,7 @@
 }
 @if (confirmationString is not null)
 {
-			<>@confirmationString</>
+	<p>@confirmationString</p>
 }
 
 <div>
@@ -150,11 +150,6 @@
 		else
 		{
 			<div>
-				<label>How much will this product cost</label>
-				<input @bind="productCost" type="number" />
-			</div>
-
-			<div>
 				<label>What category does this fall under</label>
 				<select @onchange="SelectChanged">
 					<option>---</option>
@@ -164,10 +159,25 @@
 					}
 				</select>
 			</div>
+			<div>
+				<label>How much will this product cost</label>
+				<input @bind="productCost" type="number" />
+			</div>
+
 
 			<div>
 				<label>What is the product name</label>
 				<input type="text" @bind="productString" />
+			</div>
+
+			<div>
+				<label>Is this product currently available</label>
+				<input @bind="isAvailable" type="checkbox" />
+			</div>
+
+			<div>
+				<label>What is the quantity this product is sold in</label>
+				<input @bind="quantity" type="text" />
 			</div>
 			<button @onclick="AddNewBaseProduct">Add</button>
 		}
@@ -205,6 +215,11 @@
 	{
 		<button @onclick="ResetViews">Cancel</button>
 	}
+
+@* 	else
+	{
+		<p>We hit here!</p>
+	} *@
 </div>
 
 @code {
@@ -238,8 +253,6 @@
 
 		baseGoodFlavors = await baseGoodFlavor.GetBaseGoodFlavorListAsync();
 		baseGoodTypes = await baseGoodType.GetBaseGoodTypeListAsync();
-		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
-
 	}
 
 	public async Task SelectChanged(ChangeEventArgs e)
@@ -294,6 +307,7 @@
 	public void ShowOption(string option)
 	{
 		ResetViews();
+		confirmationString = null;
 		switch (option)
 		{
 			case "AddProduct":
@@ -324,14 +338,16 @@
 
 	public async Task AddNewBaseProduct()
 	{
-		CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood);
-		confirmationString = await products.Create(productString, productCost, selectedId, isAvailable);
+		CEDProducts products = new(baseGoodFlavor, baseGood, baseGoodSize);
+
+		confirmationString = await products.Create(productString, productCost, selectedId, isAvailable, quantity);
 		ResetViews();
 	}
 
 	public async Task AddNewTopping()
 	{
 		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
+
 		confirmationString = await toppings.Create(productString, productCost, selectedId);
 		ResetViews();
 	}
@@ -344,10 +360,9 @@
 
 	public async Task DeleteProduct(int id)
 	{
-		CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood);
+		CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood, baseGoodSize);
 
 		confirmationString = await products.Delete(id);
-
 		ResetViews();
 	}
 
@@ -356,14 +371,12 @@
 		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
 
 		confirmationString = await toppings.Delete(id);
-
 		ResetViews();
 	}
 
 	public async Task EditProduct(int id)
 	{
 		var product = await baseGood.GetBaseGoodAsync(secondarySelectId);
-
 		var size = await baseGoodSize.GetBasegoodSizeByAsync(quantity.ToString());
 
 		if (size is null)
@@ -383,12 +396,14 @@
 		product.Goodsize = sizeUpdated.Id;
 
 		await baseGood.UpdateBaseGoodAsync(product);
+		ResetViews();
 	}
 
 	public async Task EditTopping(int id)
 	{
-		var addons = await addon.GetAddonAsync(secondarySelectId);
-		addons.Addonflavor.Flavor =  productString;
-		addons.Suggestedprice = productCost;
+		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
+
+		confirmationString = await toppings.Edit(id, productString, productCost);
+		ResetViews();
 	}
 }
