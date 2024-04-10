@@ -16,4 +16,5 @@ public interface IAuthenticationManager
     public Task<Customer> GetUserFromEmail(string email);
     public Task<Customer> CreateUser();
     public Task<string> GetUserEmail();
+    public Task SetAuthState(Task<AuthenticationState>? authState);
 }

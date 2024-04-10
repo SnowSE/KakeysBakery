@@ -8,8 +8,8 @@ namespace KakeysBakery.Services;
 
 public class UserroleService : IUserroleService
 {
-    readonly KakeysBakery.Data.PostgresContext _context;
-    public UserroleService(KakeysBakery.Data.PostgresContext context)
+    readonly KakeysBakeryClassLib.Data.PostgresContext _context;
+    public UserroleService(KakeysBakeryClassLib.Data.PostgresContext context)
     {
         _context = context;
     }

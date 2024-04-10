@@ -6,8 +6,8 @@ namespace KakeysBakery.Services;
 
 public class BaseGoodService : IBaseGoodService
 {
-    private readonly KakeysBakery.Data.PostgresContext _context;
-    public BaseGoodService(KakeysBakery.Data.PostgresContext pc)
+    private readonly KakeysBakeryClassLib.Data.PostgresContext _context;
+    public BaseGoodService(KakeysBakeryClassLib.Data.PostgresContext pc)
     {
         _context = pc;
     }

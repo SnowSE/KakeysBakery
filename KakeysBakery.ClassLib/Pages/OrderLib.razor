@@ -1,14 +1,17 @@
 ﻿@page "/Order"
 
 @using BlazorBootstrap
+@using KakeysBakeryClassLib.OAuth
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.EntityFrameworkCore
 @using System.Net.Http.Json
 @using KakeysBakeryClassLib.Data
 
+
 @inject NavigationManager navManager
 @inject HttpClient client
 @inject IDbContextFactory<PostgresContext> factory
+@inject IAuthenticationManager authManager
 
 <h3 class="pageTitle">Order</h3>
 
@@ -86,7 +89,6 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-    private IAuthenticationManager? authManager;
     private Modal modal = default!;
 
     Basegood? Selected;
@@ -105,7 +107,7 @@
         client.BaseAddress = new Uri(navManager.BaseUri);
         AvailableGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
-        authManager = new AuthenticationManager(authenticationState);
+        await authManager.SetAuthState(authenticationState);
     }
 
     public async Task CardSelected(int basegoodtypeid)

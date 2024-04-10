@@ -6,8 +6,8 @@ namespace KakeysBakery.Services;
 
 public class BaseGoodSizeService : IBasegoodSizeService
 {
-    private readonly KakeysBakery.Data.PostgresContext _context;
-    public BaseGoodSizeService(KakeysBakery.Data.PostgresContext pc)
+    private readonly KakeysBakeryClassLib.Data.PostgresContext _context;
+    public BaseGoodSizeService(KakeysBakeryClassLib.Data.PostgresContext pc)
     {
         _context = pc;
     }

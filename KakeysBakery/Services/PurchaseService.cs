@@ -9,8 +9,8 @@ namespace KakeysBakery.Services;
 
 public class PurchaseService : IPurchaseService
 {
-    readonly KakeysBakery.Data.PostgresContext _context;
-    public PurchaseService(KakeysBakery.Data.PostgresContext context)
+    readonly KakeysBakeryClassLib.Data.PostgresContext _context;
+    public PurchaseService(KakeysBakeryClassLib.Data.PostgresContext context)
     {
         _context = context;
     }
