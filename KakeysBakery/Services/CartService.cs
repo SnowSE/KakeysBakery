@@ -63,4 +63,12 @@ public class CartService : ICartService
         catch { }
         return Task.CompletedTask;
     }
+
+    public async Task<int> AddToCustomersCart(int CustomerId, int BasegoodId)
+    {
+        //TODO: fix this
+
+        await Task.CompletedTask;
+        return -1;
+    }
 }
