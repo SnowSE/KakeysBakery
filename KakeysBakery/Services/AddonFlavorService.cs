@@ -8,7 +8,7 @@ public class AddonFlavorService : IAddonFlavorService
 {
     private readonly KakeysBakery.Data.PostgresContext _context;
     public AddonFlavorService(KakeysBakery.Data.PostgresContext pc)
-    {   
+    {
         _context = pc;
     }
     public Task CreateAddonFlavorAsync(Addonflavor addonFlavor)

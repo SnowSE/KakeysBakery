@@ -53,10 +53,10 @@ public class BaseGoodService : IBaseGoodService
                 .FirstOrDefaultAsync();
     }
 
-    public async Task<Basegood?> GetBaseGoodFromFlavorAsync(int id, int flavorid)
+    public async Task<Basegood?> GetBaseGoodFromFlavorAsync(int typeId, int flavorid)
     {
         return await _context.Basegoods
-                .Where(b => b.Typeid == id)
+                .Where(b => b.Typeid == typeId)
                 .Where(b => b.Flavorid == flavorid)
                 .FirstOrDefaultAsync();
     }
