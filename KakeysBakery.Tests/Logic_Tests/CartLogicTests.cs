@@ -45,11 +45,13 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         //ACT
         int testCartID = await client.GetFromJsonAsync<int>($"api/cart/addToCart/{customerId}/{BasegoodId}");
         Cart? testCart = await client.GetFromJsonAsync<Cart>($"api/cart/get/{testCartID}");
+        Product? productTest = await client.GetFromJsonAsync<Product>($"api/Product/get/{testCart!.Productid}");
 
         //ASSERT
         Assert.NotNull(testCart);
         Assert.Equal(testCart.Id, testCartID);
         Assert.Equal(customerId, testCart.Customerid);
+        Assert.NotNull(productTest);
     }
 
     //THIS IS THE GOAL
@@ -65,12 +67,15 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         //ACT
         int testCartID = await client.GetFromJsonAsync<int>($"api/cart/addToCart/{customerId}/{BasegoodId}");
         Cart? testCart = await client.GetFromJsonAsync<Cart>($"api/cart/get/{testCartID}");
+        Product? productTest = await client.GetFromJsonAsync<Product>($"api/Product/get/{testCart!.Productid}");
 
         //ASSERT
         Assert.NotNull(testCart);
         Assert.Equal(testCart.Id, testCartID);
         Assert.Equal(customerId, testCart.Customerid);
+        Assert.NotNull(productTest);
     }
+
 
 
 
