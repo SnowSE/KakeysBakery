@@ -46,4 +46,14 @@ public class cartController : ControllerBase
     {
         await cartService.DeleteCartAsync(id);
     }
+    [HttpGet("addToCart/{customerId}/{BasegoodId}")]
+    public async Task<IActionResult> AddTocartAsync(int customerId, int BasegoodId)
+    {
+        var cart = await cartService.AddToCustomersCart(customerId, BasegoodId);
+        if (cart == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(cart); // Return the addon if found
+    }
 }

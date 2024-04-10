@@ -9,4 +9,5 @@ public interface ICartService
     public Task CreateCartAsync(Cart cart);
     public Task DeleteCartAsync(int cartId);
     public Task UpdateCartAsync(Cart cart);
+    public Task<int> AddToCustomersCart(int CustomerId, int BasegoodId);
 }
