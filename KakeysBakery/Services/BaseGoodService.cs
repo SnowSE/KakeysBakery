@@ -77,7 +77,10 @@ public class BaseGoodService : IBaseGoodService
     {
         try
         {
-            return await _context.Basegoods.Where(i => i.Typeid == BasegoodTypeId).Include(i => i.Flavor).ToListAsync();
+            return await _context.Basegoods
+                .Where(i => i.Typeid == BasegoodTypeId)
+                .Include(i => i.Flavor)
+                .ToListAsync();
         }
         catch { return new List<Basegood>(); }
     }

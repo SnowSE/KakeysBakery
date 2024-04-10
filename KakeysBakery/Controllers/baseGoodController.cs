@@ -34,9 +34,9 @@ public class BasegoodController : ControllerBase
     }
 
     [HttpGet("get_from_type/{id}")]
-    public async Task<List<Basegood>> GetBasegoodsFromTypeAsync(int id)
+    public async Task<List<Basegood>> GetBasegoodsFromTypeAsync(int typeId)
     {
-        return await baseGoodService.GetBasegoodsFromTypeAsync(id);
+        return await baseGoodService.GetBasegoodsFromTypeAsync(typeId);
     }
 
     [HttpGet("get_from_flavor/{id}/{flavorId}")]

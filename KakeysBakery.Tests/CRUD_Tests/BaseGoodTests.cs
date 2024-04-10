@@ -194,4 +194,39 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
             Assert.Fail("Expected no exception, but got:" + ex.Message);
         }
     }
+
+    [Fact]
+    public async Task Get_BaseGood_From_BaseGoodType()
+    {
+        // ARRANGE
+        Basegoodflavor goodFlavor = new()
+        {
+            Id = -1
+        };
+
+        Basegood good = new()
+        {
+            Id = -1,
+            Typeid = -1,
+            Flavorid = -1
+        };
+
+        await client.PostAsJsonAsync("api/basegoodflavor/add", goodFlavor);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+
+        // ACT & Assert
+        List<Basegood>? resultList = await client.GetFromJsonAsync<List<Basegood>>($"api/basegood/get_from_type/{good.Id}");
+        Assert.NotNull(resultList);
+
+        Basegood result = resultList.First();
+        Assert.Equal(good, result);
+    }
+
+    [Fact]
+    public async Task Get_BaseGood_From_BaseGoodFlavor()
+    {
+        Assert.Fail();
+    }
+
+
 }
