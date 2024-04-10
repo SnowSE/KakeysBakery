@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace KakeysBakeryTests;
+namespace KakeysBakeryTests.CRUD_Tests;
 
 public class CustomerRoleTests : IClassFixture<BakeryFactory>
 {

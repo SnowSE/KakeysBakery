@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 using KakeysBakeryClassLib.Data;
 
-using KakeysBakeryTests;
-
-namespace KakeysBakeryTests;
+namespace KakeysBakeryTests.CRUD_Tests;
 
 public class ProductTests : IClassFixture<BakeryFactory>
 {

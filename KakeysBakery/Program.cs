@@ -6,14 +6,15 @@ using KakeysBakery.Components;
 using KakeysBakery.Components.AuthenticationStateSyncer;
 using KakeysBakery.Services;
 
-using KakeysBakeryClassLib.Services.Implementations;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication;        
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Components.Authorization;
 using KakeysBakeryClassLib.Pages;
 using KakeysBakeryClassLib.PayPalAuth;
+using KakeysBakeryClassLib.Services.Implementations;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);

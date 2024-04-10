@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
 
-//using KakeysBakery.Services.nonDBServices;
-
-using Microsoft.AspNetCore.Mvc.Formatters;
-
-namespace KakeysBakeryTests;
+namespace KakeysBakeryTests.Logic_Tests;
 
 public class CartLogicTests : IClassFixture<BakeryFactory>
 {
@@ -46,8 +37,8 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         int prodId = 1212;
         await setUpTest(customerId, BasegoodId, allOtherId);
 
-        ProductAddonBasegood testProdAddBase = new ProductAddonBasegood() { Id=allOtherId, Addonid=null, Basegoodid=BasegoodId,Productid=prodId};
-        Product testProduct = new Product() { Id =prodId, Description="test product to add to cart", Ispublic=true, Productname="A nice cake that we are testing" };
+        ProductAddonBasegood testProdAddBase = new ProductAddonBasegood() { Id = allOtherId, Addonid = null, Basegoodid = BasegoodId, Productid = prodId };
+        Product testProduct = new Product() { Id = prodId, Description = "test product to add to cart", Ispublic = true, Productname = "A nice cake that we are testing" };
         await client.PostAsJsonAsync("api/Product/add", testProduct);
         await client.PostAsJsonAsync("api/ProductAddonBasegood/add", testProdAddBase);
 
@@ -76,9 +67,9 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         Cart? testCart = await client.GetFromJsonAsync<Cart>($"api/cart/get/{testCartID}");
 
         //ASSERT
-        Assert.NotNull(testCart );
-        Assert.Equal( testCart.Id, testCartID );
-        Assert.Equal(customerId, testCart.Customerid );        
+        Assert.NotNull(testCart);
+        Assert.Equal(testCart.Id, testCartID);
+        Assert.Equal(customerId, testCart.Customerid);
     }
 
 
@@ -135,7 +126,7 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
     [Fact]
     public async Task CanCheckIfProductIsALoneProduct()
     {
-       // CartLogic testCart = new CartLogic(client);
+        // CartLogic testCart = new CartLogic(client);
         Product testProduct = new Product() { Id = 1000 };
         Basegood testgood = new Basegood() { Id = 2000 };
         ProductAddonBasegood link = new ProductAddonBasegood()
@@ -150,8 +141,8 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         await client.PostAsJsonAsync("api/productAddonBasegood/add", link);
 
 
-       // int result = await testCart.FindProductForSingleBaseGoodAsync(testgood.Id);
-       // Assert.Equal(testProduct.Id, result);
+        // int result = await testCart.FindProductForSingleBaseGoodAsync(testgood.Id);
+        // Assert.Equal(testProduct.Id, result);
     }
 
 
@@ -160,7 +151,7 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
     {
         Customer testCustomer = new Customer() { Id = 23456 };
         Basegood basegood = new Basegood() { Id = 1234567890 };
-       // CartLogic testCart = new CartLogic(client);
+        // CartLogic testCart = new CartLogic(client);
         //await Assert.ThrowsAsync<InputFormatterException>(async () =>
         //{
         //    await testCart.addBaseGoodAsync(basegood, testCustomer);

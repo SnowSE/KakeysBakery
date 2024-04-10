@@ -79,11 +79,11 @@ namespace KakeysBakery.Components.Pages.Admin
             try
             {
 
-            var addons = await addon.GetAddonAsync(id);
-            addons.Addonflavor.Flavor = productString;
-            addons.Suggestedprice = productCost;
-            await addon.UpdateAddOnAsync(addons);
-            return "Successfully edited the topping";
+                var addons = await addon.GetAddonAsync(id);
+                addons.Addonflavor.Flavor = productString;
+                addons.Suggestedprice = productCost;
+                await addon.UpdateAddOnAsync(addons);
+                return "Successfully edited the topping";
             }
             catch
             {
