@@ -131,10 +131,9 @@ app.MapControllerRoute(
 name: "default",
 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies(typeof(HomeLib).Assembly);
 
 app.Run();
 
