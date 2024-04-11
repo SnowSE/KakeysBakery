@@ -11,16 +11,15 @@ public class AddonFlavorService : IAddonFlavorService
     {   
         _context = pc;
     }
-    public Task CreateAddonFlavorAsync(Addonflavor addonFlavor)
+    public async Task CreateAddonFlavorAsync(Addonflavor addonFlavor)
     {
         try
         {
             addonFlavor.Id = addonFlavor.Id;
-            _context.Addonflavors.Add(addonFlavor);
-            _context.SaveChanges();
+            await _context.Addonflavors.AddAsync(addonFlavor);
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public Task DeleteAddonFlavorAsync(int addonFlavorId)
@@ -31,7 +30,7 @@ public class AddonFlavorService : IAddonFlavorService
             if (addonFlavor != null)
             {
                 _context.Addonflavors.Remove(addonFlavor);
-                _context.SaveChanges();
+                _context.SaveChangesAsync();
             }
         }
         catch { }
@@ -59,7 +58,7 @@ public class AddonFlavorService : IAddonFlavorService
         try
         {
             _context.Addonflavors.Update(addonFlavor);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
         catch { }
         return Task.CompletedTask;

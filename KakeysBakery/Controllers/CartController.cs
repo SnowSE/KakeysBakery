@@ -46,14 +46,15 @@ public class cartController : ControllerBase
     {
         await cartService.DeleteCartAsync(id);
     }
+
     [HttpGet("addToCart/{customerId}/{BasegoodId}")]
-    public async Task<IActionResult> AddTocartAsync(int customerId, int BasegoodId)
+    public async Task<int> AddTocartAsync(int customerId, int BasegoodId)
     {
-        var cart = await cartService.AddToCustomersCart(customerId, BasegoodId);
-        if (cart == null)
+        try
         {
-            return NotFound(); // Return 404 Not Found status
+            int cartId = await cartService.AddToCustomersCart(customerId, BasegoodId);
+            return cartId; // Return the addon if found
         }
-        return Ok(cart); // Return the addon if found
+        catch { return -2; }
     }
 }

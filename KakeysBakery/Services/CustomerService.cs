@@ -11,18 +11,17 @@ public class CustomerService : ICustomerService
     {
         _context = pc;
     }
-    public Task CreateCustomerAsync(Customer customer)
+    public async Task CreateCustomerAsync(Customer customer)
     {
         try
         {
             _context.Customers.Add(customer);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
-    public Task DeleteCustomerAsync(int productId)
+    public async Task DeleteCustomerAsync(int productId)
     {
         try
         {
@@ -30,11 +29,10 @@ public class CustomerService : ICustomerService
             if (customer != null)
             {
                 _context.Customers.Remove(customer);
-                _context.SaveChanges();
+                 await _context.SaveChangesAsync();
             }
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<Customer>> GetCustomerListAsync()
@@ -60,15 +58,14 @@ public class CustomerService : ICustomerService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateCustomerAsync(Customer customer)
+    public async Task UpdateCustomerAsync(Customer customer)
     {
         try
         {
             _context.Customers.Update(customer);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<Customer?> GetCustomerByEmail(string email)

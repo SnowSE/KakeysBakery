@@ -11,19 +11,18 @@ public class BaseGoodSizeService : IBasegoodSizeService
     {
         _context = pc;
     }
-    public Task CreateBasegoodSizeAsync(BasegoodSize addonFlavor)
+    public async Task CreateBasegoodSizeAsync(BasegoodSize addonFlavor)
     {
         try
         {
             addonFlavor.Id = _context.BasegoodSizes.Count() + 1;
             _context.BasegoodSizes.Add(addonFlavor);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
-    public Task DeleteBasegoodSizeAsync(int addonFlavorId)
+    public async Task DeleteBasegoodSizeAsync(int addonFlavorId)
     {
         try
         {
@@ -31,11 +30,10 @@ public class BaseGoodSizeService : IBasegoodSizeService
             if (addonFlavor != null)
             {
                 _context.BasegoodSizes.Remove(addonFlavor);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<BasegoodSize>> GetBasegoodSizeListAsync()
@@ -54,15 +52,14 @@ public class BaseGoodSizeService : IBasegoodSizeService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateBasegoodSizeAsync(BasegoodSize addonFlavor)
+    public async Task UpdateBasegoodSizeAsync(BasegoodSize addonFlavor)
     {
         try
         {
             _context.BasegoodSizes.Update(addonFlavor);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<BasegoodSize?> GetBasegoodSizeByAsync(string flavor)

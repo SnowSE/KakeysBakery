@@ -34,7 +34,7 @@ public class PurchaseController : ControllerBase
     }
 
     [HttpPost("add")]
-    public async Task CreatePurchaseAsync(Purchase addon)
+    public async Task CreatePurchaseAsync([FromBody] Purchase addon)
     {
         await purchaseService.CreatePurchaseAsync(addon);
     }

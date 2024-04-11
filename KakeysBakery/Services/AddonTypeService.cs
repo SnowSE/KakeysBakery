@@ -11,18 +11,17 @@ public class AddonTypeService : IAddonTypeService
     {
         _context = pc;
     }
-    public Task CreateAddonTypeAsync(Addontype addontype)
+    public async Task CreateAddonTypeAsync(Addontype addontype)
     {
         try
         {
             _context.Addontypes.Add(addontype);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
-    public Task DeleteAddonTypeAsync(int addonTypeId)
+    public async Task DeleteAddonTypeAsync(int addonTypeId)
     {
         try
         {
@@ -30,11 +29,10 @@ public class AddonTypeService : IAddonTypeService
             if (addontype != null)
             {
                 _context.Addontypes.Remove(addontype);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<Addontype>> GetAddonTypeListAsync()
@@ -53,14 +51,13 @@ public class AddonTypeService : IAddonTypeService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateAddonTypeAsync(Addontype addontype)
+    public async Task UpdateAddonTypeAsync(Addontype addontype)
     {
         try
         {
             _context.Addontypes.Update(addontype);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 }

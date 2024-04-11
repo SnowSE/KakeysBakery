@@ -14,16 +14,15 @@ public class PurchaseService : IPurchaseService
     {
         _context = context;
     }
-    public Task CreatePurchaseAsync(Purchase purchase)
+    public async Task CreatePurchaseAsync(Purchase purchase)
     {
         try
         {
             _context.Purchases.Add(purchase);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
-    }
+        }
 
     public async Task DeletePurchaseAsync(int purchaseID)
     {
@@ -33,7 +32,7 @@ public class PurchaseService : IPurchaseService
             if (purchase != null)
             {
                 _context.Purchases.Remove(purchase);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
@@ -55,14 +54,13 @@ public class PurchaseService : IPurchaseService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdatePurchaseAsync(Purchase purchase)
+    public async Task UpdatePurchaseAsync(Purchase purchase)
     {
         try
         {
             _context.Purchases.Update(purchase);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 }

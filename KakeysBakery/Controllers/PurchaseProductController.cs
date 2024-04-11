@@ -34,7 +34,7 @@ public class PurchaseProductController : ControllerBase
 
 
     [HttpPost("add")]
-    public async Task CreatePurchaseProductAsync(PurchaseProduct purchaseProduct)
+    public async Task CreatePurchaseProductAsync([FromBody] PurchaseProduct purchaseProduct)
     {
         await purchaseProductService.CreatePurchaseProductAsync(purchaseProduct);
     }

@@ -11,18 +11,17 @@ public class ProductAddonBasegoodService : IProductAddonBasegoodService
     {
         _context = pc;
     }
-    public Task CreateProductAddonBasegoodAsync(ProductAddonBasegood productAddonBasegood)
+    public async Task CreateProductAddonBasegoodAsync(ProductAddonBasegood productAddonBasegood)
     {
         try
         {
             _context.ProductAddonBasegoods.Add(productAddonBasegood);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
-    public Task DeleteProductAddonBasegoodAsync(int productAddonBasegoodId)
+    public async Task DeleteProductAddonBasegoodAsync(int productAddonBasegoodId)
     {
         try
         {
@@ -30,11 +29,10 @@ public class ProductAddonBasegoodService : IProductAddonBasegoodService
             if (productAddonBasegood != null)
             {
                 _context.ProductAddonBasegoods.Remove(productAddonBasegood);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<ProductAddonBasegood>> GetProductAddonBasegoodListAsync()
@@ -53,14 +51,13 @@ public class ProductAddonBasegoodService : IProductAddonBasegoodService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateProductAddonBasegoodAsync(ProductAddonBasegood productAddonBasegood)
+    public async Task UpdateProductAddonBasegoodAsync(ProductAddonBasegood productAddonBasegood)
     {
         try
         {
             _context.ProductAddonBasegoods.Update(productAddonBasegood);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 }

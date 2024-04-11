@@ -11,18 +11,17 @@ public class BaseGoodFlavorService : IBaseGoodFlavorService
     {
         _context = pc;
     }
-    public Task CreateBaseGoodFlavorAsync(Basegoodflavor basegoodflavor)
+    public async Task CreateBaseGoodFlavorAsync(Basegoodflavor basegoodflavor)
     {
         try
         {
             _context.Basegoodflavors.Add(basegoodflavor);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
-    public Task DeleteBaseGoodFlavorAsync(int baseGoodId)
+    public async Task DeleteBaseGoodFlavorAsync(int baseGoodId)
     {
         try
         {
@@ -30,11 +29,10 @@ public class BaseGoodFlavorService : IBaseGoodFlavorService
             if (basegoodflavor != null)
             {
                 _context.Basegoodflavors.Remove(basegoodflavor);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<Basegoodflavor>> GetBaseGoodFlavorListAsync()
@@ -60,14 +58,13 @@ public class BaseGoodFlavorService : IBaseGoodFlavorService
     }
 
 
-    public Task UpdateBaseGoodFlavorAsync(Basegoodflavor basegoodflavor)
+    public async Task UpdateBaseGoodFlavorAsync(Basegoodflavor basegoodflavor)
     {
         try
         {
             _context.Basegoodflavors.Update(basegoodflavor);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 }

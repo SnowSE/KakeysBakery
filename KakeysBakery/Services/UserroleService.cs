@@ -18,10 +18,9 @@ public class UserroleService : IUserroleService
         try
         {
             _context.Userroles.Add(userrole);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        await Task.CompletedTask;
     }
 
     public async Task DeleteUserroleAsync(int userroleID)
@@ -32,7 +31,7 @@ public class UserroleService : IUserroleService
             if (userrole != null)
             {
                 _context.Userroles.Remove(userrole);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
@@ -54,14 +53,13 @@ public class UserroleService : IUserroleService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateUserroleAsync(Userrole userrole)
+    public async Task UpdateUserroleAsync(Userrole userrole)
     {
         try
         {
             _context.Userroles.Update(userrole);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 }

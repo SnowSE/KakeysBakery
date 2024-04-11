@@ -11,18 +11,17 @@ public class BaseGoodTypeService : IBaseGoodTypeService
     {
         _context = pc;
     }
-    public Task CreateBaseGoodTypeAsync(Basegoodtype baseGoodType)
+    public async Task CreateBaseGoodTypeAsync(Basegoodtype baseGoodType)
     {
         try
         {
             _context.Basegoodtypes.Add(baseGoodType);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
-    public Task DeleteBaseGoodTypeAsync(int baseGoodId)
+    public async Task DeleteBaseGoodTypeAsync(int baseGoodId)
     {
         try
         {
@@ -30,11 +29,10 @@ public class BaseGoodTypeService : IBaseGoodTypeService
             if (baseGoodType != null)
             {
                 _context.Basegoodtypes.Remove(baseGoodType);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<Basegoodtype>> GetBaseGoodTypeListAsync()
@@ -53,15 +51,14 @@ public class BaseGoodTypeService : IBaseGoodTypeService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateBaseGoodTypeAsync(Basegoodtype baseGoodType)
+    public async Task UpdateBaseGoodTypeAsync(Basegoodtype baseGoodType)
     {
         try
         {
             _context.Basegoodtypes.Update(baseGoodType);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<Basegoodtype?> GetBaseGoodTypeByBase(string basegood)

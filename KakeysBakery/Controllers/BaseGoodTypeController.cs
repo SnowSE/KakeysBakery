@@ -34,7 +34,7 @@ public class BasegoodtypeController : ControllerBase
 
 
     [HttpPost("add")]
-    public async Task CreateBaseGoodTypeAsync(Basegoodtype baseGoodType)
+    public async Task CreateBaseGoodTypeAsync([FromBody] Basegoodtype baseGoodType)
     {
         await baseGoodTypeService.CreateBaseGoodTypeAsync(baseGoodType);
     }

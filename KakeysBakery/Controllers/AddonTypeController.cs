@@ -34,7 +34,7 @@ public class AddonTypeController : ControllerBase
 
 
     [HttpPost("add")]
-    public async Task CreateAddonTypeAsync(Addontype addonType)
+    public async Task CreateAddonTypeAsync([FromBody] Addontype addonType)
     {
         await baseGoodService.CreateAddonTypeAsync(addonType);
     }

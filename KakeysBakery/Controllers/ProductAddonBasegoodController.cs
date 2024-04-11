@@ -34,7 +34,7 @@ public class ProductAddonBasegoodController : ControllerBase
 
 
     [HttpPost("add")]
-    public async Task CreateProductAddonBasegoodAsync(ProductAddonBasegood productAddonBasegood)
+    public async Task CreateProductAddonBasegoodAsync([FromBody] ProductAddonBasegood productAddonBasegood)
     {
         await productAddonBasegoodService.CreateProductAddonBasegoodAsync(productAddonBasegood);
     }

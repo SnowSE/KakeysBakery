@@ -12,18 +12,17 @@ public class ProductService : IProductService
     {
         _context = pc;
     }
-    public Task CreateProductAsync(Product product)
+    public async Task CreateProductAsync(Product product)
     {
         try
         {
             _context.Products.Add(product);
-            _context.SaveChanges();
+                _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
-    public Task DeleteProductAsync(int productId)
+    public async Task DeleteProductAsync(int productId)
     {
         try
         {
@@ -31,11 +30,10 @@ public class ProductService : IProductService
             if (product != null)
             {
                 _context.Products.Remove(product);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<Product>> GetProductListAsync()
@@ -61,14 +59,13 @@ public class ProductService : IProductService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateProductAsync(Product product)
+    public async Task UpdateProductAsync(Product product)
     {
         try
         {
             _context.Products.Update(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 }

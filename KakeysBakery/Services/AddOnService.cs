@@ -19,7 +19,7 @@ public class AddOnService : IAddonService
         try
         {
             _context.Addons.Add(addon);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
         await Task.CompletedTask;
@@ -33,7 +33,7 @@ public class AddOnService : IAddonService
             if (addon != null)
             {
                 _context.Addons.Remove(addon);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
@@ -55,15 +55,14 @@ public class AddOnService : IAddonService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateAddOnAsync(Addon addon)
+    public async Task UpdateAddOnAsync(Addon addon)
     {
         try
         {
             _context.Addons.Update(addon);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<Addon>> GetAddonListFromType(int id)

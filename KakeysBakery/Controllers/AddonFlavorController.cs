@@ -34,7 +34,7 @@ public class AddonflavorController : ControllerBase
 
 
     [HttpPost("add")]
-    public async Task CreateAddonFlavorAsync(Addonflavor addonFlavor)
+    public async Task CreateAddonFlavorAsync([FromBody] Addonflavor addonFlavor)
     {
         await addonFlavorService.CreateAddonFlavorAsync(addonFlavor);
     }

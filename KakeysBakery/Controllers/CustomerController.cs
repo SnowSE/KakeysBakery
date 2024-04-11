@@ -55,7 +55,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpPost("add")]
-    public async Task CreateCustomerAsync(Customer customer)
+    public async Task CreateCustomerAsync([FromBody] Customer customer)
     {
         await CustomerService.CreateCustomerAsync(customer);
     }

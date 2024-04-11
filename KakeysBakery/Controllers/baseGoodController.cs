@@ -46,7 +46,7 @@ public class BasegoodController : ControllerBase
     }
 
     [HttpPost("add")]
-    public async Task CreateBaseGoodAsync(Basegood basegood)
+    public async Task CreateBaseGoodAsync([FromBody] Basegood basegood)
     {
         await baseGoodService.CreateBaseGoodAsync(basegood);
     }

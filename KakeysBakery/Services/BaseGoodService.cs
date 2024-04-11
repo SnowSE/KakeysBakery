@@ -11,18 +11,17 @@ public class BaseGoodService : IBaseGoodService
     {
         _context = pc;
     }
-    public Task CreateBaseGoodAsync(Basegood basegood)
+    public async Task CreateBaseGoodAsync(Basegood basegood)
     {
         try
         {
             _context.Basegoods.Add(basegood);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
-    public Task DeleteBaseGoodAsync(int baseGoodId)
+    public async Task DeleteBaseGoodAsync(int baseGoodId)
     {
         try
         {
@@ -30,11 +29,10 @@ public class BaseGoodService : IBaseGoodService
             if (basegood != null)
             {
                 _context.Basegoods.Remove(basegood);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<Basegood>> GetBaseGoodListAsync()
@@ -61,15 +59,14 @@ public class BaseGoodService : IBaseGoodService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateBaseGoodAsync(Basegood basegood)
+    public async Task UpdateBaseGoodAsync(Basegood basegood)
     {
         try
         {
             _context.Basegoods.Update(basegood);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
 

@@ -16,15 +16,21 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         {
             Id = customerId
         };
-        await client.PostAsJsonAsync("api/Cutomer/add", testCustomer);
+        await client.PostAsJsonAsync("api/Customer/add", testCustomer);
+
         Basegoodflavor testflavor = new Basegoodflavor() { Id = allOtherId, Flavorname = "test Flavor Name" };
         BasegoodSize testSize = new BasegoodSize() { Id = allOtherId, Size = "test pan size" };
         Basegoodtype testType = new Basegoodtype() { Id = allOtherId, Basegood = "a test cake" };
+
         Basegood testGood = new Basegood() { Id = BasegoodId, Flavorid = allOtherId, Sizeid = allOtherId, Typeid = allOtherId };
+        
         await client.PostAsJsonAsync("api/Basegoodflavor/add", testflavor);
         await client.PostAsJsonAsync("api/BasegoodSize/add", testSize);
         await client.PostAsJsonAsync("api/Basegoodtype/add", testType);
         await client.PostAsJsonAsync("api/Basegood/add", testGood);
+
+        var basegood = await client.GetFromJsonAsync<Basegood?>($"api/Basegood/get/{BasegoodId}");
+        string asdf = "hi";
     }
     //A First Step
     [Fact]

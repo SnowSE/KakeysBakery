@@ -31,7 +31,7 @@ public class AddonController : ControllerBase
 
 
     [HttpPost("add")]
-    public async Task CreateAddOnAsync(Addon addon)
+    public async Task CreateAddOnAsync([FromBody] Addon addon)
     {
         await addonService.CreateAddOnAsync(addon);
     }

@@ -34,7 +34,7 @@ public class BasegoodflavorController : ControllerBase
 
 
     [HttpPost("add")]
-    public async Task CreateBaseGoodFlavorAsync(Basegoodflavor baseGoodFlavor)
+    public async Task CreateBaseGoodFlavorAsync([FromBody] Basegoodflavor baseGoodFlavor)
     {
         await baseGoodService.CreateBaseGoodFlavorAsync(baseGoodFlavor);
     }

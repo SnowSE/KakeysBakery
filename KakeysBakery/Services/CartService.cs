@@ -11,18 +11,17 @@ public class CartService : ICartService
     {
         _context = pc;
     }
-    public Task CreateCartAsync(Cart cart)
+    public async Task CreateCartAsync(Cart cart)
     {
         try
         {
             _context.Carts.Add(cart);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
-    public Task DeleteCartAsync(int cartId)
+    public async Task DeleteCartAsync(int cartId)
     {
         try
         {
@@ -30,11 +29,10 @@ public class CartService : ICartService
             if (cart != null)
             {
                 _context.Carts.Remove(cart);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<List<Cart>> GetCartListAsync()
@@ -53,22 +51,67 @@ public class CartService : ICartService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateCartAsync(Cart cart)
+    public async Task UpdateCartAsync(Cart cart)
     {
         try
         {
             _context.Carts.Update(cart);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 
     public async Task<int> AddToCustomersCart(int CustomerId, int BasegoodId)
     {
         //TODO: fix this
+        int? cartId = null;
+        try
+        {
+            Basegood? good = _context.Basegoods.Where(b => b.Id == BasegoodId).FirstOrDefault();
+            Customer? cust = _context.Customers.Where(c => c.Id == CustomerId).FirstOrDefault();
+            if (good != null && cust != null)
+            {
+                var prodAddOnBaseGood = _context.ProductAddonBasegoods.Where(p => p.Basegoodid == BasegoodId)
+                    .Where(p => p.Basegood!.Typeid == good.Typeid)
+                    .Where(p => p.Addonid == null)
+                    .ToList();
+                int prodId;
+                if (prodAddOnBaseGood is null)
+                {
+                    //Create product for basegood
+                    Product newprod = new();
+                    _context.Products.Add(newprod);
 
+                    prodId = newprod.Id;
+
+                    ProductAddonBasegood newaddonbase = new() { 
+                        Basegoodid = BasegoodId,
+                        Productid = prodId
+                    };
+                    _context.ProductAddonBasegoods.Add(newaddonbase);
+
+                }
+                else if (prodAddOnBaseGood.Count >= 1)
+                {
+                    //Get prod Id
+                    prodId = (int) _context.Products.Where(p => p.Id == prodAddOnBaseGood[0].Id).FirstOrDefault().Id;
+                }
+                else
+                {
+                    throw new Exception("something went wrong trying to get a product id");
+                }
+
+                //add to cart
+                Cart cart = new()
+                {
+                    Customerid = CustomerId,
+                    Productid = prodId
+                };
+            }
+            else throw new Exception("either the customer or basegood couldn't be found");
+        }
+        catch { }
         await Task.CompletedTask;
-        return -1;
+        return cartId ?? -1;
     }
 }

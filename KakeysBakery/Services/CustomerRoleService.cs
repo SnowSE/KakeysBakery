@@ -16,10 +16,9 @@ public class CustomerRoleService : ICustomerRoleService
         try
         {
             _context.CustomerRoles.Add(customerRole);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        await Task.CompletedTask;
     }
 
     public async Task DeleteCustomerRoleAsync(int customerRoleID)
@@ -30,7 +29,7 @@ public class CustomerRoleService : ICustomerRoleService
             if (customerRole != null)
             {
                 _context.CustomerRoles.Remove(customerRole);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
         catch { }
@@ -52,14 +51,13 @@ public class CustomerRoleService : ICustomerRoleService
                 .FirstOrDefaultAsync();
     }
 
-    public Task UpdateCustomerRoleAsync(CustomerRole customerRole)
+    public async Task UpdateCustomerRoleAsync(CustomerRole customerRole)
     {
         try
         {
             _context.CustomerRoles.Update(customerRole);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch { }
-        return Task.CompletedTask;
     }
 }

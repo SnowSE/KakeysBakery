@@ -31,7 +31,7 @@ public class CustomerRoleController : ControllerBase
 
 
     [HttpPost("add")]
-    public async Task CreateCustomerRoleAsync(CustomerRole customerRole)
+    public async Task CreateCustomerRoleAsync([FromBody] CustomerRole customerRole)
     {
         await customerRoleService.CreateCustomerRoleAsync(customerRole);
     }
