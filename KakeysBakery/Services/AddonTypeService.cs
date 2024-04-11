@@ -6,8 +6,8 @@ namespace KakeysBakery.Services;
 
 public class AddonTypeService : IAddonTypeService
 {
-    private readonly KakeysBakery.Data.PostgresContext _context;
-    public AddonTypeService(KakeysBakery.Data.PostgresContext pc)
+    private readonly KakeysBakeryClassLib.Data.PostgresContext _context;
+    public AddonTypeService(KakeysBakeryClassLib.Data.PostgresContext pc)
     {
         _context = pc;
     }

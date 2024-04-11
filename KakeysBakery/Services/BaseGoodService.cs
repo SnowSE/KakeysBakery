@@ -6,8 +6,8 @@ namespace KakeysBakery.Services;
 
 public class BaseGoodService : IBaseGoodService
 {
-    private readonly KakeysBakery.Data.PostgresContext _context;
-    public BaseGoodService(KakeysBakery.Data.PostgresContext pc)
+    private readonly KakeysBakeryClassLib.Data.PostgresContext _context;
+    public BaseGoodService(KakeysBakeryClassLib.Data.PostgresContext pc)
     {
         _context = pc;
     }
@@ -51,10 +51,10 @@ public class BaseGoodService : IBaseGoodService
                 .FirstOrDefaultAsync();
     }
 
-    public async Task<Basegood?> GetBaseGoodFromFlavorAsync(int id, int flavorid)
+    public async Task<Basegood?> GetBaseGoodFromFlavorAsync(int typeId, int flavorid)
     {
         return await _context.Basegoods
-                .Where(b => b.Typeid == id)
+                .Where(b => b.Typeid == typeId)
                 .Where(b => b.Flavorid == flavorid)
                 .FirstOrDefaultAsync();
     }
@@ -74,7 +74,10 @@ public class BaseGoodService : IBaseGoodService
     {
         try
         {
-            return await _context.Basegoods.Where(i => i.Typeid == BasegoodTypeId).Include(i => i.Flavor).ToListAsync();
+            return await _context.Basegoods
+                .Where(i => i.Typeid == BasegoodTypeId)
+                .Include(i => i.Flavor)
+                .ToListAsync();
         }
         catch { return new List<Basegood>(); }
     }

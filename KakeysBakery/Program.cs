@@ -1,9 +1,11 @@
+using System.Net;
 using System.Text.Json.Serialization;
 
 using Auth0.AspNetCore.Authentication;
 
 using KakeysBakery.Components;
 using KakeysBakery.Components.AuthenticationStateSyncer;
+using KakeysBakery.Components.OAuth;
 using KakeysBakery.Services;
 
 using KakeysBakeryClassLib.Pages;
@@ -53,7 +55,7 @@ builder.Services.AddScoped<IUserroleService, UserroleService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
 builder.Services.AddScoped<IBasegoodSizeService, BaseGoodSizeService>();
-
+builder.Services.AddScoped<IAuthenticationManager, WebAuthenticationManager>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options =>
@@ -71,7 +73,7 @@ builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
 //builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
-builder.Services.AddDbContextFactory<KakeysBakery.Data.PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
+builder.Services.AddDbContextFactory<KakeysBakeryClassLib.Data.PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -131,10 +133,9 @@ app.MapControllerRoute(
 name: "default",
 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies(typeof(HomeLib).Assembly);
 
 app.Run();
 

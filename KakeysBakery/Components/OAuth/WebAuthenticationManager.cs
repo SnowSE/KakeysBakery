@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace KakeysBakery.Components.OAuth;
 
-public class AuthenticationManager(Task<AuthenticationState>? authState) : IAuthenticationManager
+public class WebAuthenticationManager() : IAuthenticationManager
 {
-    private readonly Task<AuthenticationState>? authenticationState = authState;
+    private Task<AuthenticationState>? authenticationState = null;
     private AuthenticationState? state;
     public Customer? Customer { get; set; } = null;
 
@@ -21,6 +21,12 @@ public class AuthenticationManager(Task<AuthenticationState>? authState) : IAuth
         {
             state = await authenticationState;
         }
+    }
+
+    public async Task SetAuthState(Task<AuthenticationState>? authState)
+    {
+        authenticationState = authState;
+        await GetAuthState();
     }
 
     public async Task<bool> IsUserLoggedIn()

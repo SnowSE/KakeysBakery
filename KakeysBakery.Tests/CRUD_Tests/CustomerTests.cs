@@ -116,6 +116,35 @@ public class CustomerTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public async Task Get_Customer_ByEmail()
+    {
+        // ARRANGE
+        Customer testCustomer = new Customer()
+        {
+            Id = 30,
+            Email = "test@email.example.com",
+            Forename = "test",
+            Surname = "sur",
+            Phone = "5555555555",
+            Preferredcontact = "Text"
+        };
+
+        await client.PostAsJsonAsync("api/customer/add", testCustomer);
+
+        // ACT
+        Customer? result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{testCustomer.Email}");
+
+        // ASSERT
+        Assert.NotNull(result);
+
+        Assert.Equal(testCustomer.Forename, result.Forename);
+        Assert.Equal(testCustomer.Surname, result.Surname);
+        Assert.Equal(testCustomer.Id, result.Id);
+        Assert.Equal(testCustomer.Phone, result.Phone);
+        Assert.Equal(testCustomer.Preferredcontact, result.Preferredcontact);
+    }
+
+    [Fact]
     public async Task Get_Customer_ByName_When_NotExists()
     {
         await Assert.ThrowsAsync<HttpRequestException>(async () =>

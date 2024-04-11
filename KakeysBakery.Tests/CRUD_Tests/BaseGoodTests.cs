@@ -194,4 +194,71 @@ public class BaseGoodTests : IClassFixture<BakeryFactory>
             Assert.Fail("Expected no exception, but got:" + ex.Message);
         }
     }
+
+    [Fact]
+    public async Task Get_BaseGood_From_BaseGoodType()
+    {
+        // ARRANGE
+        Basegoodflavor goodFlavor = new()
+        {
+            Id = 90
+        };
+
+        Basegoodtype goodType = new()
+        {
+            Id = 90
+        };
+
+        Basegood good = new()
+        {
+            Id = 90,
+            Typeid = 90,
+            Flavorid = 90
+        };
+
+        await client.PostAsJsonAsync("api/Basegoodtype/add", goodType);
+        await client.PostAsJsonAsync("api/basegoodflavor/add", goodFlavor);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+
+        // ACT & Assert
+        List<Basegood>? resultList = await client.GetFromJsonAsync<List<Basegood>>($"api/basegood/get_from_type/{goodType.Id}");
+        Assert.NotNull(resultList);
+        Assert.NotEmpty(resultList);
+
+        Basegood result = resultList.First();
+        Assert.Equal(good.Id, result.Id);
+    }
+
+    [Fact]
+    public async Task Get_BaseGood_From_BaseGoodFlavor()
+    {
+        // ARRANGE
+        Basegoodflavor goodFlavor = new()
+        {
+            Id = 91
+        };
+
+        Basegoodtype goodType = new()
+        {
+            Id = 91
+        };
+
+        Basegood good = new()
+        {
+            Id = 91,
+            Typeid = 91,
+            Flavorid = 91
+        };
+
+        await client.PostAsJsonAsync("api/Basegoodtype/add", goodType);
+        await client.PostAsJsonAsync("api/basegoodflavor/add", goodFlavor);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+
+        // ACT & Assert
+        Basegood? resultList = await client.GetFromJsonAsync<Basegood>($"api/basegood/get_from_flavor/{goodType.Id}/{goodFlavor.Id}");
+        Assert.NotNull(resultList);
+
+        Basegood result = resultList;
+        Assert.Equal(good.Id, result.Id);
+    }
 }

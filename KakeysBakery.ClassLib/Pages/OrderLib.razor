@@ -1,17 +1,17 @@
 ﻿@page "/Order"
 
 @using BlazorBootstrap
-@using KakeysBakeryClassLib.Data
 @using KakeysBakeryClassLib.OAuth
-@using KakeysBakeryClassLib.Pages
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using System.Net.Http.Json
-@using KakeysBakery.Data
+@using KakeysBakeryClassLib.Data
 
 @inject NavigationManager navManager
 @inject HttpClient client
 @inject IDbContextFactory<PostgresContext> factory
+@inject IAuthenticationManager authManager
 
 <h3 class="pageTitle">Order</h3>
 
@@ -74,10 +74,7 @@
         {
             @foreach (Basegoodtype type in AvailableGoodTypes)
             {
-                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => {
-                    await CardSelected(type.Id);
-                    await modal.ShowAsync();
-                }">
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => { await CardSelected(type.Id); await modal.ShowAsync(); }">
                     <h3 class="typelabel" style="z-index: 1;">@type.Basegood</h3>
                     <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(type.Basegood).jpg">
                 </div>
@@ -89,7 +86,6 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-    private IAuthenticationManager? authManager;
     private Modal modal = default!;
 
     Basegood? Selected;
@@ -108,7 +104,7 @@
         client.BaseAddress = new Uri(navManager.BaseUri);
         AvailableGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
 
-        authManager = new AuthenticationManager(authenticationState);
+        await authManager.SetAuthState(authenticationState);
     }
 
     public async Task CardSelected(int basegoodtypeid)

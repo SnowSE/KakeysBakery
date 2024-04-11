@@ -33,16 +33,16 @@ public class BasegoodController : ControllerBase
         return Ok(basegood); // Return the addon if found
     }
 
-    [HttpGet("get_from_type/{id}")]
-    public async Task<List<Basegood>> GetBasegoodsFromTypeAsync(int id)
+    [HttpGet("get_from_type/{typeId}")]
+    public async Task<List<Basegood>> GetBasegoodsFromTypeAsync(int typeId)
     {
-        return await baseGoodService.GetBasegoodsFromTypeAsync(id);
+        return await baseGoodService.GetBasegoodsFromTypeAsync(typeId);
     }
 
-    [HttpGet("get_from_flavor/{id}/{flavorId}")]
-    public async Task<Basegood?> GetBasegoodsFromFlavorAsync(int id, int flavorId)
+    [HttpGet("get_from_flavor/{typeId}/{flavorId}")]
+    public async Task<Basegood?> GetBasegoodFromFlavorAsync(int typeId, int flavorId)
     {
-        return await baseGoodService.GetBaseGoodFromFlavorAsync(id, flavorId);
+        return await baseGoodService.GetBaseGoodFromFlavorAsync(typeId, flavorId);
     }
 
     [HttpPost("add")]
