@@ -24,23 +24,23 @@ public class ProductAddonBasegoodController : ControllerBase
     [HttpGet("get/{id}")]
     public async Task<IActionResult> GetProductAddonBasegoodAsync(int id)
     {
-        var addon = await productAddonBasegoodService.GetProductAddonBasegoodAsync(id);
-        if (addon == null)
+        var pab = await productAddonBasegoodService.GetProductAddonBasegoodAsync(id);
+        if (pab == null)
         {
             return NotFound(); // Return 404 Not Found status
         }
-        return Ok(addon); // Return the addon if found
+        return Ok(pab); // Return the addon if found
     }
 
     [HttpGet("get/{selectedTypeId}/{typeId}")]
     public async Task<IActionResult> GetProductAddonBasegoodAsync2(int selectedTypeId, int typeId)
     {
-        var addon = await productAddonBasegoodService.GetProductAddonBasegoodAsync(selectedTypeId, typeId);
-        if (addon == null)
+        var pab = await productAddonBasegoodService.GetProductAddonBasegoodAsync(selectedTypeId, typeId);
+        if (pab == null)
         {
             return NotFound(); // Return 404 Not Found status
         }
-        return Ok(addon); // Return the addon if found
+        return Ok(pab); // Return the addon if found
     }
 
 

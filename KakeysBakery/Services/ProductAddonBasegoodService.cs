@@ -47,12 +47,12 @@ public class ProductAddonBasegoodService : IProductAddonBasegoodService
                 .FirstOrDefaultAsync();
     }
 
-    public async Task<ProductAddonBasegood?> GetProductAddonBasegoodAsync(int selectedTypeId, int typeId)
+    public async Task<ProductAddonBasegood?> GetProductAddonBasegoodAsync(int typeId, int baseGoodId)
     {
         return await _context.ProductAddonBasegoods
             .Include(p => p.Basegood)
-            .Where(p => p.Basegood!.Typeid == selectedTypeId)
-            .Where(p => p.Basegoodid == typeId)
+            .Where(p => p.Basegood!.Typeid == typeId)
+            .Where(p => p.Basegoodid == baseGoodId)
             .Where(p => p.Addon == null)
             .FirstOrDefaultAsync();
     }

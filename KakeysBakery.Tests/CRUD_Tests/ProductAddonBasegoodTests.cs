@@ -52,53 +52,35 @@ public class ProductAddonBasegoodTests : IClassFixture<BakeryFactory>
     [Fact]
     public async Task Get_ProductAddonBasegood_BySelectionId_And_TypeId()
     {
-        //// ARRANGE
+        // ARRANGE
+        Basegoodtype type = new()
+        {
+            Id = 1101
+        };
+
         Basegood good = new()
         {
-            Id = 1000,
-            Typeid = 1
+            Id = 1100,
+            Typeid = type.Id
         };
 
         ProductAddonBasegood pab = new()
         {
-            Id = 78,
+            Id = 1102,
             Basegoodid = good.Id,
-            Basegood = good
         };
 
-        try
-        {
-            await client.PostAsJsonAsync("api/basegood/add", good);
-        }
-        catch (Exception ex)
-        {
-            Assert.Fail();
-        }
-
-        try
-        {
-            await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
-        }
-        catch (Exception ex)
-        {
-            Assert.Fail();
-        }
-
-        try
-        {
-            ProductAddonBasegood? result = await client.GetFromJsonAsync<ProductAddonBasegood>($"api/productAddonBasegood/get/{pab.Id}");
-        }
-        catch (Exception ex)
-        {
-            Assert.Fail();
-        }
+        await client.PostAsJsonAsync("api/basegoodtype/add", type);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+        await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
 
         // ACT
+        ProductAddonBasegood? result = await client.GetFromJsonAsync<ProductAddonBasegood>($"api/productAddonBasegood/get/{type.Id}/{good.Id}");
 
         // ASSERT
-        //Assert.NotNull(result);
+        Assert.NotNull(result);
 
-        //Assert.Equal(pab.Id, result.Id);
+        Assert.Equal(pab.Id, result.Id);
     }
 
     [Fact]
@@ -125,7 +107,6 @@ public class ProductAddonBasegoodTests : IClassFixture<BakeryFactory>
         // ARRANGE
         ProductAddonBasegood testProductAddonBasegood = new()
         {
-            //Basegoodname = "TestName",
             Id = 80
         };
 

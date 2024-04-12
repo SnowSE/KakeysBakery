@@ -23,7 +23,7 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
         Basegoodtype testType = new Basegoodtype() { Id = allOtherId, Basegood = "a test cake" };
 
         Basegood testGood = new Basegood() { Id = BasegoodId, Flavorid = allOtherId, Sizeid = allOtherId, Typeid = allOtherId };
-        
+
         await client.PostAsJsonAsync("api/Basegoodflavor/add", testflavor);
         await client.PostAsJsonAsync("api/BasegoodSize/add", testSize);
         await client.PostAsJsonAsync("api/Basegoodtype/add", testType);
