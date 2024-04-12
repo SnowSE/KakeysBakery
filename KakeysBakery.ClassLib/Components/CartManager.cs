@@ -25,11 +25,6 @@ public class CartManager(HttpClient client)
 
         int flavorId = Convert.ToInt32(e.Value.ToString());
 
-        try
-        {
-            // If 404, don't do anything
-            Selected = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{CurrentGoodTypeId}/{flavorId}");
-        }
-        catch { }
+        Selected = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{CurrentGoodTypeId}/{flavorId}");
     }
 }
