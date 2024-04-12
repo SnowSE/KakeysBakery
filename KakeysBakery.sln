@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KakeysBakeryClassLib", "Kak
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiKakeys", "MauiKakeys\MauiKakeys.csproj", "{732E23F9-70C5-42F2-A0E0-A316CFF0B7D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KakeysSharedLib", "KakeysSharedLib\KakeysSharedLib.csproj", "{87EFB7BC-4187-4C6B-97A3-02FCA2206896}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{732E23F9-70C5-42F2-A0E0-A316CFF0B7D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{732E23F9-70C5-42F2-A0E0-A316CFF0B7D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{732E23F9-70C5-42F2-A0E0-A316CFF0B7D8}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{87EFB7BC-4187-4C6B-97A3-02FCA2206896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87EFB7BC-4187-4C6B-97A3-02FCA2206896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87EFB7BC-4187-4C6B-97A3-02FCA2206896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87EFB7BC-4187-4C6B-97A3-02FCA2206896}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
