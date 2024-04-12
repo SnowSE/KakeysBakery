@@ -32,6 +32,17 @@ public class ProductAddonBasegoodController : ControllerBase
         return Ok(addon); // Return the addon if found
     }
 
+    [HttpGet("get/{selectedTypeId}/{typeId}")]
+    public async Task<IActionResult> GetProductAddonBasegoodAsync2(int selectedTypeId, int typeId)
+    {
+        var addon = await productAddonBasegoodService.GetProductAddonBasegoodAsync(selectedTypeId, typeId);
+        if (addon == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(addon); // Return the addon if found
+    }
+
 
     [HttpPost("add")]
     public async Task CreateProductAddonBasegoodAsync([FromBody] ProductAddonBasegood productAddonBasegood)

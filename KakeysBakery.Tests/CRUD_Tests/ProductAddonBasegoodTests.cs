@@ -35,7 +35,6 @@ public class ProductAddonBasegoodTests : IClassFixture<BakeryFactory>
         // ARRANGE
         ProductAddonBasegood testProductAddonBasegood = new()
         {
-
             Id = 78
         };
 
@@ -48,6 +47,58 @@ public class ProductAddonBasegoodTests : IClassFixture<BakeryFactory>
         Assert.NotNull(result);
 
         Assert.Equal(testProductAddonBasegood.Id, result.Id);
+    }
+
+    [Fact]
+    public async Task Get_ProductAddonBasegood_BySelectionId_And_TypeId()
+    {
+        //// ARRANGE
+        Basegood good = new()
+        {
+            Id = 1000,
+            Typeid = 1
+        };
+
+        ProductAddonBasegood pab = new()
+        {
+            Id = 78,
+            Basegoodid = good.Id,
+            Basegood = good
+        };
+
+        try
+        {
+            await client.PostAsJsonAsync("api/basegood/add", good);
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail();
+        }
+
+        try
+        {
+            await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail();
+        }
+
+        try
+        {
+            ProductAddonBasegood? result = await client.GetFromJsonAsync<ProductAddonBasegood>($"api/productAddonBasegood/get/{pab.Id}");
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail();
+        }
+
+        // ACT
+
+        // ASSERT
+        //Assert.NotNull(result);
+
+        //Assert.Equal(pab.Id, result.Id);
     }
 
     [Fact]
