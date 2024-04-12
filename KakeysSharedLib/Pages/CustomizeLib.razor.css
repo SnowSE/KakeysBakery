@@ -1,0 +1,12 @@
+﻿body {
+}
+
+input, label, select {
+    display:block
+}
+
+imgbutton {
+    height: 5vh;
+    width: 10%;
+    object-fit: cover
+}

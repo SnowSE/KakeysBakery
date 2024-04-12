@@ -1,0 +1,202 @@
+﻿@page "/Order"
+
+@using BlazorBootstrap
+@using KakeysBakeryClassLib.OAuth
+@* @using Microsoft.AspNetCore.Components.Authorization *@
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.EntityFrameworkCore
+@using System.Net.Http.Json
+@using KakeysBakeryClassLib.Data
+
+@inject NavigationManager navManager
+@inject HttpClient client
+@inject IDbContextFactory<PostgresContext> factory
+@inject IAuthenticationManager authManager
+
+<h3 class="pageTitle">Order</h3>
+
+<Modal @ref="modal" Title="Customize Your Order">
+    <BodyTemplate>
+        <div class="Modal">
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Choose @AvailableGoodTypes?.Where(c => c.Id == CurrentId).First()?.Basegood Type:</label>
+                        </td>
+                        <td>
+                            <select class="form-select" name="flavor" @onchange="UpdateSelection" id="box">
+                                <option> --- </option>
+                                @if (CurrentDetails is not null)
+                                {
+                                    @foreach (Basegood basegood in CurrentDetails)
+                                    {
+                                        @if (basegood.Isavailable ?? false)
+                                        {
+                                            <option value="@basegood.Flavor?.Id">@basegood.Flavor?.Flavorname</option>
+                                        }
+
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Quantity:</label>
+                        </td>
+                        <td>
+                            <div class="InputBox">
+                                <input class="form-control" min="1" type="number" @bind="quantity" id="box" />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr />
+            <h5>Total: $@(Selected?.Suggestedprice * quantity)</h5>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="async () => { await modal.HideAsync(); }">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick="async () => { await AddToCart(); }">Add To Cart</Button>
+    </FooterTemplate>
+</Modal>
+
+<div class="mt-5 border totalPage">
+    <div class="d-flex flex-wrap justify-content-center">
+        @if (AvailableGoodTypes == null)
+        {
+            <p>Loading products, please wait</p>
+        }
+        else
+        {
+            @foreach (Basegoodtype type in AvailableGoodTypes)
+            {
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => { await CardSelected(type.Id); await modal.ShowAsync(); }">
+                    <h3 class="typelabel" style="z-index: 1;">@type.Basegood</h3>
+                    <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(type.Basegood).jpg">
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    // [CascadingParameter]
+    // private Task<AuthenticationState>? authenticationState { get; set; }
+    private Modal modal = default!;
+
+    Basegood? Selected;
+    List<Basegood>? CurrentDetails = null;
+    public List<Basegoodtype>? AvailableGoodTypes = null;
+
+    int CurrentId;
+    int? quantity = 1;
+
+    PostgresContext? context;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = factory.CreateDbContext(); // TODO: Extract out
+
+        client.BaseAddress = new Uri(navManager.BaseUri);
+        AvailableGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall");
+
+        // await authManager.SetAuthState(authenticationState);
+    }
+
+    public async Task CardSelected(int basegoodtypeid)
+    {
+        CurrentId = basegoodtypeid;
+        CurrentDetails = await client.GetFromJsonAsync<List<Basegood>>($"api/Basegood/get_from_type/{basegoodtypeid}");
+    }
+
+    private async Task UpdateSelection(ChangeEventArgs e)
+    {
+        if (e.Value is null) { return; }
+        if (e.Value is "---") { return; }
+
+        int typeId = Convert.ToInt32(e.Value.ToString());
+        Selected = await client.GetFromJsonAsync<Basegood>($"api/Basegood/get_from_flavor/{CurrentId}/{typeId}");
+    }
+
+    public async Task AddToCart()
+    {
+        // if (!(await authManager!.IsUserLoggedIn()))
+        // {
+        //     navManager.NavigateTo("Account/Login?redirectUri=/Order", forceLoad: true);
+        //     return;
+        // }
+
+        if (context == null) { return; }
+        if (quantity == null) { return; }
+
+        Product? product = await GetProduct();
+        if (product == null) { return; }
+
+        string email = ""; // await authManager.GetUserEmail();
+        Customer? customer = await client.GetFromJsonAsync<Customer>($"api/Customer/get_by_email/{email}");
+        if (customer is null) { return; }
+
+        Cart c = new()
+            {
+                Customerid = customer.Id,
+                Productid = product.Id,
+                Quantity = quantity
+            };
+
+        // Save to database
+        context.Carts.Add(c); //We are duplicating the products, fail to check if product exists before creating
+        await context.SaveChangesAsync();
+    }
+
+    private async Task<Product?> GetProduct()
+    {
+        if (context is null) { return null; }
+
+        int bgId = CurrentId;
+
+        var pab = await context.ProductAddonBasegoods
+            .Include(p => p.Basegood)
+            .Where(p => p.Basegood!.Typeid == Selected!.Typeid)
+            .Where(p => p.Basegoodid == bgId)
+            .Where(p => p.Addon == null)
+            .FirstOrDefaultAsync();
+
+        Product? product;
+        if (pab is null)
+        {
+            var bgType = await client.GetFromJsonAsync<Basegoodtype>($"api/Basegoodtype/get/{Selected!.Typeid}");
+            var flavor = await client.GetFromJsonAsync<Basegoodflavor>($"api/Basegoodflavor/get/{Selected!.Flavorid}");
+
+            product = new()
+                {
+                    Ispublic = true,
+                    Productname = $"{bgType!.Basegood} {flavor!.Flavorname}"
+                };
+
+            context.Products.Add(product);
+            await context.SaveChangesAsync();
+
+            pab = new()
+                {
+                    Productid = product.Id,
+                    Basegoodid = bgId
+                };
+
+            context.ProductAddonBasegoods.Add(pab);
+            await context.SaveChangesAsync();
+        }
+
+        else
+        {
+            product = await context.Products
+                .Where(p => p.Id == pab.Productid)
+                .FirstOrDefaultAsync();
+        }
+
+        return product;
+    }
+}
