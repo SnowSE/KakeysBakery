@@ -13,12 +13,8 @@ public class ProductAddonBasegoodService : IProductAddonBasegoodService
     }
     public async Task CreateProductAddonBasegoodAsync(ProductAddonBasegood productAddonBasegood)
     {
-        try
-        {
-            _context.ProductAddonBasegoods.Add(productAddonBasegood);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.ProductAddonBasegoods.Add(productAddonBasegood);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteProductAddonBasegoodAsync(int productAddonBasegoodId)

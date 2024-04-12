@@ -16,35 +16,23 @@ public class PurchaseService : IPurchaseService
     }
     public async Task CreatePurchaseAsync(Purchase purchase)
     {
-        try
-        {
-            _context.Purchases.Add(purchase);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
-        }
+        _context.Purchases.Add(purchase);
+        await _context.SaveChangesAsync();
+    }
 
     public async Task DeletePurchaseAsync(int purchaseID)
     {
-        try
+        Purchase? purchase = await _context.Purchases.FirstOrDefaultAsync(a => a.Id == purchaseID);
+        if (purchase != null)
         {
-            Purchase? purchase = await _context.Purchases.FirstOrDefaultAsync(a => a.Id == purchaseID);
-            if (purchase != null)
-            {
-                _context.Purchases.Remove(purchase);
-                await _context.SaveChangesAsync();
-            }
+            _context.Purchases.Remove(purchase);
+            await _context.SaveChangesAsync();
         }
-        catch { }
     }
 
     public async Task<List<Purchase>> GetPurchaseListAsync()
     {
-        try
-        {
-            return await _context.Purchases.ToListAsync();
-        }
-        catch { return new List<Purchase>(); }
+        return await _context.Purchases.ToListAsync() ?? [];
     }
 
     public async Task<Purchase?> GetPurchaseAsync(int id)
@@ -56,11 +44,7 @@ public class PurchaseService : IPurchaseService
 
     public async Task UpdatePurchaseAsync(Purchase purchase)
     {
-        try
-        {
-            _context.Purchases.Update(purchase);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Purchases.Update(purchase);
+        await _context.SaveChangesAsync();
     }
 }

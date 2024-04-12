@@ -15,35 +15,23 @@ public class UserroleService : IUserroleService
     }
     public async Task CreateUserroleAsync(Userrole userrole)
     {
-        try
-        {
-            _context.Userroles.Add(userrole);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Userroles.Add(userrole);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteUserroleAsync(int userroleID)
     {
-        try
+        Userrole? userrole = await _context.Userroles.FirstOrDefaultAsync(a => a.Id == userroleID);
+        if (userrole != null)
         {
-            Userrole? userrole = await _context.Userroles.FirstOrDefaultAsync(a => a.Id == userroleID);
-            if (userrole != null)
-            {
-                _context.Userroles.Remove(userrole);
-                await _context.SaveChangesAsync();
-            }
+            _context.Userroles.Remove(userrole);
+            await _context.SaveChangesAsync();
         }
-        catch { }
     }
 
     public async Task<List<Userrole>> GetUserroleListAsync()
     {
-        try
-        {
-            return await _context.Userroles.ToListAsync();
-        }
-        catch { return new List<Userrole>(); }
+        return await _context.Userroles.ToListAsync() ?? [];
     }
 
     public async Task<Userrole?> GetUserroleAsync(int id)
@@ -55,11 +43,7 @@ public class UserroleService : IUserroleService
 
     public async Task UpdateUserroleAsync(Userrole userrole)
     {
-        try
-        {
-            _context.Userroles.Update(userrole);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Userroles.Update(userrole);
+        await _context.SaveChangesAsync();
     }
 }

@@ -13,35 +13,23 @@ public class CustomerRoleService : ICustomerRoleService
     }
     public async Task CreateCustomerRoleAsync(CustomerRole customerRole)
     {
-        try
-        {
-            _context.CustomerRoles.Add(customerRole);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.CustomerRoles.Add(customerRole);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteCustomerRoleAsync(int customerRoleID)
     {
-        try
+        CustomerRole? customerRole = await _context.CustomerRoles.FirstOrDefaultAsync(a => a.Id == customerRoleID);
+        if (customerRole != null)
         {
-            CustomerRole? customerRole = await _context.CustomerRoles.FirstOrDefaultAsync(a => a.Id == customerRoleID);
-            if (customerRole != null)
-            {
-                _context.CustomerRoles.Remove(customerRole);
-                await _context.SaveChangesAsync();
-            }
+            _context.CustomerRoles.Remove(customerRole);
+            await _context.SaveChangesAsync();
         }
-        catch { }
     }
 
     public async Task<List<CustomerRole>> GetCustomerRoleListAsync()
     {
-        try
-        {
-            return await _context.CustomerRoles.ToListAsync();
-        }
-        catch { return new List<CustomerRole>(); }
+        return await _context.CustomerRoles.ToListAsync() ?? [];
     }
 
     public async Task<CustomerRole?> GetCustomerRoleAsync(int id)
@@ -53,11 +41,7 @@ public class CustomerRoleService : ICustomerRoleService
 
     public async Task UpdateCustomerRoleAsync(CustomerRole customerRole)
     {
-        try
-        {
-            _context.CustomerRoles.Update(customerRole);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.CustomerRoles.Update(customerRole);
+        await _context.SaveChangesAsync();
     }
 }

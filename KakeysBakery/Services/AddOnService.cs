@@ -16,36 +16,23 @@ public class AddOnService : IAddonService
     }
     public async Task CreateAddOnAsync(Addon addon)
     {
-        try
-        {
-            _context.Addons.Add(addon);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
-        await Task.CompletedTask;
+        _context.Addons.Add(addon);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAddOnAsync(int addonID)
     {
-        try
+        Addon? addon = await _context.Addons.FirstOrDefaultAsync(a => a.Id == addonID);
+        if (addon != null)
         {
-            Addon? addon = await _context.Addons.FirstOrDefaultAsync(a => a.Id == addonID);
-            if (addon != null)
-            {
-                _context.Addons.Remove(addon);
-                await _context.SaveChangesAsync();
-            }
+            _context.Addons.Remove(addon);
+            await _context.SaveChangesAsync();
         }
-        catch { }
     }
 
     public async Task<List<Addon>> GetAddonListAsync()
     {
-        try
-        {
-            return await _context.Addons.ToListAsync();
-        }
-        catch { return new List<Addon>(); }
+        return await _context.Addons.ToListAsync() ?? [];
     }
 
     public async Task<Addon?> GetAddonAsync(int id)
@@ -57,20 +44,12 @@ public class AddOnService : IAddonService
 
     public async Task UpdateAddOnAsync(Addon addon)
     {
-        try
-        {
-            _context.Addons.Update(addon);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Addons.Update(addon);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<List<Addon>> GetAddonListFromType(int id)
     {
-        try
-        {
-            return await _context.Addons.Where(t => t.Addontypeid == id).ToListAsync();
-        }
-        catch { return new List<Addon>(); }
+        return await _context.Addons.Where(t => t.Addontypeid == id).ToListAsync() ?? [];
     }
 }

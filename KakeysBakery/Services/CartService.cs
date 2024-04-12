@@ -13,35 +13,23 @@ public class CartService : ICartService
     }
     public async Task CreateCartAsync(Cart cart)
     {
-        try
-        {
-            _context.Carts.Add(cart);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Carts.Add(cart);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteCartAsync(int cartId)
     {
-        try
+        Cart? cart = _context.Carts.FirstOrDefault(b => b.Id == cartId);
+        if (cart != null)
         {
-            Cart? cart = _context.Carts.FirstOrDefault(b => b.Id == cartId);
-            if (cart != null)
-            {
-                _context.Carts.Remove(cart);
-                await _context.SaveChangesAsync();
-            }
+            _context.Carts.Remove(cart);
+            await _context.SaveChangesAsync();
         }
-        catch { }
     }
 
     public async Task<List<Cart>> GetCartListAsync()
     {
-        try
-        {
-            return await _context.Carts.ToListAsync();
-        }
-        catch { return new List<Cart>(); }
+        return await _context.Carts.ToListAsync() ?? [];
     }
 
     public async Task<Cart?> GetCartAsync(int id)
@@ -53,12 +41,8 @@ public class CartService : ICartService
 
     public async Task UpdateCartAsync(Cart cart)
     {
-        try
-        {
-            _context.Carts.Update(cart);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Carts.Update(cart);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<int> AddToCustomersCart(int CustomerId, int BasegoodId)
@@ -84,7 +68,8 @@ public class CartService : ICartService
 
                     prodId = newprod.Id;
 
-                    ProductAddonBasegood newaddonbase = new() { 
+                    ProductAddonBasegood newaddonbase = new()
+                    {
                         Basegoodid = BasegoodId,
                         Productid = prodId
                     };
@@ -94,7 +79,7 @@ public class CartService : ICartService
                 else if (prodAddOnBaseGood.Count >= 1)
                 {
                     //Get prod Id
-                    prodId = (int) _context.Products.Where(p => p.Id == prodAddOnBaseGood[0].Id).FirstOrDefault().Id;
+                    prodId = (int)_context.Products.Where(p => p.Id == prodAddOnBaseGood[0].Id).FirstOrDefault().Id;
                 }
                 else
                 {

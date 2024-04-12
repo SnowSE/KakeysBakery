@@ -14,35 +14,23 @@ public class PurchaseProductService : IPurchaseProductService
     }
     public async Task CreatePurchaseProductAsync(PurchaseProduct purchaseProduct)
     {
-        try
-        {
-            _context.PurchaseProducts.Add(purchaseProduct);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.PurchaseProducts.Add(purchaseProduct);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeletePurchaseProductAsync(int baseGoodId)
     {
-        try
+        PurchaseProduct? purchaseProduct = _context.PurchaseProducts.FirstOrDefault(b => b.Id == baseGoodId);
+        if (purchaseProduct != null)
         {
-            PurchaseProduct? purchaseProduct = _context.PurchaseProducts.FirstOrDefault(b => b.Id == baseGoodId);
-            if (purchaseProduct != null)
-            {
-                _context.PurchaseProducts.Remove(purchaseProduct);
-                await _context.SaveChangesAsync();
-            }
+            _context.PurchaseProducts.Remove(purchaseProduct);
+            await _context.SaveChangesAsync();
         }
-        catch { }
     }
 
     public async Task<List<PurchaseProduct>> GetPurchaseProductListAsync()
     {
-        try
-        {
-            return await _context.PurchaseProducts.ToListAsync();
-        }
-        catch { return new List<PurchaseProduct>(); }
+        return await _context.PurchaseProducts.ToListAsync() ?? [];
     }
 
     public async Task<PurchaseProduct?> GetPurchaseProductAsync(int id)
@@ -54,11 +42,7 @@ public class PurchaseProductService : IPurchaseProductService
 
     public async Task UpdatePurchaseProductAsync(PurchaseProduct purchaseProduct)
     {
-        try
-        {
-            _context.PurchaseProducts.Update(purchaseProduct);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.PurchaseProducts.Update(purchaseProduct);
+        await _context.SaveChangesAsync();
     }
 }
