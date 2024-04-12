@@ -1,7 +1,7 @@
-﻿//using KakeysBakeryClassLib.Data;
+﻿//using KakeysSharedLib.Data;
 //using SQLite;
 
-//namespace KakeysBakeryClassLib.Services
+//namespace KakeysSharedLib.Services
 //{
 //    public static class MauiConnection
 //    {

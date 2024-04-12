@@ -5,7 +5,7 @@ using System.Text.Json;
 
 using Microsoft.Extensions.Configuration;
 
-namespace KakeysBakeryClassLib.PayPalAuth;
+namespace KakeysSharedLib.PayPalAuth;
 
 public class PayPalAuthentication(HttpClient client, IConfiguration config) : IPayPalAuthentication
 {

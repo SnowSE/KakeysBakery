@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using KakeysBakeryClassLib.Data;
+using KakeysSharedLib.Data;
 
 //using Microsoft.AspNetCore.Components.Authorization;
 
-namespace KakeysBakeryClassLib.OAuth;
+namespace KakeysSharedLib.OAuth;
 
 public interface IAuthenticationManager
 {

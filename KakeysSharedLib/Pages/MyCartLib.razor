@@ -2,7 +2,7 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
 
-@using KakeysBakeryClassLib.Data
+@using KakeysSharedLib.Data
 @using System.Net.Http.Json
 @* @using Microsoft.AspNetCore.Components.Authorization *@
 
@@ -91,7 +91,7 @@
         //         products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
 
         //         //get the cart and then filter itself to only get items connected to the current customer
-        //         allCartItems = await client.GetFromJsonAsync<List<KakeysBakeryClassLib.Data.Cart>>("api/cart/getall");
+        //         allCartItems = await client.GetFromJsonAsync<List<KakeysSharedLib.Data.Cart>>("api/cart/getall");
         //         allCartItems = allCartItems!.Where(i => i.Customerid == currentCustomer!.Id).ToList();
 
         //         foreach (var cart in allCartItems)

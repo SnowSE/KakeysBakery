@@ -1,6 +1,8 @@
 ﻿@page "/Customize"
-@using KakeysBakeryClassLib.Services.Interfaces
+
 @* @using Microsoft.AspNetCore.Components.Authorization *@
+@using KakeysSharedLib.Data
+@using KakeysSharedLib.Services.Interfaces
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using BlazorBootstrap
@@ -65,7 +67,7 @@
 
         <div>
             <label>How many do you want</label>
-            <input type="number"/>
+            <input type="number" />
         </div>
 
         <div>
@@ -88,11 +90,23 @@
         </div>
 
         <div>
-            <label>What frosting flavor do you want</label>
-            <select>
-                <option>---</option>
-            </select>
+            <h4>Frosting or Fondant</h4>
+            <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
+            <label for="html">Fondant</label><br>
+            <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true">
+            <label for="css">Frosting</label><br>
         </div>
+
+        @if (isFrosting)
+        {
+
+            <div>
+                <label>What frosting flavor do you want</label>
+                <select>
+                    <option>---</option>
+                </select>
+            </div>
+        }
 
         <div>
             <label>What flavor of cake do you want</label>
@@ -121,36 +135,62 @@
 <Modal @ref="RoundCake" Title="Customize Your Round Cake">
     <BodyTemplate>
         <div>
-            <label>What diameter do you want</label>
-            <select>
-                <option>---</option>
-            </select>
-        </div>
-
-        <div>
-            <label>What frosting flavor do you want</label>
-            <select>
-                <option>---</option>
-            </select>
-        </div>
-
-        <div>
-            <label>What flavor of cake do you want</label>
-            <select>
-                <option>---</option>
-            </select>
-        </div>
-
-        <div>
-            <label>Any flavored fillings? </label>
-            <select>
-                <option>---</option>
-            </select>
-        </div>
-
-        <div>
             <label>How many layers</label>
+            <input @bind="layers" type="number"/>
         </div>
+
+        @for (int i = 0; i < layers; i++)
+        {
+            
+        <div>
+            <label>What diameter do you want for layer @i</label>
+            <select>
+                <option>---</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Frosting or Fondant</label>
+            <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
+            <label for="html">Fondant</label>
+            <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true">
+            <label for="css">Frosting</label>
+        </div>
+
+        @if (isFrosting)
+        {
+            <div>
+                <label>What frosting flavor do you want for layer @i</label>
+                <select>
+                    <option>---</option>
+                </select>
+            </div>
+        }
+
+        <div>
+            <label>What flavor of cake do you want for layer @i</label>
+            <select>
+                <option>---</option>
+            </select>
+        </div>
+
+        <div>
+                @if(layers > 1)
+                {
+                    <label>Any flavored fillings between layers @(i+1) and @(i+2)</label>
+                }
+                else
+                {
+                    <label>Any flavored filling?</label>
+                }
+                <select>
+                <option>---</option>
+            </select>
+        </div>
+
+        <hr/>
+        }
+        
 
         <div>
             <input type="textarea" rows="4" cols="50" placeholder="Words or other features" />
@@ -163,8 +203,19 @@
 </Modal>
 
 @code {
+    int layers = 1;
+    bool isFrosting = false;
     Modal WeddingCake = new Modal();
     Modal Cupcake = new Modal();
     Modal SheetCake = new Modal();
     Modal RoundCake = new Modal();
+
+    List<Addon> addons;
+    List<Addonflavor> flavors;
+
+    protected async override Task OnInitializedAsync()
+    {
+        addons = await addon.GetAddonListAsync();
+
+    }
 }

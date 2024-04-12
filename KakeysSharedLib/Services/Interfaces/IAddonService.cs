@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using KakeysBakeryClassLib.Data;
+using KakeysSharedLib.Data;
 
-namespace KakeysBakeryClassLib.Services.Interfaces;
+namespace KakeysSharedLib.Services.Interfaces;
 
 public interface IAddonService
 {

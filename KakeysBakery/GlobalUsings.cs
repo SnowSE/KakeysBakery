@@ -1,4 +1,4 @@
-﻿global using KakeysBakeryClassLib.OAuth;
-global using KakeysBakeryClassLib.Data;
-global using KakeysBakeryClassLib.PayPalAuth;
-global using KakeysBakeryClassLib.Services.Interfaces;
+﻿global using KakeysSharedLib.OAuth;
+global using KakeysSharedLib.Data;
+global using KakeysSharedLib.PayPalAuth;
+global using KakeysSharedLib.Services.Interfaces;

@@ -1,7 +1,7 @@
-﻿using KakeysBakeryClassLib.Data;
+﻿using KakeysSharedLib.Data;
 
 
-namespace KakeysBakeryClassLib.Services.Interfaces;
+namespace KakeysSharedLib.Services.Interfaces;
 
 public interface IBaseGoodService
 {

@@ -1,12 +1,12 @@
-﻿//using KakeysBakeryClassLib.Data;
-//using KakeysBakeryClassLib.Services.Interfaces;
+﻿//using KakeysSharedLib.Data;
+//using KakeysSharedLib.Services.Interfaces;
 //using System;
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace KakeysBakeryClassLib.Services.Implementations
+//namespace KakeysSharedLib.Services.Implementations
 //{
 //    internal class AddonServiceMaui : IAddonService
 //    {

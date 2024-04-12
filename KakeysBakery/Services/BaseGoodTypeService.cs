@@ -1,13 +1,11 @@
-﻿using KakeysBakery.Data;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class BaseGoodTypeService : IBaseGoodTypeService
 {
-    private readonly KakeysBakeryClassLib.Data.PostgresContext _context;
-    public BaseGoodTypeService(KakeysBakeryClassLib.Data.PostgresContext pc)
+    private readonly PostgresContext _context;
+    public BaseGoodTypeService(PostgresContext pc)
     {
         _context = pc;
     }

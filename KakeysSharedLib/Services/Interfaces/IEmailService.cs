@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using MimeKit;
 
-namespace KakeysBakeryClassLib.Services.Interfaces;
+namespace KakeysSharedLib.Services.Interfaces;
 
 public interface IEmailService
 {

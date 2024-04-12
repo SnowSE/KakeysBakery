@@ -1,13 +1,11 @@
-﻿using KakeysBakery.Data;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
 public class AddonFlavorService : IAddonFlavorService
 {
-    private readonly KakeysBakeryClassLib.Data.PostgresContext _context;
-    public AddonFlavorService(KakeysBakeryClassLib.Data.PostgresContext pc)
+    private readonly PostgresContext _context;
+    public AddonFlavorService(PostgresContext pc)
     {
         _context = pc;
     }

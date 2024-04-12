@@ -4,9 +4,9 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//using KakeysBakeryClassLib.Data;
+//using KakeysSharedLib.Data;
 
-//namespace KakeysBakeryClassLib.Services.Interfaces.nonDBInterfaces;
+//namespace KakeysSharedLib.Services.Interfaces.nonDBInterfaces;
 
 //public interface ICartLogic
 //{

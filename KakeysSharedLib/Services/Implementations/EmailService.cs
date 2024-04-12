@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-using KakeysBakeryClassLib.Services.Interfaces;
+using KakeysSharedLib.Services.Interfaces;
 
 using MailKit;
 using MailKit.Net.Smtp;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 using MimeKit;
 
-namespace KakeysBakeryClassLib.Services.Implementations;
+namespace KakeysSharedLib.Services.Implementations;
 public class EmailService(IConfiguration _config) : IEmailService
 {
     //base code for this implementation taken from 

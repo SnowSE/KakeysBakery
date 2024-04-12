@@ -1,4 +1,4 @@
-﻿namespace KakeysBakeryClassLib.PayPalAuth;
+﻿namespace KakeysSharedLib.PayPalAuth;
 
 public interface IPayPalAuthentication
 {
