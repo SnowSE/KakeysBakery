@@ -16,35 +16,23 @@ public class AddonTypeService : IAddonTypeService
     }
     public async Task CreateAddonTypeAsync(Addontype addontype)
     {
-        try
-        {
-            _context.Addontypes.Add(addontype);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Addontypes.Add(addontype);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAddonTypeAsync(int addonTypeId)
     {
-        try
+        Addontype? addontype = _context.Addontypes.FirstOrDefault(b => b.Id == addonTypeId);
+        if (addontype != null)
         {
-            Addontype? addontype = _context.Addontypes.FirstOrDefault(b => b.Id == addonTypeId);
-            if (addontype != null)
-            {
-                _context.Addontypes.Remove(addontype);
-                await _context.SaveChangesAsync();
-            }
+            _context.Addontypes.Remove(addontype);
+            await _context.SaveChangesAsync();
         }
-        catch { }
     }
 
     public async Task<List<Addontype>> GetAddonTypeListAsync()
     {
-        try
-        {
-            return await _context.Addontypes.ToListAsync();
-        }
-        catch { return new List<Addontype>(); }
+        return await _context.Addontypes.ToListAsync() ?? [];
     }
 
     public async Task<Addontype?> GetAddonTypeAsync(int id)
@@ -56,11 +44,7 @@ public class AddonTypeService : IAddonTypeService
 
     public async Task UpdateAddonTypeAsync(Addontype addontype)
     {
-        try
-        {
-            _context.Addontypes.Update(addontype);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Addontypes.Update(addontype);
+        await _context.SaveChangesAsync();
     }
 }
