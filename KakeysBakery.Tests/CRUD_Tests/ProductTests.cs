@@ -73,14 +73,15 @@ public class ProductTests : IClassFixture<BakeryFactory>
     public async Task Get_Product_ByName()
     {
         // ARRANGE
-        Basegood basegood = new Basegood();
-        basegood.Id = 1;
+        Basegood basegood = new Basegood()
+        {
+            Id = 11110
+        };
         Product testProduct = new()
         {
-            Id = 245,
-            // Basegoodid = 1,
-            Description = "Test",
-            Productname = "TestName",
+            Id = 1111,
+            Description = "Test123",
+            Productname = "TestName123",
         };
         await client.PostAsJsonAsync("api/basegood/add", basegood);
         await client.PostAsJsonAsync("api/product/add", testProduct);

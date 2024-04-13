@@ -1,6 +1,7 @@
 ﻿@page "/Order"
 
 @using BlazorBootstrap
+@using KakeysSharedLib.Components
 @using KakeysSharedLib.OAuth
 @* @using Microsoft.AspNetCore.Components.Authorization *@
 @using Microsoft.AspNetCore.Components.Web
@@ -102,7 +103,7 @@ else
         manager = new(client);
         await manager.PopulateAvailableGoodTypes();
 
-        await authManager.SetAuthState(authenticationState);
+        // await authManager.SetAuthState(authenticationState);
         IsDataLoaded = true;
     }
 

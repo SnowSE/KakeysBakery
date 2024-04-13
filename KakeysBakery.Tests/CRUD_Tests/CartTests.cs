@@ -55,13 +55,13 @@ public class CartTests : IClassFixture<BakeryFactory>
         // ARRANGE
         Customer customer = new()
         {
-            Id = 1000,
+            Id = 1100,
             Email = "test@example.com"
         };
         
         Cart testCart = new()
         {
-            Id = 78,
+            Id = 1110,
             Customerid = customer.Id,
         };
 
