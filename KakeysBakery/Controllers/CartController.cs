@@ -28,6 +28,16 @@ public class cartController : ControllerBase
         return Ok(cart); // Return the addon if found
     }
 
+    [HttpGet("get_from_email/{email}")]
+    public async Task<IActionResult> GetcartAsync(string email)
+    {
+        var cart = await cartService.GetCartFromEmailAsync(email);
+        if (cart == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(cart); // Return the addon if found
+    }
 
     [HttpPost("add")]
     public async Task CreatecartAsync(Cart cart)

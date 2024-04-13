@@ -13,35 +13,23 @@ public class CustomerService : ICustomerService
     }
     public async Task CreateCustomerAsync(Customer customer)
     {
-        try
-        {
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Customers.Add(customer);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteCustomerAsync(int productId)
     {
-        try
+        Customer? customer = _context.Customers.FirstOrDefault(b => b.Id == productId);
+        if (customer != null)
         {
-            Customer? customer = _context.Customers.FirstOrDefault(b => b.Id == productId);
-            if (customer != null)
-            {
-                _context.Customers.Remove(customer);
-                 await _context.SaveChangesAsync();
-            }
+            _context.Customers.Remove(customer);
+            await _context.SaveChangesAsync();
         }
-        catch { }
     }
 
     public async Task<List<Customer>> GetCustomerListAsync()
     {
-        try
-        {
-            return await _context.Customers.ToListAsync();
-        }
-        catch { return new List<Customer>(); }
+        return await _context.Customers.ToListAsync() ?? [];
     }
 
     public async Task<Customer?> GetCustomerAsync(int id)
@@ -60,12 +48,8 @@ public class CustomerService : ICustomerService
 
     public async Task UpdateCustomerAsync(Customer customer)
     {
-        try
-        {
-            _context.Customers.Update(customer);
-            await _context.SaveChangesAsync();
-        }
-        catch { }
+        _context.Customers.Update(customer);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<Customer?> GetCustomerByEmail(string email)
