@@ -39,6 +39,14 @@ public class CartService : ICartService
                 .FirstOrDefaultAsync();
     }
 
+    public async Task<Cart?> GetCartFromEmailAsync(string email)
+    {
+        return await _context.Carts
+            .Include(b => b.Customer)
+            .Where(b => b.Customer!.Email == email)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task UpdateCartAsync(Cart cart)
     {
         _context.Carts.Update(cart);

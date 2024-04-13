@@ -1,4 +1,6 @@
-﻿using KakeysBakery.Data;
+﻿using BlazorBootstrap;
+
+using KakeysBakery.Data;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +16,7 @@ public class ProductAddonBasegoodService : IProductAddonBasegoodService
     public async Task CreateProductAddonBasegoodAsync(ProductAddonBasegood productAddonBasegood)
     {
         _context.ProductAddonBasegoods.Add(productAddonBasegood);
+
         await _context.SaveChangesAsync();
     }
 
@@ -47,13 +50,25 @@ public class ProductAddonBasegoodService : IProductAddonBasegoodService
                 .FirstOrDefaultAsync();
     }
 
-    public async Task<ProductAddonBasegood?> GetProductAddonBasegoodAsync(int typeId, int baseGoodId)
+    public async Task<ProductAddonBasegood?> GetProductAddonBasegoodByProductIdAsync(int productId)
+    {
+        var pab = await _context.ProductAddonBasegoods
+            .Where(b => b.Productid == productId)
+            .FirstOrDefaultAsync();
+
+        var test = await _context.ProductAddonBasegoods
+            .ToListAsync();
+
+        return pab;
+    }
+
+    public async Task<ProductAddonBasegood?> GetProductAddonBasegoodAsync(int flavorId, int typeId)
     {
         return await _context.ProductAddonBasegoods
             .Include(p => p.Basegood)
-            .Where(p => p.Basegood!.Typeid == typeId)
-            .Where(p => p.Basegoodid == baseGoodId)
             .Where(p => p.Addon == null)
+            .Where(p => p.Basegood!.Typeid == typeId)
+            .Where(p => p.Basegood!.Flavorid == flavorId)
             .FirstOrDefaultAsync();
     }
 

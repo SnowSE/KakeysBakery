@@ -50,6 +50,34 @@ public class CartTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public async Task Get_Cart_ByEmail()
+    {
+        // ARRANGE
+        Customer customer = new()
+        {
+            Id = 1000,
+            Email = "test@example.com"
+        };
+        
+        Cart testCart = new()
+        {
+            Id = 78,
+            Customerid = customer.Id,
+        };
+
+        await client.PostAsJsonAsync("api/customer/add", customer);
+        await client.PostAsJsonAsync("api/cart/add", testCart);
+
+        // ACT
+        Cart? result = await client.GetFromJsonAsync<Cart>($"api/cart/get_from_email/{customer.Email}");
+
+        // ASSERT
+        Assert.NotNull(result);
+
+        Assert.Equal(testCart.Id, result.Id);
+    }
+
+    [Fact]
     public async Task Get_Cart_ById_When_NotExists()
     {
         await Assert.ThrowsAsync<HttpRequestException>(async () =>

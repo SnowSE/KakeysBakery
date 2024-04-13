@@ -32,10 +32,21 @@ public class ProductAddonBasegoodController : ControllerBase
         return Ok(pab); // Return the addon if found
     }
 
-    [HttpGet("get/{selectedTypeId}/{typeId}")]
-    public async Task<IActionResult> GetProductAddonBasegoodAsync2(int selectedTypeId, int typeId)
+    [HttpGet("get_by_productId/{productId}")]
+    public async Task<IActionResult> GetProductAddonBasegoodByProductIdAsync(int productId)
     {
-        var pab = await productAddonBasegoodService.GetProductAddonBasegoodAsync(selectedTypeId, typeId);
+        var pab = await productAddonBasegoodService.GetProductAddonBasegoodByProductIdAsync(productId);
+        if (pab == null)
+        {
+            return NotFound(); // Return 404 Not Found status
+        }
+        return Ok(pab); // Return the addon if found
+    }
+
+    [HttpGet("get/{flavorId}/{typeId}")]
+    public async Task<IActionResult> GetProductAddonBasegoodAsync2(int flavorId, int typeId)
+    {
+        var pab = await productAddonBasegoodService.GetProductAddonBasegoodAsync(flavorId, typeId);
         if (pab == null)
         {
             return NotFound(); // Return 404 Not Found status

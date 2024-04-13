@@ -70,6 +70,33 @@ public class ProductTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public async Task Get_Product_ByName()
+    {
+        // ARRANGE
+        Basegood basegood = new Basegood();
+        basegood.Id = 1;
+        Product testProduct = new()
+        {
+            Id = 245,
+            // Basegoodid = 1,
+            Description = "Test",
+            Productname = "TestName",
+        };
+        await client.PostAsJsonAsync("api/basegood/add", basegood);
+        await client.PostAsJsonAsync("api/product/add", testProduct);
+
+        // ACT
+        Product? result = await client.GetFromJsonAsync<Product>($"api/product/get_by_name/{testProduct.Productname}");
+
+        // ASSERT
+        Assert.NotNull(result);
+
+        Assert.Equal(testProduct.Description, result.Description);
+        Assert.Equal(testProduct.Id, result.Id);
+    }
+
+
+    [Fact]
     public async Task Get_Product_ById_When_NotExists()
     {
         await Assert.ThrowsAsync<HttpRequestException>(async () =>

@@ -6,6 +6,7 @@ public interface ICartService
 {
     public Task<List<Cart>> GetCartListAsync();
     public Task<Cart?> GetCartAsync(int id);
+    public Task<Cart?> GetCartFromEmailAsync(string email);
     public Task CreateCartAsync(Cart cart);
     public Task DeleteCartAsync(int cartId);
     public Task UpdateCartAsync(Cart cart);

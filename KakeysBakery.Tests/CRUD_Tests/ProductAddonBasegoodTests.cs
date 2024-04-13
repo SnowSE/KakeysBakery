@@ -50,7 +50,7 @@ public class ProductAddonBasegoodTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
-    public async Task Get_ProductAddonBasegood_BySelectionId_And_TypeId()
+    public async Task Get_ProductAddonBasegood_ByFlavorId_And_TypeId()
     {
         // ARRANGE
         Basegoodtype type = new()
@@ -58,10 +58,16 @@ public class ProductAddonBasegoodTests : IClassFixture<BakeryFactory>
             Id = 1101
         };
 
+        Basegoodflavor flavor = new()
+        {
+            Id = 1103
+        };
+
         Basegood good = new()
         {
             Id = 1100,
-            Typeid = type.Id
+            Typeid = type.Id,
+            Flavorid = flavor.Id,
         };
 
         ProductAddonBasegood pab = new()
@@ -71,11 +77,60 @@ public class ProductAddonBasegoodTests : IClassFixture<BakeryFactory>
         };
 
         await client.PostAsJsonAsync("api/basegoodtype/add", type);
+        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
         await client.PostAsJsonAsync("api/basegood/add", good);
         await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
 
         // ACT
-        ProductAddonBasegood? result = await client.GetFromJsonAsync<ProductAddonBasegood>($"api/productAddonBasegood/get/{type.Id}/{good.Id}");
+        ProductAddonBasegood? result = await client.GetFromJsonAsync<ProductAddonBasegood>($"api/productAddonBasegood/get/{flavor.Id}/{type.Id}");
+
+        // ASSERT
+        Assert.NotNull(result);
+
+        Assert.Equal(pab.Id, result.Id);
+    }
+
+    [Fact]
+    public async Task Get_ProductAddonBasegood_ByProductId()
+    {
+        // ARRANGE
+        Basegoodtype type = new()
+        {
+            Id = 1101
+        };
+
+        Basegoodflavor flavor = new()
+        {
+            Id = 1103
+        };
+
+        Basegood good = new()
+        {
+            Id = 1100,
+            Typeid = type.Id,
+            Flavorid = flavor.Id,
+        };
+
+        Product product = new()
+        {
+            Id = 1104
+        };
+
+        ProductAddonBasegood pab = new()
+        {
+            Id = 1102,
+            Basegoodid = good.Id,
+            Productid = product.Id,
+        };
+
+        await client.PostAsJsonAsync("api/basegoodtype/add", type);
+        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+        await client.PostAsJsonAsync("api/product/add", product);
+        await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
+
+        // ACT
+        ProductAddonBasegood? result = await client.GetFromJsonAsync<ProductAddonBasegood>($"api/productAddonBasegood/get_by_productId/{product.Id}");
 
         // ASSERT
         Assert.NotNull(result);
