@@ -1,4 +1,4 @@
-﻿using KakeysBakeryClassLib.OAuth;
+﻿using KakeysSharedLib.OAuth;
 
 using Microsoft.AspNetCore.Components.Authorization;
 

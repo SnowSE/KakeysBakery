@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Json;
 
+using KakeysSharedLib.Data;
+
 namespace KakeysBakeryTests.Logic_Tests;
 
 public class CartLogicTests : IClassFixture<BakeryFactory>

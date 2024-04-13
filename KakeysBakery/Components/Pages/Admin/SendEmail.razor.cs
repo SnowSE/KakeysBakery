@@ -1,6 +1,6 @@
 ﻿using KakeysBakery.Data;
 
-using KakeysBakeryClassLib.Services.Implementations;
+using KakeysSharedLib.Services.Implementations;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;

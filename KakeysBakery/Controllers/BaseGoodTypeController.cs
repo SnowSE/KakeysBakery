@@ -1,6 +1,6 @@
 ﻿using KakeysBakery.Services;
 
-using KakeysBakeryClassLib.Services.Interfaces;
+using KakeysSharedLib.Services.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
 

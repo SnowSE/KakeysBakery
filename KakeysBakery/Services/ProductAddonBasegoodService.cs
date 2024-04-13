@@ -8,8 +8,8 @@ namespace KakeysBakery.Services;
 
 public class ProductAddonBasegoodService : IProductAddonBasegoodService
 {
-    private readonly KakeysBakeryClassLib.Data.PostgresContext _context;
-    public ProductAddonBasegoodService(KakeysBakeryClassLib.Data.PostgresContext pc)
+    private readonly PostgresContext _context;
+    public ProductAddonBasegoodService(PostgresContext pc)
     {
         _context = pc;
     }

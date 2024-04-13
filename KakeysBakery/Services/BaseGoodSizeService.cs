@@ -6,9 +6,9 @@ namespace KakeysBakery.Services;
 
 public class BaseGoodSizeService : IBasegoodSizeService
 {
-    private readonly KakeysBakeryClassLib.Data.PostgresContext _context;
-    public BaseGoodSizeService(KakeysBakeryClassLib.Data.PostgresContext pc)
-    {
+    private readonly PostgresContext _context;
+    public BaseGoodSizeService(PostgresContext pc)
+    {   
         _context = pc;
     }
     public async Task CreateBasegoodSizeAsync(BasegoodSize addonFlavor)

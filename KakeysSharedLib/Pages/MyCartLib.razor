@@ -1,0 +1,110 @@
+﻿@page "/Cart"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+
+@using KakeysSharedLib.Data
+@using System.Net.Http.Json
+@* @using Microsoft.AspNetCore.Components.Authorization *@
+
+
+<p>Hello @Username!</p>
+
+<div class="align-content-center p-5" id="totalCart">
+    <div class="text-center">
+        <h2 id="pageTitle"> YOUR CART </h2>
+    </div>
+
+
+    <div class="p-4" style="background-color: #EBDCCE;">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th class="px-3 itemDescription" scope="col">Qty</th>
+                    <th class="px-3 itemDescription" scope="col">Price</th>
+                </tr>
+            <tr><td colspan="4"><hr /></td></tr>
+            </thead>
+            <tbody>
+                @foreach (var product in customerProducts!)
+                {
+                    <tr class="cartCard flex-row">
+                        <td class="pe-4"><img src="images/cookie.jpg" /></td>
+                        <td>
+                            <h1 class="itemName">@product.Productname</h1>
+                            <p class="itemDescription">
+                                @(product.Description ?? "Product has no description")
+                            </p>
+                        </td>
+                        <td class="ps-4 itemDescription">1x</td>
+                        <td class="px-3 itemDescription">$5.00</td>
+                    </tr>
+                    <tr><td colspan="4"><hr /></td></tr>
+
+                }
+                <tr id="">
+                    <td colspan="4" style="text-align: right;" class="itemDescription" id="displayTotal">TOTAL: $10.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+@code {
+    // [CascadingParameter]
+    // private Task<AuthenticationState>? authenticationState { get; set; }
+
+    private string Username = "";
+    private string email = "";
+    HttpClient client = new HttpClient();
+    Customer? currentCustomer = new();
+    List<Product>? products = new();
+    List<Product>? customerProducts = new();
+    List<Cart>? allCartItems = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //https://github.com/paypal/paypal-rest-api-specifications/blob/main/openapi/payments_payment_v2.json
+        //https://github.com/christianhelle/refitter
+
+
+        //var octocat = await paypalapi.();
+
+        // if (authenticationState is not null)
+        // {
+        //     // var state = await authenticationState;
+        //     client.BaseAddress = new Uri("https://localhost:7196/");
+        //     Username = state?.User?.Identity?.Name ?? string.Empty;
+        //     try
+        //     {
+        //         var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
+        //         email = userEmail ?? "no email found";
+        //     }
+        //     catch { email = "getting email threw error"; }
+
+        //     try
+        //     {
+        //         currentCustomer = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+        //         products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
+
+        //         //get the cart and then filter itself to only get items connected to the current customer
+        //         allCartItems = await client.GetFromJsonAsync<List<KakeysSharedLib.Data.Cart>>("api/cart/getall");
+        //         allCartItems = allCartItems!.Where(i => i.Customerid == currentCustomer!.Id).ToList();
+
+        //         foreach (var cart in allCartItems)
+        //         {
+        //             customerProducts!.Add(products!.Where(c => c.Id == cart.Productid).FirstOrDefault()!);
+        //         }
+
+
+        //     }
+        //     catch { }
+        //     StateHasChanged();
+        // }
+        await base.OnInitializedAsync();
+
+    }
+}

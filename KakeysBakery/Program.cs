@@ -1,4 +1,3 @@
-using System.Net;
 using System.Text.Json.Serialization;
 
 using Auth0.AspNetCore.Authentication;
@@ -8,9 +7,11 @@ using KakeysBakery.Components.AuthenticationStateSyncer;
 using KakeysBakery.Components.OAuth;
 using KakeysBakery.Services;
 
-using KakeysBakeryClassLib.Pages;
-using KakeysBakeryClassLib.PayPalAuth;
-using KakeysBakeryClassLib.Services.Implementations;
+using KakeysSharedLib.OAuth;
+using KakeysSharedLib.Pages;
+using KakeysSharedLib.PayPalAuth;
+using KakeysSharedLib.Services.Implementations;
+using KakeysSharedLib.Services.Interfaces;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -73,7 +74,7 @@ builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
 //builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
-builder.Services.AddDbContextFactory<KakeysBakeryClassLib.Data.PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
+builder.Services.AddDbContextFactory<KakeysSharedLib.Data.PostgresContext>(options => options.UseNpgsql(builder.Configuration["db"]));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

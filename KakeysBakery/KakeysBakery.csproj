@@ -38,11 +38,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KakeysBakery.ClassLib\KakeysBakeryClassLib.csproj" />
+    <Folder Include="wwwroot\bootstrap\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\bootstrap\" />
+    <ProjectReference Include="..\KakeysSharedLib\KakeysSharedLib.csproj" />
   </ItemGroup>
 
 </Project>
