@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0-android;</TargetFrameworks>
+        <TargetFrameworks>net8.0;net8.0-android</TargetFrameworks>
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
         <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
         <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
@@ -14,7 +14,7 @@
         <!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
         	<NoWarn>NU1701;NETSDK1206</NoWarn> <!--Suppress PayPal, Alpine warning-->
 
-		<OutputType>Exe</OutputType>        
+		<OutputType Condition="'$(TargetFramework)' != 'net8.0'">Exe</OutputType>        
 		<RootNamespace>MauiKakeys</RootNamespace>
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
