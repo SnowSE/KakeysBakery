@@ -93,7 +93,7 @@ public class CartLogicTests : IClassFixture<BakeryFactory>
 
 
 
-   
+
     //[Fact]
     //public async Task CanCheckIfProductIsALoneProduct()
     //{
