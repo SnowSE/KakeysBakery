@@ -30,7 +30,8 @@ jobs:
 
     - name: Lint
       run: |
-          dotnet format --verify-no-changes --severity warn
+          # dotnet format --verify-no-changes --severity warn
+          dotnet format --verify-no-changes
 
     - name: Build
       run: |
