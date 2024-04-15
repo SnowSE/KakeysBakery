@@ -76,7 +76,9 @@
                 {
                     <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async () => { await manager.SelectGoodTypeCard(type.Id); await modal.ShowAsync(); }">
                         <h3 class="typelabel" style="z-index: 1;">@type.Basegood</h3>
-                        <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(type.Basegood).jpg">
+                        @* <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="images/@(type.Basegood).jpg"> *@
+                        <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/@(type.Basegood).jpg">
+
                     </div>
                 }
             }
