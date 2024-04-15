@@ -7,7 +7,7 @@ namespace KakeysBakery.Services;
 public class CartService : ICartService
 {
     private readonly PostgresContext _context;
-    public CartService( PostgresContext pc)
+    public CartService(PostgresContext pc)
     {
         _context = pc;
     }

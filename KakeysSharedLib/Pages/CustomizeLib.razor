@@ -56,7 +56,7 @@
                 <option>---</option>
                 @foreach (Addon frosting in frostings)
                 {
-                    <option> @frosting.Addonflavor.Flavor </option>
+                    <option> @frosting?.Addonflavor?.Flavor </option>
                 }
             </select>
         </div>
@@ -66,7 +66,7 @@
                 <option>---</option>
                 @foreach (Addon cake in cupcakeFlavors)
                 {
-                    <option>@cake.Addonflavor.Flavor</option>
+                    <option>@cake?.Addonflavor?.Flavor</option>
                 }
             </select>
         </div>
@@ -77,7 +77,7 @@
                 <option>---</option>
                 @foreach(Addon filling in fillings)
                 {
-                    <option>@filling.Addonflavor.Flavor</option>
+                    <option>@filling?.Addonflavor?.Flavor</option>
                 }
             </select>
         </div>
@@ -88,7 +88,7 @@
         </div>
 
         <div>
-            <input type="textarea" rows="4" cols="50" placeholder="What additional customization do you want with this cupcake?" />
+            <input rows="4" cols="50" placeholder="What additional customization do you want with this cupcake?" />
         </div>
     </BodyTemplate>
     <FooterTemplate>
@@ -127,7 +127,7 @@
                     <option>---</option>
                     @foreach (Addon frosting in frostings)
                     {
-                        <option> @frosting.Addonflavor.Flavor </option>
+                        <option> @frosting?.Addonflavor?.Flavor </option>
                     }
                 </select>
             </div>
@@ -139,7 +139,7 @@
                 <option>---</option>
                 @foreach (Addon cake in sheetFlavors)
                 {
-                    <option>@cake.Addonflavor.Flavor</option>
+                    <option>@cake?.Addonflavor?.Flavor</option>
                 }
             </select>
         </div>
@@ -150,13 +150,13 @@
                 <option>---</option>
                 @foreach (Addon filling in fillings)
                 {
-                    <option>@filling.Addonflavor.Flavor</option>
+                    <option>@filling?.Addonflavor?.Flavor</option>
                 }
             </select>
         </div>
 
         <div>
-            <input type="textarea" rows="4" cols="50" placeholder="Words or other features" />
+            <input rows="4" cols="50" placeholder="Words or other features" />
         </div>
     </BodyTemplate>
     <FooterTemplate>
@@ -201,7 +201,7 @@
                         <option>---</option>
                         @foreach (Addon frosting in frostings)
                         {
-                            <option> @frosting.Addonflavor.Flavor </option>
+                            <option> @frosting?.Addonflavor?.Flavor </option>
                         }
                     </select>
                 </div>
@@ -213,7 +213,7 @@
                     <option>---</option>
                     @foreach (Addon cake in cakeFlavors)
                     {
-                        <option>@cake.Addonflavor.Flavor</option>
+                        <option>@cake?.Addonflavor?.Flavor</option>
                     }
                 </select>
             </div>
@@ -227,7 +227,7 @@
                         <option>---</option>
                         @foreach (Addon filling in fillings)
                         {
-                            <option>@filling.Addonflavor.Flavor</option>
+                            <option>@filling?.Addonflavor?.Flavor</option>
                         }
                     </select>
                 }
@@ -238,7 +238,7 @@
                         <option>---</option>
                         @foreach (Addon filling in fillings)
                         {
-                            <option>@filling.Addonflavor.Flavor</option>
+                            <option>@filling?.Addonflavor?.Flavor</option>
                         }
                     </select>
                 }
@@ -269,7 +269,7 @@
     List<Addon>? addons;
     List<Addonflavor>? flavors;
     List<Addontype>? types;
-    List<Product>? products;
+    // List<Product>? products;
 
     List<Addon> frostings = new(); //
     List<Addon> fillings = new(); //
@@ -289,14 +289,22 @@
         flavors = await addonflavor.GetAddonFlavorListAsync();
         types = await addontype.GetAddonTypeListAsync();
 
-        // figure out way for cake/sheet siz
-        cakeSizes.Add(await addontype.GetAddonTypeAsync(4));
-        cakeSizes.Add(await addontype.GetAddonTypeAsync(5));
-        cakeSizes.Add(await addontype.GetAddonTypeAsync(6));
+        // figure out way for cake/sheet size
+        for (int i = 0; i <= 2; i++)
+        {
+            var addonType = await addontype.GetAddonTypeAsync(i+4);
+            if (addonType is not null)
+            {
+                cakeSizes.Add(addonType);
+            }
 
-        sheetSizes.Add(await addontype.GetAddonTypeAsync(7));
-        sheetSizes.Add(await addontype.GetAddonTypeAsync(8));
-        sheetSizes.Add(await addontype.GetAddonTypeAsync(9));
+            var sheetType = await addontype.GetAddonTypeAsync(i + 7);
+            if (sheetType is not null)
+            {
+                sheetSizes.Add(sheetType);
+            }
+        }
+
         foreach (Addon addon in addons)
         {
             if (addon.Addontypeid == 1)
@@ -315,12 +323,8 @@
             if (addon.Addontypeid == 7)
                 sheetFlavors.Add(addon);
 
-
-
             if (addon.Addontypeid == 10)
                 cupcakeFlavors.Add(addon);
         }
     }
-
-
 }

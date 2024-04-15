@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+
 using KakeysSharedLib.Components;
 
 using Microsoft.AspNetCore.Components;
@@ -340,7 +341,7 @@ public class CartManagerTests : IClassFixture<BakeryFactory>
         });
 
         var result = await unitUnderTest.GetProduct();
-        
+
         // ASSERT
         Assert.NotNull(result);
     }
