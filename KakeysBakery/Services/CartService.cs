@@ -1,5 +1,6 @@
 ﻿using KakeysBakery.Data;
 
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
@@ -87,7 +88,9 @@ public class CartService : ICartService
                 else if (prodAddOnBaseGood.Count >= 1)
                 {
                     //Get prod Id
-                    prodId = (int)_context.Products.Where(p => p.Id == prodAddOnBaseGood[0].Id).FirstOrDefault().Id;
+                    var prod = _context.Products.Where(p => p.Id == prodAddOnBaseGood[0].Id).FirstOrDefault();
+                    if (prod == null) { throw new NullReferenceException("Product Id is Null!"); };
+                    prodId = prod.Id;
                 }
                 else
                 {

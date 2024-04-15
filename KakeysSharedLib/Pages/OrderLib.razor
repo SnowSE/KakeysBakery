@@ -23,7 +23,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <label>Choose @manager.AvailableGoodTypes?.Where(c => c.Id == manager.CurrentGoodTypeId).First()?.Basegood Type:</label>
+                                <label>Choose @manager!.AvailableGoodTypes?.Where(c => c.Id == manager.CurrentGoodTypeId).First()?.Basegood Type:</label>
                             </td>
                             <td>
                                 <select class="form-select" name="flavor" @onchange="manager.UpdateSelection" id="box">
@@ -66,7 +66,7 @@
 
     <div class="mt-5 border totalPage">
         <div class="d-flex flex-wrap justify-content-center">
-            @if (manager.AvailableGoodTypes == null)
+            @if (manager!.AvailableGoodTypes == null)
             {
                 <p>Loading products, please wait</p>
             }
