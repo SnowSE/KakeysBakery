@@ -56,7 +56,10 @@
                 <option>---</option>
                 @foreach (Addon frosting in frostings)
                 {
-                    <option> @frosting.Addonflavor.Flavor </option>
+                    @if (frosting.Addonflavor is not null)
+                    {
+                        <option> @frosting.Addonflavor.Flavor </option>
+                    }
                 }
             </select>
         </div>
@@ -66,7 +69,10 @@
                 <option>---</option>
                 @foreach (Addon cake in cupcakeFlavors)
                 {
-                    <option>@cake.Addonflavor.Flavor</option>
+                    @if (cake.Addonflavor is not null)
+                    {
+                        <option>@cake.Addonflavor.Flavor</option>
+                    }
                 }
             </select>
         </div>
@@ -75,9 +81,13 @@
             <label>Any flavored fillings</label>
             <select>
                 <option>---</option>
-                @foreach(Addon filling in fillings)
+                @foreach (Addon filling in fillings)
                 {
-                    <option>@filling.Addonflavor.Flavor</option>
+                    @if (filling.Addonflavor is not null)
+                    {
+                        <option>@filling.Addonflavor.Flavor</option>
+                    }
+
                 }
             </select>
         </div>
@@ -127,7 +137,10 @@
                     <option>---</option>
                     @foreach (Addon frosting in frostings)
                     {
-                        <option> @frosting.Addonflavor.Flavor </option>
+                        @if (frosting.Addonflavor is not null)
+                        {
+                            <option> @frosting.Addonflavor.Flavor </option>
+                        }
                     }
                 </select>
             </div>
@@ -139,7 +152,10 @@
                 <option>---</option>
                 @foreach (Addon cake in sheetFlavors)
                 {
-                    <option>@cake.Addonflavor.Flavor</option>
+                    @if (cake.Addonflavor is not null)
+                    {
+                        <option>@cake.Addonflavor.Flavor</option>
+                    }
                 }
             </select>
         </div>
@@ -150,7 +166,10 @@
                 <option>---</option>
                 @foreach (Addon filling in fillings)
                 {
-                    <option>@filling.Addonflavor.Flavor</option>
+                    @if (filling.Addonflavor is not null)
+                    {
+                        <option>@filling.Addonflavor.Flavor</option>
+                    }
                 }
             </select>
         </div>
@@ -178,7 +197,7 @@
                 <label>What diameter do you want for layer @(i + 1)</label>
                 <select>
                     <option>---</option>
-                    @foreach(Addontype size in cakeSizes)
+                    @foreach (Addontype size in cakeSizes)
                     {
                         <option>@size.Basetype</option>
                     }
@@ -201,7 +220,10 @@
                         <option>---</option>
                         @foreach (Addon frosting in frostings)
                         {
-                            <option> @frosting.Addonflavor.Flavor </option>
+                            @if (frosting.Addonflavor is not null)
+                            {
+                                <option> @frosting.Addonflavor.Flavor </option>
+                            }
                         }
                     </select>
                 </div>
@@ -213,7 +235,10 @@
                     <option>---</option>
                     @foreach (Addon cake in cakeFlavors)
                     {
-                        <option>@cake.Addonflavor.Flavor</option>
+                        @if (cake.Addonflavor is not null)
+                        {
+                            <option>@cake.Addonflavor.Flavor</option>
+                        }
                     }
                 </select>
             </div>
@@ -227,7 +252,10 @@
                         <option>---</option>
                         @foreach (Addon filling in fillings)
                         {
-                            <option>@filling.Addonflavor.Flavor</option>
+                            @if (filling.Addonflavor is not null)
+                            {
+                                <option>@filling.Addonflavor.Flavor</option>
+                            }
                         }
                     </select>
                 }
@@ -236,9 +264,13 @@
                     <label>Any flavored filling?</label>
                     <select>
                         <option>---</option>
+
                         @foreach (Addon filling in fillings)
                         {
-                            <option>@filling.Addonflavor.Flavor</option>
+                            @if (filling.Addonflavor is not null)
+                            {
+                                <option>@filling.Addonflavor.Flavor</option>
+                            }
                         }
                     </select>
                 }
@@ -282,45 +314,78 @@
 
     List<Addon> cupcakeFlavors = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        await GetNeededData();
+        await PopulateLists();
+    }
 
-    protected async override Task OnInitializedAsync()
+    private async Task GetCakeSizes()
+    {
+        for (int i = 4; i <= 6; i++)
+        {
+            var retrieved = await addontype.GetAddonTypeAsync(i);
+            if (retrieved is not null)
+            {
+                cakeSizes.Add(retrieved);
+            }
+        }
+    }
+
+    private async Task GetSheetCakeSizes()
+    {
+        for (int i = 7; i <= 9; i++)
+        {
+            var retrieved = await addontype.GetAddonTypeAsync(i);
+            if (retrieved is not null)
+            {
+                sheetSizes.Add(retrieved);
+            }
+        }
+    }
+
+    private async Task GetNeededData()
     {
         addons = await addon.GetAddonListAsync();
         flavors = await addonflavor.GetAddonFlavorListAsync();
         types = await addontype.GetAddonTypeListAsync();
-
-        // figure out way for cake/sheet siz
-        cakeSizes.Add(await addontype.GetAddonTypeAsync(4));
-        cakeSizes.Add(await addontype.GetAddonTypeAsync(5));
-        cakeSizes.Add(await addontype.GetAddonTypeAsync(6));
-
-        sheetSizes.Add(await addontype.GetAddonTypeAsync(7));
-        sheetSizes.Add(await addontype.GetAddonTypeAsync(8));
-        sheetSizes.Add(await addontype.GetAddonTypeAsync(9));
-        foreach (Addon addon in addons)
-        {
-            if (addon.Addontypeid == 1)
-                frostings.Add(addon);
-
-            if (addon.Addontypeid == 2)
-                fillings.Add(addon);
-
-            if (addon.Addontypeid == 3)
-                fondant.Add(addon);
-
-            // figute out way for cake/sheet flavor
-            if (addon.Addontypeid == 4)
-                cakeFlavors.Add(addon);
-            
-            if (addon.Addontypeid == 7)
-                sheetFlavors.Add(addon);
-
-
-
-            if (addon.Addontypeid == 10)
-                cupcakeFlavors.Add(addon);
-        }
     }
 
+    private async Task PopulateLists()
+    {
+        // figure out a less hard coded way to get this data
+        await GetCakeSizes();
+        await GetSheetCakeSizes();
 
+        PopulateFlavors();
+    }
+
+    private void PopulateFlavors()
+    {
+        //figure out more long term solution, but for now this works
+        if (addons is not null)
+        {
+            foreach (Addon addon in addons)
+            {
+                if (addon.Addontypeid == 1)
+                    frostings.Add(addon);
+
+                if (addon.Addontypeid == 2)
+                    fillings.Add(addon);
+
+                if (addon.Addontypeid == 3)
+                    fondant.Add(addon);
+
+                if (addon.Addontypeid == 4)
+                    cakeFlavors.Add(addon);
+
+                if (addon.Addontypeid == 7)
+                    sheetFlavors.Add(addon);
+
+                if (addon.Addontypeid == 10)
+                    cupcakeFlavors.Add(addon);
+            }
+        }
+        else throw new Exception("Unable to find any addons");
+    }
 }
