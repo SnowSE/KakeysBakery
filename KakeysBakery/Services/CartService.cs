@@ -112,7 +112,7 @@ public class CartService : ICartService
     }
 
     //return the purchase Id
-    public int PerformCheckoutLogic(int customerId)
+    public async Task<int> PerformCheckoutLogicAsync(int customerId)
     {
         List<Cart> carts = new();
 
@@ -140,6 +140,8 @@ public class CartService : ICartService
             _context.PurchaseProducts.Add(new PurchaseProduct { Productid = cart.Productid, Purchaseid = newPurchase.Id , Quantity = cart.Quantity});
         }
 
+        //clear the customers cart
+        await Task.CompletedTask;
         return newPurchase.Id;
     }
 }

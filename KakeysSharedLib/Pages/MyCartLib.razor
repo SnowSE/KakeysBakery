@@ -112,6 +112,6 @@
     //Bryce is making this for checking out
     public async Task CheckoutCart(int customerId)
     {
-        PerformCheckoutLogic(customerId);
+        int purchaseId = await client.GetFromJsonAsync<int>($"api/cart/CheckoutLogic/{customerId}");
     }
 }
