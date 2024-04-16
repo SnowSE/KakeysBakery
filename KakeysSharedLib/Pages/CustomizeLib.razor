@@ -327,29 +327,6 @@
         await PopulateLists();
     }
 
-    private async Task GetCakeSizes()
-    {
-        for (int i = 4; i <= 6; i++)
-        {
-            var retrieved = await addontype.GetAddonTypeAsync(i);
-            if (retrieved is not null)
-            {
-                cakeSizes.Add(retrieved);
-            }
-        }
-    }
-
-    private async Task GetSheetCakeSizes()
-    {
-        for (int i = 7; i <= 9; i++)
-        {
-            var retrieved = await addontype.GetAddonTypeAsync(i);
-            if (retrieved is not null)
-            {
-                sheetSizes.Add(retrieved);
-            }
-        }
-    }
 
     private async Task GetNeededData()
     {
@@ -358,7 +335,10 @@
         types = await addontype.GetAddonTypeListAsync();
     }
 
-        // figure out way for cake/sheet size
+    private async Task PopulateLists()
+    {
+        
+    // figure out way for cake/sheet size
         for (int i = 0; i <= 2; i++)
         {
             var addonType = await addontype.GetAddonTypeAsync(i+4);
@@ -376,6 +356,7 @@
 
         PopulateFlavors();
     }
+    
 
     private void PopulateFlavors()
     {
