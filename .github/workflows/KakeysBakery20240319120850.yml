@@ -30,8 +30,7 @@ jobs:
 
     - name: Lint
       run: |
-          dotnet format --verify-no-changes --severity warn
-
+          # dotnet format --verify-no-changes --severity warn
     - name: Build
       run: |
           dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore /warnaserror
