@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KakeysSharedLib.Data;
+namespace KakeysSharedlib.Data;
 
 public partial class BasegoodSize
 {

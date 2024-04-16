@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KakeysSharedLib.Data;
+namespace KakeysSharedlib.Data;
+
 public partial class PurchaseProduct
 {
     public int Id { get; set; }
@@ -9,6 +10,8 @@ public partial class PurchaseProduct
     public int? Purchaseid { get; set; }
 
     public int? Productid { get; set; }
+
+    public int? Quantity { get; set; }
 
     public virtual Product? Product { get; set; }
 

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using KakeysSharedLib.Data;
+using KakeysSharedlib.Data;
 
-namespace KakeysSharedLib.Services.Interfaces;
+namespace KakeysSharedlib.Services.Interfaces;
 
 public interface ICustomerRoleService
 {

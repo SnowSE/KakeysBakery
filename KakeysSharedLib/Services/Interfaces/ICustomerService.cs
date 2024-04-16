@@ -1,4 +1,4 @@
-﻿using KakeysSharedLib.Data;
+﻿using KakeysSharedlib.Data;
 
 namespace KakeysSharedLib.Services.Interfaces;
 

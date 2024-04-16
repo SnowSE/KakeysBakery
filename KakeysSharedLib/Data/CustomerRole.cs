@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KakeysSharedLib.Data;
+namespace KakeysSharedlib.Data;
+
 public partial class CustomerRole
 {
     public int Id { get; set; }

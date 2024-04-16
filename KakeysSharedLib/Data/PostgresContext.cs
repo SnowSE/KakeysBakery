@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Microsoft.EntityFrameworkCore;
 
-namespace KakeysSharedLib.Data;
+namespace KakeysSharedlib.Data;
 
 public partial class PostgresContext : DbContext
 {
@@ -47,6 +46,7 @@ public partial class PostgresContext : DbContext
     public virtual DbSet<Referencephoto> Referencephotos { get; set; }
 
     public virtual DbSet<Userrole> Userroles { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -311,6 +311,7 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Productid).HasColumnName("productid");
             entity.Property(e => e.Purchaseid).HasColumnName("purchaseid");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
 
             entity.HasOne(d => d.Product).WithMany(p => p.PurchaseProducts)
                 .HasForeignKey(d => d.Productid)
