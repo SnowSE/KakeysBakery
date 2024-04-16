@@ -13,6 +13,8 @@
 @inject IAddonFlavorService addonflavor
 @inject IProductService product
 @inject ICustomerService customer
+@inject IProductAddonBasegoodService prod_basegood_addon
+@inject ICartService cart
 
 <body>
     <h3>This form is for pastries with a small to medium amount of customization. If you wish for a highly customized cake or a cake with lots of detail, please contact me directly [link to contact me]</h3>
@@ -52,7 +54,7 @@
     <BodyTemplate>
         <div>
             <label>What frosting flavor do you want</label>
-            <select>
+            <select @bind="cupcakeFrosting">
                 <option>---</option>
                 @foreach (Addon frosting in frostings)
                 {
@@ -62,7 +64,7 @@
         </div>
         <div>
             <label>What flavor of cupcake do you want</label>
-            <select>
+            <select @bind="cupcakeFlavor">
                 <option>---</option>
                 @foreach (Addon cake in cupcakeFlavors)
                 {
@@ -73,7 +75,7 @@
 
         <div>
             <label>Any flavored fillings</label>
-            <select>
+            <select @bind="cupcakeFilling">
                 <option>---</option>
                 @foreach(Addon filling in fillings)
                 {
@@ -84,16 +86,16 @@
 
         <div>
             <label>Count (in Dozens)</label>
-            <input type="number" />
+            <input type="number" @bind-value="cupcakeDozens" />
         </div>
 
         <div>
-            <input rows="4" cols="50" placeholder="What additional customization do you want with this cupcake?" />
+            <input rows="4" cols="50" @bind-value="cupcakeDescription" placeholder="What additional customization do you want with this cupcake?" />
         </div>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Secondary " @onclick="async () => { await Cupcake.HideAsync(); }">Close</Button>
-        <Button Color="ButtonColor.Primary">Add To Cart</Button>
+        <Button Color="ButtonColor.Primary" @onclick="async () => { await addCupcakeToCart();}">Add To Cart</Button>
     </FooterTemplate>
 </Modal>
 
@@ -187,9 +189,9 @@
 
             <div>
                 <label>Frosting or Fondant</label>
-                <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
+                <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false" >
                 <label for="html">Fondant</label>
-                <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true">
+                <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
                 <label for="css">Frosting</label>
             </div>
 
@@ -260,7 +262,9 @@
 
 @code {
     int layers = 1;
-    bool isFrosting = false;
+    int cupcakeDozens = 1;
+    bool isFrosting = true;
+    string? cupcakeDescription;
     Modal WeddingCake = new Modal();
     Modal Cupcake = new Modal();
     Modal SheetCake = new Modal();
@@ -272,10 +276,13 @@
     // List<Product>? products;
 
     List<Addon> frostings = new(); //
+    string? cupcakeFrosting;
     List<Addon> fillings = new(); //
+    string? cupcakeFilling;
     List<Addon> fondant = new();
     List<Addontype> cakeSizes = new();
     List<Addon> cakeFlavors = new();
+    string? cupcakeFlavor;
 
     List<Addontype> sheetSizes = new();
     List<Addon> sheetFlavors = new();
@@ -319,12 +326,43 @@
             // figute out way for cake/sheet flavor
             if (addon.Addontypeid == 4)
                 cakeFlavors.Add(addon);
-            
+
             if (addon.Addontypeid == 7)
                 sheetFlavors.Add(addon);
 
             if (addon.Addontypeid == 10)
                 cupcakeFlavors.Add(addon);
         }
+    }
+    private async Task addCupcakeToCart()
+    {
+        //CODE WORKS WE JUST NEED A CUSTOMER ID
+        // Product prodToAdd = new()
+        // {
+        //     Description = cupcakeDescription,
+        //     Productname = cupcakeFlavor +" Cupcakes"
+        // };
+        // await product.CreateProductAsync(prodToAdd);
+
+        // if (cupcakeFrosting is not null)
+        // {
+        //     await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = frostings.Find(f => f.Addonflavor!.Flavor == cupcakeFrosting)!.Id, Basegoodid = 53 });
+        //     cupcakeFrosting = null;
+        // }
+        // if (cupcakeFilling is not null)
+        // {
+        //     await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = fillings.Find(f => f.Addonflavor!.Flavor == cupcakeFilling)!.Id, Basegoodid = 53 });
+        //     cupcakeFilling = null;
+        // }
+        // if (cupcakeFlavor is not null)
+        // {
+        //     await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = cakeFlavors.Find(f => f.Addonflavor!.Flavor == cupcakeFlavor)!.Id, Basegoodid = 53 });
+        //     cupcakeFlavor = null;
+        // }
+
+        // input counter quantity    //int
+        //await cart.CreateCartAsync(new() { Productid = prodToAdd.Id, Quantity = cupcakeDozens, Customerid = });  //TODO: add to customer's cart when we get Auth working on this page
+
+        await Cupcake.HideAsync();
     }
 }
