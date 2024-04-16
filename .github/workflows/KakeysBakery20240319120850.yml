@@ -27,10 +27,10 @@ jobs:
     - name: Restore
       run: |
           dotnet restore "${{ env.WORKING_DIRECTORY }}"
-          dotnet workload restore
 
     - name: Lint
       run: |
+          cd KakeysBakery
           dotnet format --verify-no-changes --severity warn
     - name: Build
       run: |
