@@ -13,6 +13,8 @@
 @inject IAddonFlavorService addonflavor
 @inject IProductService product
 @inject ICustomerService customer
+@inject IProductAddonBasegoodService prod_basegood_addon
+@inject ICartService cart
 
 <body>
     <h3>This form is for pastries with a small to medium amount of customization. If you wish for a highly customized cake or a cake with lots of detail, please contact me directly [link to contact me]</h3>
@@ -52,48 +54,58 @@
     <BodyTemplate>
         <div>
             <label>What frosting flavor do you want</label>
-            <select>
+            <select @bind="cupcakeFrosting">
                 <option>---</option>
                 @foreach (Addon frosting in frostings)
                 {
-                    <option> @frosting?.Addonflavor?.Flavor </option>
+                    @if (frosting.Addonflavor is not null)
+                    {
+                        <option> @frosting.Addonflavor.Flavor </option>
+                    }
                 }
             </select>
         </div>
         <div>
             <label>What flavor of cupcake do you want</label>
-            <select>
+            <select @bind="cupcakeFlavor">
                 <option>---</option>
                 @foreach (Addon cake in cupcakeFlavors)
                 {
-                    <option>@cake?.Addonflavor?.Flavor</option>
+                    @if (cake.Addonflavor is not null)
+                    {
+                        <option>@cake.Addonflavor.Flavor</option>
+                    }
                 }
             </select>
         </div>
 
         <div>
             <label>Any flavored fillings</label>
-            <select>
+            <select @bind="cupcakeFilling">
                 <option>---</option>
-                @foreach(Addon filling in fillings)
+                @foreach (Addon filling in fillings)
                 {
-                    <option>@filling?.Addonflavor?.Flavor</option>
+                    @if (filling.Addonflavor is not null)
+                    {
+                        <option>@filling.Addonflavor.Flavor</option>
+                    }
+
                 }
             </select>
         </div>
 
         <div>
             <label>Count (in Dozens)</label>
-            <input type="number" />
+            <input type="number" @bind-value="cupcakeDozens" />
         </div>
 
         <div>
-            <input rows="4" cols="50" placeholder="What additional customization do you want with this cupcake?" />
+            <input rows="4" cols="50" @bind-value="cupcakeDescription" placeholder="What additional customization do you want with this cupcake?" />
         </div>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Secondary " @onclick="async () => { await Cupcake.HideAsync(); }">Close</Button>
-        <Button Color="ButtonColor.Primary">Add To Cart</Button>
+        <Button Color="ButtonColor.Primary" @onclick="async () => { await addCupcakeToCart();}">Add To Cart</Button>
     </FooterTemplate>
 </Modal>
 
@@ -127,7 +139,10 @@
                     <option>---</option>
                     @foreach (Addon frosting in frostings)
                     {
-                        <option> @frosting?.Addonflavor?.Flavor </option>
+                        @if (frosting.Addonflavor is not null)
+                        {
+                            <option> @frosting.Addonflavor.Flavor </option>
+                        }
                     }
                 </select>
             </div>
@@ -139,7 +154,10 @@
                 <option>---</option>
                 @foreach (Addon cake in sheetFlavors)
                 {
-                    <option>@cake?.Addonflavor?.Flavor</option>
+                    @if (cake.Addonflavor is not null)
+                    {
+                        <option>@cake.Addonflavor.Flavor</option>
+                    }
                 }
             </select>
         </div>
@@ -150,7 +168,10 @@
                 <option>---</option>
                 @foreach (Addon filling in fillings)
                 {
-                    <option>@filling?.Addonflavor?.Flavor</option>
+                    @if (filling.Addonflavor is not null)
+                    {
+                        <option>@filling.Addonflavor.Flavor</option>
+                    }
                 }
             </select>
         </div>
@@ -178,7 +199,7 @@
                 <label>What diameter do you want for layer @(i + 1)</label>
                 <select>
                     <option>---</option>
-                    @foreach(Addontype size in cakeSizes)
+                    @foreach (Addontype size in cakeSizes)
                     {
                         <option>@size.Basetype</option>
                     }
@@ -189,7 +210,7 @@
                 <label>Frosting or Fondant</label>
                 <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
                 <label for="html">Fondant</label>
-                <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true">
+                <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
                 <label for="css">Frosting</label>
             </div>
 
@@ -201,7 +222,10 @@
                         <option>---</option>
                         @foreach (Addon frosting in frostings)
                         {
-                            <option> @frosting?.Addonflavor?.Flavor </option>
+                            @if (frosting.Addonflavor is not null)
+                            {
+                                <option> @frosting.Addonflavor.Flavor </option>
+                            }
                         }
                     </select>
                 </div>
@@ -213,7 +237,10 @@
                     <option>---</option>
                     @foreach (Addon cake in cakeFlavors)
                     {
-                        <option>@cake?.Addonflavor?.Flavor</option>
+                        @if (cake.Addonflavor is not null)
+                        {
+                            <option>@cake.Addonflavor.Flavor</option>
+                        }
                     }
                 </select>
             </div>
@@ -227,7 +254,10 @@
                         <option>---</option>
                         @foreach (Addon filling in fillings)
                         {
-                            <option>@filling?.Addonflavor?.Flavor</option>
+                            @if (filling.Addonflavor is not null)
+                            {
+                                <option>@filling.Addonflavor.Flavor</option>
+                            }
                         }
                     </select>
                 }
@@ -236,9 +266,13 @@
                     <label>Any flavored filling?</label>
                     <select>
                         <option>---</option>
+
                         @foreach (Addon filling in fillings)
                         {
-                            <option>@filling?.Addonflavor?.Flavor</option>
+                            @if (filling.Addonflavor is not null)
+                            {
+                                <option>@filling.Addonflavor.Flavor</option>
+                            }
                         }
                     </select>
                 }
@@ -260,7 +294,9 @@
 
 @code {
     int layers = 1;
-    bool isFrosting = false;
+    int cupcakeDozens = 1;
+    bool isFrosting = true;
+    string? cupcakeDescription;
     Modal WeddingCake = new Modal();
     Modal Cupcake = new Modal();
     Modal SheetCake = new Modal();
@@ -272,27 +308,40 @@
     // List<Product>? products;
 
     List<Addon> frostings = new(); //
+    string? cupcakeFrosting;
     List<Addon> fillings = new(); //
+    string? cupcakeFilling;
     List<Addon> fondant = new();
     List<Addontype> cakeSizes = new();
     List<Addon> cakeFlavors = new();
+    string? cupcakeFlavor;
 
     List<Addontype> sheetSizes = new();
     List<Addon> sheetFlavors = new();
 
     List<Addon> cupcakeFlavors = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        await GetNeededData();
+        await PopulateLists();
+    }
 
-    protected async override Task OnInitializedAsync()
+
+    private async Task GetNeededData()
     {
         addons = await addon.GetAddonListAsync();
         flavors = await addonflavor.GetAddonFlavorListAsync();
         types = await addontype.GetAddonTypeListAsync();
+    }
+
+    private async Task PopulateLists()
+    {
 
         // figure out way for cake/sheet size
         for (int i = 0; i <= 2; i++)
         {
-            var addonType = await addontype.GetAddonTypeAsync(i+4);
+            var addonType = await addontype.GetAddonTypeAsync(i + 4);
             if (addonType is not null)
             {
                 cakeSizes.Add(addonType);
@@ -305,26 +354,93 @@
             }
         }
 
-        foreach (Addon addon in addons)
+        PopulateFlavors();
+    }
+
+
+    private void PopulateFlavors()
+    {
+        //figure out more long term solution, but for now this works
+        if (addons is not null)
         {
-            if (addon.Addontypeid == 1)
-                frostings.Add(addon);
+            foreach (Addon addon in addons)
+            {
+                if (addon.Addontypeid == 1)
+                    frostings.Add(addon);
 
-            if (addon.Addontypeid == 2)
-                fillings.Add(addon);
+                if (addon.Addontypeid == 2)
+                    fillings.Add(addon);
 
-            if (addon.Addontypeid == 3)
-                fondant.Add(addon);
+                if (addon.Addontypeid == 3)
+                    fondant.Add(addon);
 
-            // figute out way for cake/sheet flavor
-            if (addon.Addontypeid == 4)
-                cakeFlavors.Add(addon);
-            
-            if (addon.Addontypeid == 7)
-                sheetFlavors.Add(addon);
+                if (addon.Addontypeid == 4)
+                    cakeFlavors.Add(addon);
 
-            if (addon.Addontypeid == 10)
-                cupcakeFlavors.Add(addon);
+                if (addon.Addontypeid == 7)
+                    sheetFlavors.Add(addon);
+
+                if (addon.Addontypeid == 10)
+                    cupcakeFlavors.Add(addon);
+            }
+        }
+        else throw new Exception("Unable to find any addons");
+    }
+    private async Task addCupcakeToCart()
+    {
+        //CODE WORKS WE JUST NEED A CUSTOMER ID
+        // Product prodToAdd = new()
+        // {
+        //     Description = cupcakeDescription,
+        //     Productname = cupcakeFlavor +" Cupcakes"
+        // };
+        // await product.CreateProductAsync(prodToAdd);
+
+        // if (cupcakeFrosting is not null)
+        // {
+        //     await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = frostings.Find(f => f.Addonflavor!.Flavor == cupcakeFrosting)!.Id, Basegoodid = 53 });
+        //     cupcakeFrosting = null;
+        // }
+        // if (cupcakeFilling is not null)
+        // {
+        //     await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = fillings.Find(f => f.Addonflavor!.Flavor == cupcakeFilling)!.Id, Basegoodid = 53 });
+        //     cupcakeFilling = null;
+        // }
+        // if (cupcakeFlavor is not null)
+        // {
+        //     await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = cakeFlavors.Find(f => f.Addonflavor!.Flavor == cupcakeFlavor)!.Id, Basegoodid = 53 });
+        //     cupcakeFlavor = null;
+        // }
+
+        // input counter quantity    //int
+        //await cart.CreateCartAsync(new() { Productid = prodToAdd.Id, Quantity = cupcakeDozens, Customerid = });  //TODO: add to customer's cart when we get Auth working on this page
+
+        await Cupcake.HideAsync();
+    }
+
+    public class CupCakeCustomization
+    {
+        IProductService productService;
+        ICartService cart;
+        IProductAddonBasegoodService productAddonBasegood;
+        Product product;
+
+        CupCakeCustomization(IProductService productService, IProductAddonBasegoodService productAddonBasegood, ICartService cart, Product product)
+        {
+            this.productService = productService;
+            this.productAddonBasegood = productAddonBasegood;
+            this.cart = cart;
+            this.product = product;
+        }
+
+        public async Task AddAddon(string frosting, int addonId)
+        {
+            await productAddonBasegood.CreateProductAddonBasegoodAsync(new() { Productid = product.Id, Addonid = addonId, Basegoodid = 53 });
+        }
+
+        public async Task AddToCart(int quantity, int customerId)
+        {
+            await cart.CreateCartAsync(new() { Productid = product.Id, Quantity = quantity, Customerid = customerId });
         }
     }
 }
