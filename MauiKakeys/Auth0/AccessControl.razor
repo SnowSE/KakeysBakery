@@ -3,7 +3,10 @@
 
 <AuthorizeView>
     <Authorized>
-        Hello, @context.User.Identity.Name!
+        @if (context.User.Identity is not null)
+        {
+            <p>Hello, @context.User.Identity.Name!</p>
+        }
         <a href="#" @onclick="Logout">Log out</a>
     </Authorized>
     <NotAuthorized>

@@ -110,4 +110,5 @@ public class CartManager(HttpClient client)
     {
         AvailableGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall") ?? [];
     }
+
 }

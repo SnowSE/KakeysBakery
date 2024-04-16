@@ -106,4 +106,12 @@
         await base.OnInitializedAsync();
 
     }
+
+    //put a remove from cart method here
+
+    //Bryce is making this for checking out
+    public async Task CheckoutCart(int customerId)
+    {
+        PerformCheckoutLogic(customerId);
+    }
 }

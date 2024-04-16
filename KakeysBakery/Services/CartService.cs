@@ -110,4 +110,36 @@ public class CartService : ICartService
         await Task.CompletedTask;
         return cartId ?? -1;
     }
+
+    //return the purchase Id
+    public int PerformCheckoutLogic(int customerId)
+    {
+        List<Cart> carts = new();
+
+
+        //get all cart items connected to current customer
+        carts = _context.Carts.Where(c => c.Customerid == customerId)
+            .ToList();
+
+        //create a default purchase
+        Purchase newPurchase = new()
+        {
+            Customerid = customerId,
+            //need to generate correct price
+            Orderdate = DateTime.Today,
+            //have a way for them to input specifications to their order
+            Isfulfilled = false,
+            Fulfillmentdate = null //Have a way for her to fulfill orders
+        };
+        _context.Purchases.Add(newPurchase);
+
+        
+        //for each cart item, add the product id into purchase_product
+        foreach (Cart cart in carts)
+        {
+            _context.PurchaseProducts.Add(new PurchaseProduct { Productid = cart.Productid, Purchaseid = newPurchase.Id , Quantity = cart.Quantity});
+        }
+
+        return newPurchase.Id;
+    }
 }
