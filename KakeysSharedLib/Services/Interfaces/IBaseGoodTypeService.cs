@@ -1,6 +1,6 @@
-﻿using KakeysSharedlib.Data;
+﻿using KakeysSharedLib.Data;
 
-namespace KakeysSharedlib.Services.Interfaces;
+namespace KakeysSharedLib.Services.Interfaces;
 
 public interface IBaseGoodTypeService
 {

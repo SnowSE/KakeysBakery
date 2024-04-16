@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KakeysSharedlib.Data;
+namespace KakeysSharedLib.Data;
 
 public partial class Purchase
 {

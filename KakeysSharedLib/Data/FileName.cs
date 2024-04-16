@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KakeysSharedLib.Data
+namespace KakeysSharedLib.Data;
+
+internal class FileName
 {
-    internal class FileName
-    {
-    }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using KakeysSharedlib.Data;
+using KakeysSharedLib.Data;
 
-namespace KakeysSharedlib.Services.Interfaces;
+namespace KakeysSharedLib.Services.Interfaces;
 
 public interface IPurchaseService
 {
