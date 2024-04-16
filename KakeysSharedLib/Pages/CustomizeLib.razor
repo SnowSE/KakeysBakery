@@ -442,15 +442,5 @@
         {
             await cart.CreateCartAsync(new() { Productid = product.Id, Quantity = quantity, Customerid = customerId });
         }
-
-        public async Task CreateProduct(string description, string cupcakeFlavor)
-        {
-            Product prodToAdd = new()
-                {
-                    Description = description,
-                    Productname = cupcakeFlavor + " Cupcakes"
-                };
-            await productService.CreateProductAsync(prodToAdd);
-        }
     }
 }
