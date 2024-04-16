@@ -27,10 +27,11 @@ jobs:
     - name: Restore
       run: |
           dotnet restore "${{ env.WORKING_DIRECTORY }}"
+          dotnet workload restore
 
     - name: Lint
       run: |
-          # dotnet format --verify-no-changes --severity warn
+          dotnet format --verify-no-changes --severity warn
     - name: Build
       run: |
           dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore /warnaserror
