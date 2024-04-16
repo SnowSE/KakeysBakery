@@ -208,7 +208,7 @@
 
             <div>
                 <label>Frosting or Fondant</label>
-                <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false" >
+                <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
                 <label for="html">Fondant</label>
                 <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
                 <label for="css">Frosting</label>
@@ -337,11 +337,11 @@
 
     private async Task PopulateLists()
     {
-        
-    // figure out way for cake/sheet size
+
+        // figure out way for cake/sheet size
         for (int i = 0; i <= 2; i++)
         {
-            var addonType = await addontype.GetAddonTypeAsync(i+4);
+            var addonType = await addontype.GetAddonTypeAsync(i + 4);
             if (addonType is not null)
             {
                 cakeSizes.Add(addonType);
@@ -356,7 +356,7 @@
 
         PopulateFlavors();
     }
-    
+
 
     private void PopulateFlavors()
     {
@@ -416,5 +416,41 @@
         //await cart.CreateCartAsync(new() { Productid = prodToAdd.Id, Quantity = cupcakeDozens, Customerid = });  //TODO: add to customer's cart when we get Auth working on this page
 
         await Cupcake.HideAsync();
+    }
+
+    public class CupCakeCustomization
+    {
+        IProductService productService;
+        ICartService cart;
+        IProductAddonBasegoodService productAddonBasegood;
+        Product product;
+
+        CupCakeCustomization(IProductService productService, IProductAddonBasegoodService productAddonBasegood, ICartService cart, Product product)
+        {
+            this.productService = productService;
+            this.productAddonBasegood = productAddonBasegood;
+            this.cart = cart;
+            this.product = product;
+        }
+
+        public async Task AddAddon(string frosting, int addonId)
+        {
+            await productAddonBasegood.CreateProductAddonBasegoodAsync(new() { Productid = product.Id, Addonid = addonId, Basegoodid = 53 });
+        }
+
+        public async Task AddToCart(int quantity, int customerId)
+        {
+            await cart.CreateCartAsync(new() { Productid = product.Id, Quantity = quantity, Customerid = customerId });
+        }
+
+        public async Task CreateProduct(string description, string cupcakeFlavor)
+        {
+            Product prodToAdd = new()
+                {
+                    Description = description,
+                    Productname = cupcakeFlavor + " Cupcakes"
+                };
+            await productService.CreateProductAsync(prodToAdd);
+        }
     }
 }
