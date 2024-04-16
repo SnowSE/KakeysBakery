@@ -11,7 +11,6 @@ namespace KakeysBakery.Components.Pages.Admin;
 
 public partial class SendEmail
 {
-    bool isSent = false;
     string? returnedMessage;
     string? receaverEmail;
     //private PostgresContext _context;
@@ -39,7 +38,6 @@ public partial class SendEmail
             //    Text = messageIn
             //};
             returnedMessage = emailService.sendEmail(receaverEmail, message);
-            isSent = true;
         }
         await Task.CompletedTask;
     }

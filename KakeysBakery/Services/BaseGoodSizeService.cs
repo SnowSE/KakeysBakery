@@ -8,7 +8,7 @@ public class BaseGoodSizeService : IBasegoodSizeService
 {
     private readonly PostgresContext _context;
     public BaseGoodSizeService(PostgresContext pc)
-    {   
+    {
         _context = pc;
     }
     public async Task CreateBasegoodSizeAsync(BasegoodSize addonFlavor)

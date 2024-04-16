@@ -4,31 +4,7 @@ using KakeysSharedLib.Services.Interfaces;
 
 namespace KakeysBakery.Components.Pages.Admin
 {
-    public partial class CreateEditDelete()
-    {
-        public virtual async Task Create(string productString, decimal productCost, int id)
-        {
-
-        }
-        public virtual async Task Edit(int id, string productString, decimal productCost)
-        {
-
-        }
-        public virtual async Task Delete(int id)
-        {
-
-        }
-        public virtual async Task Create(string productString, decimal productCost, int selectedId, bool isAvailabe)
-        {
-
-        }
-        public virtual async Task Edit(int id, string productString, decimal productCost, string quantity, bool isAvailable)
-        {
-        }
-
-    }
-
-    public class CEDToppings : CreateEditDelete
+    public class CEDToppings
     {
         readonly IAddonService addon;
         readonly IAddonFlavorService addonFlavor;
@@ -56,7 +32,7 @@ namespace KakeysBakery.Components.Pages.Admin
             };
         }
 
-        public override async Task<string> Create(string productString, decimal productCost, int selectedId)
+        public async Task<string> Create(string productString, decimal productCost, int selectedId)
         {
             try
             {
@@ -64,7 +40,7 @@ namespace KakeysBakery.Components.Pages.Admin
                 await addonFlavor.CreateAddonFlavorAsync(newFlavor);
                 var returned = await addonFlavor.GetAddonFlavorByFlavorAsync(productString);
 
-                var newAddon = CreateAddon(productCost, selectedId, returned.Id);
+                var newAddon = CreateAddon(productCost, selectedId, returned!.Id);
                 await addon.CreateAddOnAsync(newAddon);
                 return "Successfully Added Topping";
             }
@@ -74,13 +50,13 @@ namespace KakeysBakery.Components.Pages.Admin
             }
         }
 
-        public override async Task<string> Edit(int id, string productString, decimal productCost)
+        public async Task<string> Edit(int id, string productString, decimal productCost)
         {
             try
             {
 
                 var addons = await addon.GetAddonAsync(id);
-                addons.Addonflavor.Flavor = productString;
+                addons!.Addonflavor!.Flavor = productString;
                 addons.Suggestedprice = productCost;
                 await addon.UpdateAddOnAsync(addons);
                 return "Successfully edited the topping";
@@ -91,7 +67,7 @@ namespace KakeysBakery.Components.Pages.Admin
             }
         }
 
-        public override async Task<string> Delete(int id)
+        public async Task<string> Delete(int id)
         {
             await addon.DeleteAddOnAsync(id);
             return "Successfully deleted product";
@@ -99,7 +75,7 @@ namespace KakeysBakery.Components.Pages.Admin
     }
 
 
-    public class CEDProducts : CreateEditDelete
+    public class CEDProducts
     {
         readonly IBaseGoodFlavorService baseGoodFlavor;
         readonly IBaseGoodService baseGood;
@@ -159,7 +135,7 @@ namespace KakeysBakery.Components.Pages.Admin
                     returnedSize = await baseGoodSize.GetBasegoodSizeByAsync(quantity);
                 }
 
-                var newAddon = CreateBaseGood(productCost, selectedId, returned.Id, isAvailabe, returnedSize.Id);
+                var newAddon = CreateBaseGood(productCost, selectedId, returned.Id, isAvailabe, returnedSize!.Id);
                 await baseGood.CreateBaseGoodAsync(newAddon);
 
                 return "Successfully Added Product";
@@ -170,7 +146,7 @@ namespace KakeysBakery.Components.Pages.Admin
             }
 
         }
-        public async override Task<string> Edit(int id, string productString, decimal productCost, string quantity, bool isAvailable)
+        public async Task<string> Edit(int id, string productString, decimal productCost, string quantity, bool isAvailable)
         {
             var product = await baseGood.GetBaseGoodAsync(id);
             var size = await baseGoodSize.GetBasegoodSizeByAsync(quantity);
@@ -186,17 +162,17 @@ namespace KakeysBakery.Components.Pages.Admin
 
             var sizeUpdated = await baseGoodSize.GetBasegoodSizeByAsync(quantity.ToString());
 
-            product.Flavor.Flavorname = productString;
+            product!.Flavor!.Flavorname = productString;
             product.Suggestedprice = productCost;
             product.Isavailable = isAvailable;
-            product.Sizeid = sizeUpdated.Id;
+            product.Sizeid = sizeUpdated!.Id;
 
             await baseGood.UpdateBaseGoodAsync(product);
 
             return "Successfully edited the product";
         }
 
-        public override async Task<string> Delete(int id)
+        public async Task<string> Delete(int id)
         {
             await baseGood.DeleteBaseGoodAsync(id);
             return "Successfully deleted product";

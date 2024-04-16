@@ -58,7 +58,7 @@ public class CartTests : IClassFixture<BakeryFactory>
             Id = 1100,
             Email = "test@example.com"
         };
-        
+
         Cart testCart = new()
         {
             Id = 1110,

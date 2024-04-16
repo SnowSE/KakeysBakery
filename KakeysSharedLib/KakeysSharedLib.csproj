@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>NU1701;NETSDK1206</NoWarn> <!--Suppress PayPal, Alpine warning-->
   </PropertyGroup>
 
 
@@ -15,6 +16,7 @@
       <!--<PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.4.1" />--><!-- DO NOT USE THIS ONE-->
       <PackageReference Include="Blazor.Bootstrap" Version="2.1.0" />
       <PackageReference Include="MailKit" Version="4.4.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
           <PrivateAssets>all</PrivateAssets>
