@@ -67,7 +67,15 @@ builder.Services
         options.Scope = "openid profile email";
     });
 
-builder.Services.AddHttpClient();
+builder.Services.AddScoped(o =>
+{
+    var client = new HttpClient
+    {
+        BaseAddress = new Uri("https://localhost:7196")
+    };
+    return client;
+});
+
 builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
@@ -89,13 +97,14 @@ if (!app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
-app.MapControllers();
 app.UseStaticFiles();
 app.UseAntiforgery();
 app.UseRouting();
 app.UseAntiforgery();
 app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers(); // Needs to be below Auth
 
 //for OAuth
 app.MapGet("/Account/Login", async (HttpContext httpContext, string redirectUri = "/") =>

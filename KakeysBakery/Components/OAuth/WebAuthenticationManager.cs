@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace KakeysBakery.Components.OAuth;
 
-public class WebAuthenticationManager() : IAuthenticationManager
+public class WebAuthenticationManager(HttpClient client) : IAuthenticationManager
 {
     private Task<AuthenticationState>? authenticationState = null;
     private AuthenticationState? state;
@@ -47,7 +47,6 @@ public class WebAuthenticationManager() : IAuthenticationManager
         Customer? result = null;
         try
         {
-            using var client = new HttpClient();
             result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
         }
         catch { }
@@ -73,7 +72,6 @@ public class WebAuthenticationManager() : IAuthenticationManager
                         .FirstOrDefault()!.Value
         };
 
-        using var client = new HttpClient();
         await client.PostAsJsonAsync("api/customer/add", user);
 
         return user;

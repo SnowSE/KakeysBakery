@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Authorization;
 
 using KakeysSharedLib.Data;
-
 
 //using Microsoft.AspNetCore.Components.Authorization;
 
@@ -17,5 +17,5 @@ public interface IAuthenticationManager
     public Task<Customer> GetUserFromEmail(string email);
     public Task<Customer> CreateUser();
     public Task<string> GetUserEmail();
-    //public Task SetAuthState(Task<AuthenticationState>? authState);
+    public Task SetAuthState(Task<AuthenticationState>? authState);
 }

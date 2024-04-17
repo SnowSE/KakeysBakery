@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KakeysBakery.Controllers;
 
@@ -19,6 +20,7 @@ public class AddonController : ControllerBase
     }
 
     [HttpGet("get/{id}")]
+    [Authorize]
     public async Task<IActionResult> GetAddonAsync(int id)
     {
         var addon = await addonService.GetAddonAsync(id);

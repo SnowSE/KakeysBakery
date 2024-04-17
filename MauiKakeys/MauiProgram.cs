@@ -31,7 +31,15 @@ namespace MauiKakeys
             }));
             builder.Services.AddAuthorizationCore();
             builder.Services.AddBlazorBootstrap();
-            builder.Services.AddHttpClient();
+
+            builder.Services.AddScoped(o =>
+            {
+                var client = new HttpClient
+                {
+                    BaseAddress = new Uri("https://kakeysbakery20240319120850.azurewebsites.net")
+                };
+                return client;
+            });
 
             builder.Services.AddScoped<AuthenticationStateProvider, Auth0AuthenticationStateProvider>();
             builder.Services.AddScoped<IAuthenticationManager, MauiAuthenticationManager>();

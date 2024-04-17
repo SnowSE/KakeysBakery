@@ -56,7 +56,6 @@ public class CartManager(HttpClient client)
         {
             return await CreateProduct();
         }
-
     }
 
     public async Task<Product> CreateProduct()
@@ -110,5 +109,4 @@ public class CartManager(HttpClient client)
     {
         AvailableGoodTypes = await client.GetFromJsonAsync<List<Basegoodtype>>($"api/Basegoodtype/getall") ?? [];
     }
-
 }
