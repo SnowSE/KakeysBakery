@@ -14,6 +14,7 @@ public class AddonController : ControllerBase
     }
 
     [HttpGet("getall")]
+    [Authorize]
     public async Task<List<Addon>> GetAddonsAsync()
     {
         return await addonService.GetAddonListAsync();
