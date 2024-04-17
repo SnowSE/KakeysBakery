@@ -27,6 +27,7 @@ namespace MauiKakeys
                 Scope = "openid profile",
                 RedirectUri = "myapp://callback"
             }));
+            builder.Services.AddBlazorBootstrap();
 
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, Auth0AuthenticationStateProvider>();

@@ -121,19 +121,18 @@ else
 
     public async Task AddToCart()
     {
-        PreloadService.Show(SpinnerColor.Light, "Loading data...");
-        await Task.Delay(3000); // call the service/api
+        PreloadService.Show(SpinnerColor.Light, "Adding to Cart...");
+
+        if (!(await authManager!.IsUserLoggedIn()))
+        {
+            navManager.NavigateTo("Account/Login?redirectUri=/Order", forceLoad: true);
+            return;
+        }
+
+        string email = await authManager.GetUserEmail();
+        await manager!.AddToCart(email);
+
         PreloadService.Hide();
-
-
-        // if (!(await authManager!.IsUserLoggedIn()))
-        // {
-        //     navManager.NavigateTo("Account/Login?redirectUri=/Order", forceLoad: true);
-        //     return;
-        // }
-
-        // string email = await authManager.GetUserEmail();
-        // await manager!.AddToCart(email);
     }
 
 
