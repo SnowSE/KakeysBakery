@@ -57,6 +57,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
 builder.Services.AddScoped<IBasegoodSizeService, BaseGoodSizeService>();
 builder.Services.AddScoped<IAuthenticationManager, WebAuthenticationManager>();
+builder.Services.AddScoped<IPayPalAuthentication, PayPalAuthentication>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options =>
@@ -67,9 +68,6 @@ builder.Services
     });
 
 builder.Services.AddHttpClient();
-
-builder.Services.AddScoped<IPayPalAuthentication, PayPalAuthentication>();
-
 builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies

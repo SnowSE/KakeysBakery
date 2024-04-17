@@ -1,4 +1,6 @@
-﻿using MauiKakeys.Auth0;
+﻿using KakeysSharedLib.OAuth;
+
+using MauiKakeys.Auth0;
 
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -27,10 +29,12 @@ namespace MauiKakeys
                 Scope = "openid profile",
                 RedirectUri = "myapp://callback"
             }));
-            builder.Services.AddBlazorBootstrap();
-
             builder.Services.AddAuthorizationCore();
+            builder.Services.AddBlazorBootstrap();
+            builder.Services.AddHttpClient();
+
             builder.Services.AddScoped<AuthenticationStateProvider, Auth0AuthenticationStateProvider>();
+            builder.Services.AddScoped<IAuthenticationManager, MauiAuthenticationManager>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
