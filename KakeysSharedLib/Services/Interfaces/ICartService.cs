@@ -11,5 +11,5 @@ public interface ICartService
     public Task DeleteCartAsync(int cartId);
     public Task UpdateCartAsync(Cart cart);
     public Task<int> AddToCustomersCart(int CustomerId, int BasegoodId);
-    public Task<int> PerformCheckoutLogicAsync(int CustomerId);   
+    public Task<int> PerformCheckoutLogicAsync(int CustomerId);
 }

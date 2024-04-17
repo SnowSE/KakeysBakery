@@ -16,7 +16,7 @@ namespace MauiKakeys
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                }) ;
+                });
 
             builder.Services.AddMauiBlazorWebView();
 

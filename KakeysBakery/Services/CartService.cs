@@ -133,11 +133,11 @@ public class CartService : ICartService
         };
         _context.Purchases.Add(newPurchase);
 
-        
+
         //for each cart item, add the product id into purchase_product
         foreach (Cart cart in carts)
         {
-            _context.PurchaseProducts.Add(new PurchaseProduct { Productid = cart.Productid, Purchaseid = newPurchase.Id , Quantity = cart.Quantity});
+            _context.PurchaseProducts.Add(new PurchaseProduct { Productid = cart.Productid, Purchaseid = newPurchase.Id, Quantity = cart.Quantity });
         }
 
         //clear the customers cart

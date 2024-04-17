@@ -234,7 +234,7 @@ public class CartManagerTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
-    private async void AddToCart()
+    public async void AddToCart()
     {
         // ARRANGE
         Basegoodflavor flavor = new()
@@ -288,8 +288,145 @@ public class CartManagerTests : IClassFixture<BakeryFactory>
         });
 
         var result = await unitUnderTest.AddToCart(customer.Email);
+        var customerResult = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{customer.Email}");
+        var productResult = await unitUnderTest.GetProduct();
 
         // ASSERT
+        Assert.Equal(result.Quantity, unitUnderTest.Quantity);
+        Assert.Equal(result.Customerid, customerResult!.Id);
+        Assert.Equal(result.Productid, productResult.Id);
+    }
+
+    [Fact]
+    public async void AddToCart_DoesNotDuplicate_Product_When_AddingMultipleProductsToCart()
+    {
+        // ARRANGE
+        Basegoodflavor flavor = new()
+        {
+            Id = 9500
+        };
+
+        Basegoodtype type = new()
+        {
+            Id = 9600
+        };
+
+        Basegood good = new()
+        {
+            Id = 8999,
+            Typeid = type.Id,
+            Flavorid = flavor.Id
+        };
+
+        Product prod = new()
+        {
+            Id = 9805
+        };
+
+        ProductAddonBasegood pab = new()
+        {
+            Id = 1107,
+            Basegoodid = good.Id,
+            Productid = prod.Id,
+        };
+
+        Customer customer = new()
+        {
+            Email = "test@example.com"
+        };
+
+        await client.PostAsJsonAsync("api/Basegoodtype/add", type);
+        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+        await client.PostAsJsonAsync("api/product/add", prod);
+        await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
+        await client.PostAsJsonAsync("api/customer/add", customer);
+
+        CartManager unitUnderTest = new(client);
+
+        // ACT
+        await unitUnderTest.SelectGoodTypeCard(type.Id);
+        await unitUnderTest.UpdateSelection(new ChangeEventArgs()
+        {
+            Value = $"{flavor.Id}",
+        });
+
+        await unitUnderTest.AddToCart(customer.Email);
+        await unitUnderTest.AddToCart(customer.Email);
+
+        var result = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
+        var list = result!.Where(p => p.Id == prod.Id);
+
+        // ASSERT
+        Assert.NotNull(list);
+        Assert.NotEmpty(list);
+        Assert.True(1 == list.Count());
+    }
+
+    [Fact]
+    public async void AddToCart_DoesNotDuplicate_ProductAddonBasegood_When_AddingMultipleProductsToCart()
+    {
+        // ARRANGE
+        Basegoodflavor flavor = new()
+        {
+            Id = 9500
+        };
+
+        Basegoodtype type = new()
+        {
+            Id = 9600
+        };
+
+        Basegood good = new()
+        {
+            Id = 8999,
+            Typeid = type.Id,
+            Flavorid = flavor.Id
+        };
+
+        Product prod = new()
+        {
+            Id = 9800
+        };
+
+        ProductAddonBasegood pab = new()
+        {
+            Id = 1103,
+            Basegoodid = good.Id,
+            Productid = prod.Id,
+        };
+
+        Customer customer = new()
+        {
+            Email = "test@example.com"
+        };
+
+        await client.PostAsJsonAsync("api/Basegoodtype/add", type);
+        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+        await client.PostAsJsonAsync("api/product/add", prod);
+        await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
+        await client.PostAsJsonAsync("api/customer/add", customer);
+
+        CartManager unitUnderTest = new(client);
+
+        // ACT
+        await unitUnderTest.SelectGoodTypeCard(type.Id);
+        await unitUnderTest.UpdateSelection(new ChangeEventArgs()
+        {
+            Value = $"{flavor.Id}",
+        });
+
+        await unitUnderTest.AddToCart(customer.Email);
+        await unitUnderTest.AddToCart(customer.Email);
+
+        var result = await client.GetFromJsonAsync<List<ProductAddonBasegood>>("api/productaddonbasegood/getall");
+        var list = result!.Where(p => p.Basegoodid == good.Id);
+
+        // ASSERT
+        Assert.NotNull(list);
+        Assert.NotEmpty(list);
+        Assert.True(1 == list.Count());
     }
 
     [Fact]
