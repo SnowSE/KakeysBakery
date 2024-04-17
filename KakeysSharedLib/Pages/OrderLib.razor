@@ -87,12 +87,18 @@
 }
 else
 {
-    <p>Hehe</p>
+    <div class="mt-5 border">
+        <div class="d-flex flex-wrap justify-content-center">
+            <Spinner Type="SpinnerType.Dots" />
+        </div>
+    </div>
 }
 
 @code {
     // [CascadingParameter]
     // private Task<AuthenticationState>? authenticationState { get; set; }
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+
     private Modal modal = default!;
     bool IsDataLoaded = false;
 
@@ -100,6 +106,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        PreloadService.Show(SpinnerColor.Light, "Loading data...");
+
         client.BaseAddress = new Uri(navManager.BaseUri);
 
         manager = new(client);
@@ -107,18 +115,25 @@ else
 
         // await authManager.SetAuthState(authenticationState);
         IsDataLoaded = true;
+
+        PreloadService.Hide();
     }
 
     public async Task AddToCart()
     {
+        PreloadService.Show(SpinnerColor.Light, "Loading data...");
+        await Task.Delay(3000); // call the service/api
+        PreloadService.Hide();
+
+
         // if (!(await authManager!.IsUserLoggedIn()))
         // {
         //     navManager.NavigateTo("Account/Login?redirectUri=/Order", forceLoad: true);
         //     return;
         // }
 
-        string email = await authManager.GetUserEmail();
-        await manager!.AddToCart(email);
+        // string email = await authManager.GetUserEmail();
+        // await manager!.AddToCart(email);
     }
 
 
