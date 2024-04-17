@@ -12,6 +12,8 @@ public class Auth0ClientOptions
         Scope = "openid";
         RedirectUri = "myapp://callback";
         Browser = new WebBrowserAuthenticator();
+        Domain = "dev-zas6rizyxopiwv2b.us.auth0.com";
+        ClientId = "xUuj4xt0Pn4wLdompKNjM3suZZKx9fdC";
     }
 
     public string Domain { get; set; }

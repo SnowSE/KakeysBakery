@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 namespace KakeysSharedLib.Data;
+
 public partial class Basegoodflavor
 {
     public int Id { get; set; }

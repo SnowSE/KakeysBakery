@@ -67,4 +67,15 @@ public class cartController : ControllerBase
         }
         catch { return -2; }
     }
+
+    [HttpGet("CheckoutLogic/{customerId}")]
+    public async Task<int> PerformCheckoutLogicAsync(int customerId)
+    {
+        try
+        {
+            int purchaseId = await cartService.PerformCheckoutLogicAsync(customerId);
+            return purchaseId;
+        }
+        catch { return -2; }
+    }
 }
