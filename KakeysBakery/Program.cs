@@ -69,21 +69,21 @@ builder.Services
         options.Scope = "openid profile email";
     });
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.Authority = $"https://{builder.Configuration.GetValue<string>("Auth0Domain", "DEFAULT_AUTH0_DOMAIN") ?? ""}/";
-    options.TokenValidationParameters =
-      new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-      {
-          ValidAudience = "kakeys_bakery",
-          ValidIssuer = $"{builder.Configuration.GetValue<string>("Auth0Domain", "DEFAULT_AUTH0_DOMAIN") ?? ""}",
-          ValidateLifetime = true,
-      };
-});
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//}).AddJwtBearer(options =>
+//{
+//    options.Authority = $"https://{builder.Configuration.GetValue<string>("Auth0Domain", "DEFAULT_AUTH0_DOMAIN") ?? ""}/";
+//    options.TokenValidationParameters =
+//      new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+//      {
+//          ValidAudience = "kakeys_bakery",
+//          ValidIssuer = $"{builder.Configuration.GetValue<string>("Auth0Domain", "DEFAULT_AUTH0_DOMAIN") ?? ""}",
+//          ValidateLifetime = true,
+//      };
+//});
 
 builder.Services.AddScoped(o =>
 {
