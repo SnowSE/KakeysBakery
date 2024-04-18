@@ -22,26 +22,28 @@
                     <th scope="col"></th>
                     <th class="px-3 itemDescription" scope="col">Qty</th>
                     <th class="px-3 itemDescription" scope="col">Price</th>
+                    <th class="px-3 removeColumn" scope="col">Remove</th>
                 </tr>
             <tr><td colspan="4"><hr /></td></tr>
             </thead>
             <tbody>
-                @foreach (var product in customerProducts!)
+                @foreach (var cart in allCartItemsForCustomer!)
                 {
                     <tr class="cartCard flex-row">
-                        <td class="pe-4"><img src="images/cookie.jpg" /></td>
+                        <td class="pe-4"><img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cookie.jpg" /></td>
                         <td>
-                            <h1 class="itemName">@product.Productname</h1>
+                            <h1 class="itemName">@cart.Product!.Productname</h1> 
                             <p class="itemDescription">
-                                @(product.Description ?? "Product has no description")
+                                @(@cart.Product!.Description ?? "Product has no description")
                             </p>
                         </td>
-                        <td class="ps-4 itemDescription">1x</td>
-                        <td class="px-3 itemDescription">$5.00</td>
+                        <td class="ps-4 itemDescription"><input type="number" @bind="@cart.Quantity"/></td>
+                        <td class="px-3 itemDescription">@getPrice(cart)</td>
+                    <td class="removalButtom"><button class="btn btn-danger" @onclick="async () => { await removeFromCartAsync(cart.Id);}">Remove</button></td>
                     </tr>
                     <tr><td colspan="4"><hr /></td></tr>
-
                 }
+
                 <tr id="">
                     <td colspan="4" style="text-align: right;" class="itemDescription" id="displayTotal">TOTAL: $10.00</td>
                 </tr>
@@ -59,9 +61,7 @@
     //private string email = "";
     HttpClient client = new HttpClient();
     Customer? currentCustomer = new();
-    List<Product>? products = new();
-    List<Product>? customerProducts = new();
-    List<Cart>? allCartItems = new();
+    List<Cart>? allCartItemsForCustomer = new();
 
 
     protected override async Task OnInitializedAsync()
@@ -75,43 +75,99 @@
         // if (authenticationState is not null)
         // {
         //     // var state = await authenticationState;
-        //     client.BaseAddress = new Uri("https://localhost:7196/");
-        //     Username = state?.User?.Identity?.Name ?? string.Empty;
-        //     try
-        //     {
-        //         var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
-        //         email = userEmail ?? "no email found";
-        //     }
-        //     catch { email = "getting email threw error"; }
+        client.BaseAddress = new Uri("https://localhost:7196/"); //TODO: we need to replace this with the proper base address
+                                                                 //     Username = state?.User?.Identity?.Name ?? string.Empty;
+                                                                 //     try
+                                                                 //     {
+                                                                 //         var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
+                                                                 //         email = userEmail ?? "no email found";
+                                                                 //     }
+                                                                 //     catch { email = "getting email threw error"; }
 
-        //     try
-        //     {
-        //         currentCustomer = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
-        //         products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
+        string email = ""; //TEMP GET RID OF MEEEEEEE our put your email here to test
 
-        //         //get the cart and then filter itself to only get items connected to the current customer
-        //         allCartItems = await client.GetFromJsonAsync<List<KakeysSharedLib.Data.Cart>>("api/cart/getall");
-        //         allCartItems = allCartItems!.Where(i => i.Customerid == currentCustomer!.Id).ToList();
+        try
+        {
+            currentCustomer = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+            var products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
 
-        //         foreach (var cart in allCartItems)
-        //         {
-        //             customerProducts!.Add(products!.Where(c => c.Id == cart.Productid).FirstOrDefault()!);
-        //         }
+            //get the cart and then filter itself to only get items connected to the current customer
+            allCartItemsForCustomer = await client.GetFromJsonAsync<List<KakeysSharedLib.Data.Cart>>("api/cart/getall");
+            allCartItemsForCustomer = allCartItemsForCustomer!.Where(i => i.Customerid == currentCustomer!.Id).ToList();
+            List<ProductAddonBasegood>? PABs = await client.GetFromJsonAsync<List<ProductAddonBasegood>>("api/productAddonBasegood/getall");
+            List<Basegood>? basegoods = await client.GetFromJsonAsync<List<Basegood>>("api/Basegood/getall");
+            List<Addon>? addons = await client.GetFromJsonAsync<List<Addon>>("api/Addon/getall");
+            foreach (var cart in allCartItemsForCustomer)
+            {
+                cart.Product = products!.Find(p => p.Id == cart.Productid);
+                cart.Product!.ProductAddonBasegoods = PABs!.FindAll(pab => pab.Productid == cart.Productid);
+                foreach (var pab in cart.Product!.ProductAddonBasegoods)
+                {
+                    pab.Addon = addons!.Find(a => a.Id == pab.Addonid);
+                    pab.Basegood = basegoods!.Find(b => b.Id == pab.Basegoodid);
+                }
+            }
 
-
-        //     }
-        //     catch { }
-        //     StateHasChanged();
+        }
+        catch { throw; }
+        StateHasChanged();
         // }
+
+
         await base.OnInitializedAsync();
 
     }
+    private decimal getPrice(Cart cart)
+    {
+        decimal total = 0.0m;
+        foreach (var pab in cart.Product!.ProductAddonBasegoods)
+        {
 
-    //put a remove from cart method here
+            if (pab.Basegood is not null && pab.Basegood.Suggestedprice is not null)
+            {
+                total += (decimal)pab.Basegood!.Suggestedprice;
+            }
+            if (pab.Addon is not null && pab.Addon.Suggestedprice is not null)
+            {
+                total += (decimal)pab.Addon!.Suggestedprice;
+            }
+        }
+        if(cart.Quantity is null || cart.Quantity < 1)
+        {
+            cart.Quantity = 1;
+        }
+        return total * (decimal)cart.Quantity;
+    }
 
+
+    private async Task updateLocalCartToDatabaseAsync(List<Cart> carts)
+    {
+        foreach (var cart in carts)
+        {
+            var skinnyCart = cart;
+            skinnyCart.Product = null;
+            skinnyCart.Customer = null;
+
+            await client.PatchAsJsonAsync("api/cart/update", cart);
+        }
+    }
+
+    private async Task removeFromCartAsync(int cartId)
+    {
+        await client.DeleteAsync($"api/cart/delete/{cartId}");
+        allCartItemsForCustomer!.Remove(allCartItemsForCustomer.Find(c => c.Id == cartId)!);
+        StateHasChanged();
+    }
     //Bryce is making this for checking out
     public async Task CheckoutCart(int customerId)
     {
-        int purchaseId = await client.GetFromJsonAsync<int>($"api/cart/CheckoutLogic/{customerId}");
+        if (currentCustomer is not null)
+        {
+            await updateLocalCartToDatabaseAsync(allCartItemsForCustomer!);
+            int purchaseId = await client.GetFromJsonAsync<int>($"api/cart/CheckoutLogic/{customerId}");
+        }
+        else { } //Tell the customer to login
+        StateHasChanged();
     }
+
 }
