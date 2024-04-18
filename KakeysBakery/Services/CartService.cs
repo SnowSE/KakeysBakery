@@ -74,7 +74,7 @@ public class CartService : ICartService
                     //Create product for basegood
                     Product newprod = new();
                     _context.Products.Add(newprod);
-
+                    await _context.SaveChangesAsync();
                     prodId = newprod.Id;
 
                     ProductAddonBasegood newaddonbase = new()
@@ -82,8 +82,6 @@ public class CartService : ICartService
                         Basegoodid = BasegoodId,
                         Productid = prodId
                     };
-                    _context.ProductAddonBasegoods.Add(newaddonbase);
-
                 }
                 else if (prodAddOnBaseGood.Count >= 1)
                 {
@@ -106,8 +104,7 @@ public class CartService : ICartService
             }
             else throw new Exception("either the customer or basegood couldn't be found");
         }
-        catch { }
-        await Task.CompletedTask;
+        catch { throw; }
         return cartId ?? -1;
     }
 
@@ -115,8 +112,6 @@ public class CartService : ICartService
     public async Task<int> PerformCheckoutLogicAsync(int customerId)
     {
         List<Cart> carts = new();
-
-
         //get all cart items connected to current customer
         carts = _context.Carts.Where(c => c.Customerid == customerId)
             .ToList();
@@ -131,17 +126,18 @@ public class CartService : ICartService
             Isfulfilled = false,
             Fulfillmentdate = null //Have a way for her to fulfill orders
         };
-        _context.Purchases.Add(newPurchase);
 
+        _context.Purchases.Add(newPurchase);
+        await _context.SaveChangesAsync();
 
         //for each cart item, add the product id into purchase_product
         foreach (Cart cart in carts)
         {
             _context.PurchaseProducts.Add(new PurchaseProduct { Productid = cart.Productid, Purchaseid = newPurchase.Id, Quantity = cart.Quantity });
+            _context.Carts.Remove(cart);
+            await _context.SaveChangesAsync();
         }
 
-        //clear the customers cart
-        await Task.CompletedTask;
         return newPurchase.Id;
     }
 }

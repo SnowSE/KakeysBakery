@@ -50,6 +50,7 @@
                 </tr>
             </tbody>
         </table>
+        <div><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
     </div>
 
 </div>
@@ -174,9 +175,20 @@ else
     }
     public async Task CheckoutCart(int customerId)
     {
+        IsDataLoaded = false;
         await updateLocalCartToDatabaseAsync(allCartItemsForCustomer!);
+        //TODO: ADD PAY PALL Logic and redirection HERE
         int purchaseId = await client.GetFromJsonAsync<int>($"api/cart/CheckoutLogic/{customerId}");
-        StateHasChanged();
+        if (purchaseId > 0)
+        {
+            allCartItemsForCustomer = new();
+            StateHasChanged();
+        }
+        else //It failed and returned an invalid purchaseID
+        {
+            
+        }
+        IsDataLoaded = true;
     }
 
 }
