@@ -27,10 +27,12 @@ namespace MauiKakeys
             builder.Services.AddSingleton(new Auth0Client(new()
             {
                 Domain = "dev-zas6rizyxopiwv2b.us.auth0.com",
-                ClientId = "xUuj4xt0Pn4wLdompKNjM3suZZKx9fdC",
+                ClientId = "40msEBWQirG8ZCXnwCWKb6OhmQoI7ifO",
                 Scope = "openid profile",
                 RedirectUri = "myapp://callback",
             }));
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddScoped<AuthenticationStateProvider, Auth0AuthenticationStateProvider>();
 
 
             builder.Services.AddScoped(o =>
@@ -47,9 +49,7 @@ namespace MauiKakeys
             builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddAuthorizationCore();
             builder.Services.AddBlazorBootstrap();
-            builder.Services.AddScoped<AuthenticationStateProvider, Auth0AuthenticationStateProvider>();
             builder.Services.AddScoped<MauiUserState>();
             builder.Services.AddScoped<IAuthenticationManager, MauiAuthenticationManager>();
             return builder.Build();
