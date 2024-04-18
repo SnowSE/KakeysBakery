@@ -3,7 +3,7 @@
 @using BlazorBootstrap
 @using KakeysSharedLib.Components
 @using KakeysSharedLib.OAuth
-@* @using Microsoft.AspNetCore.Components.Authorization *@
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using System.Net.Http.Json
@@ -103,8 +103,8 @@ else
 }
 
 @code {
-    // [CascadingParameter]
-    // private Task<AuthenticationState>? authenticationState { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
     [Inject] protected PreloadService PreloadService { get; set; } = default!;
 
     private Modal modal = default!;
@@ -117,12 +117,10 @@ else
     {
         PreloadService.Show(SpinnerColor.Light, "Loading data...");
 
-        client.BaseAddress = new Uri(navManager.BaseUri);
-
         manager = new(client);
         await manager.PopulateAvailableGoodTypes();
 
-        // await authManager.SetAuthState(authenticationState);
+        await authManager.SetAuthState(authenticationState);
         IsDataLoaded = true;
 
         PreloadService.Hide();
@@ -143,6 +141,4 @@ else
 
         PreloadService.Hide();
     }
-
-
 }

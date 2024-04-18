@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net8.0-android</TargetFrameworks>
+        <TargetFrameworks>net8.0-android</TargetFrameworks>
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
         <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
         <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
@@ -14,7 +14,7 @@
         <!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
         	<NoWarn>NU1701;NETSDK1206</NoWarn> <!--Suppress PayPal, Alpine warning-->
 
-		<OutputType Condition="'$(TargetFramework)' != 'net8.0'">Exe</OutputType>        
+		<OutputType>Exe</OutputType>        
 		<RootNamespace>MauiKakeys</RootNamespace>
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
@@ -61,8 +61,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0" />
+        <PackageReference Include="Auth0.OidcClient.MAUI" Version="1.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.4" />
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.20" />

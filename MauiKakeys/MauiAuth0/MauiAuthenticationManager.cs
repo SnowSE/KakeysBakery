@@ -1,10 +1,18 @@
-﻿using KakeysSharedLib.OAuth;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Json;
+using System.Text;
+using System.Threading.Tasks;
+
+using KakeysSharedLib.Data;
+using KakeysSharedLib.OAuth;
 
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace KakeysBakery.Components.OAuth;
+namespace MauiKakeys.MauiAuth0;
 
-public class WebAuthenticationManager() : IAuthenticationManager
+public class MauiAuthenticationManager(HttpClient client) : IAuthenticationManager
 {
     private Task<AuthenticationState>? authenticationState = null;
     private AuthenticationState? state;
@@ -17,7 +25,10 @@ public class WebAuthenticationManager() : IAuthenticationManager
             return;
         }
 
+        if (state is null)
+        {
             state = await authenticationState;
+        }
     }
 
     public async Task SetAuthState(Task<AuthenticationState>? authState)
@@ -45,7 +56,6 @@ public class WebAuthenticationManager() : IAuthenticationManager
         Customer? result = null;
         try
         {
-            using var client = new HttpClient();
             result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
         }
         catch { }
@@ -71,7 +81,6 @@ public class WebAuthenticationManager() : IAuthenticationManager
                         .FirstOrDefault()!.Value
         };
 
-        using var client = new HttpClient();
         await client.PostAsJsonAsync("api/customer/add", user);
 
         return user;

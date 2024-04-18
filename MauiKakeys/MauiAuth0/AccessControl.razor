@@ -1,16 +1,13 @@
-@using Microsoft.AspNetCore.Components.Authorization
+@* @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <AuthorizeView>
     <Authorized>
-        @if (context.User.Identity is not null)
-        {
-            <p>Hello, @context.User.Identity.Name!</p>
-        }
-        <a href="#" @onclick="Logout">Log out</a>
+        <p>Hello, @context.User.Identity.Name!</p>
+        <button class="btn btn-primary" @onclick="Logout">Log out</button>
     </Authorized>
     <NotAuthorized>
-        <a href="#" @onclick="Login">Log in</a>
+        <button href="#" @onclick="Login">Log in</button>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -30,4 +27,4 @@
         ((Auth0AuthenticationStateProvider)AuthenticationStateProvider)
             .LogOut();
     }
-}
+} *@

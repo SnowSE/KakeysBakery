@@ -1,4 +1,5 @@
-﻿@using MauiKakeys.Auth0
+﻿@using MauiKakeys.MauiAuth0
+@inject MauiUserState userState
 
 <nav class="navbar navbar-expand-xl border-bottom border-body shadow-xl" data-bs-theme="dark" style="background-color: #4E362E">
     <div class="container-fluid">
@@ -9,13 +10,13 @@
         </button>
 
         <div class="d-xl-none position-absolute top-0 start-50 translate-middle-x d-flex justify-content-center" style="z-index:1">
-            <img style="width:16rem" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/BlackLogo.png" />
+            <img class="mt-1" style="width:8rem" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/BlackLogo.png" />
         </div>
 
         <div class="collapse navbar-collapse py-3" id="navbarSupportedContent">
             <div class="navbar-nav ms-auto me-auto mb-2 mb-lg-0 position-relative">
                 <span class="d-none d-lg-block position-absolute translate-middle p-5 my-5" style="z-index:1">
-                    <img class="position-relative" style="width:40%; left:40px; top:20px;" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/BlackLogo.png" />
+                    <img class="position-relative mt-3" style="width:40%; left:40px; top:20px;" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/BlackLogo.png" />
                 </span>
 
                 <NavLink class="nav-link mx-1" href="/" style="z-index:2" Match="NavLinkMatch.All">
@@ -47,7 +48,7 @@
                         <AuthorizeView>
 
                             <Authorized>
-                                <NavLink class="nav-link mx-1" href="Account/Logout" style="z-index:2" Match="NavLinkMatch.All">
+                                <NavLink class="nav-link mx-1" @onclick="userState.Logout" style="z-index:2" Match="NavLinkMatch.All">
                                     <span class="nav-item d-none d-xl-inline p-3" href="#">Log Out</span>
                                     <span class="nav-item d-xl-none" href="#">Log Out</span>
 
@@ -55,7 +56,7 @@
                             </Authorized>
 
                             <NotAuthorized>
-                                <NavLink class="nav-link mx-1" href="Account/Login?redirectUri=/" style="z-index:2" Match="NavLinkMatch.All">
+                                <NavLink class="nav-link mx-1" @onclick="userState.Login" style="z-index:2" Match="NavLinkMatch.All">
                                     <span class="nav-item d-none d-xl-inline p-3" href="#">Log In</span>
                                     <span class="nav-item d-xl-none" href="#">Log Out</span>
 

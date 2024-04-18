@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Components.Authorization;
-
-namespace MauiKakeys.Auth0;
+using Auth0.OidcClient;
+namespace MauiKakeys.MauiAuth0;
 
 public class Auth0AuthenticationStateProvider : AuthenticationStateProvider
 {

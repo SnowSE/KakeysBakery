@@ -1,6 +1,8 @@
-﻿using KakeysSharedLib.OAuth;
+﻿using Auth0.OidcClient;
 
-using MauiKakeys.Auth0;
+using KakeysSharedLib.OAuth;
+
+using MauiKakeys.MauiAuth0;
 
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -27,19 +29,29 @@ namespace MauiKakeys
                 Domain = "dev-zas6rizyxopiwv2b.us.auth0.com",
                 ClientId = "xUuj4xt0Pn4wLdompKNjM3suZZKx9fdC",
                 Scope = "openid profile",
-                RedirectUri = "myapp://callback"
+                RedirectUri = "myapp://callback",
             }));
-            builder.Services.AddAuthorizationCore();
-            builder.Services.AddBlazorBootstrap();
-            builder.Services.AddHttpClient();
 
-            builder.Services.AddScoped<AuthenticationStateProvider, Auth0AuthenticationStateProvider>();
-            builder.Services.AddScoped<IAuthenticationManager, MauiAuthenticationManager>();
+
+            builder.Services.AddScoped(o =>
+            {
+                var client = new HttpClient
+                {
+                    BaseAddress = new Uri("https://kakeysbakery20240319120850.azurewebsites.net")
+                };
+                return client;
+            });
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddBlazorBootstrap();
+            builder.Services.AddScoped<AuthenticationStateProvider, Auth0AuthenticationStateProvider>();
+            builder.Services.AddScoped<MauiUserState>();
+            builder.Services.AddScoped<IAuthenticationManager, MauiAuthenticationManager>();
             return builder.Build();
         }
     }
