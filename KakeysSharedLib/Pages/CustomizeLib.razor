@@ -25,15 +25,15 @@
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/weddingcake.png" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                 <p class="text-center">Wedding Cake</p>
             </div>
-            <div class="p-3 d-flex flex-column" @onclick="async ()=> await Cupcake.ShowAsync()">
+            <div class="p-3 d-flex flex-column" @onclick="async ()=> {await Cupcake.ShowAsync(); layers=1;}">
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cupcakes.png" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                 <p class="text-center">Cupcakes</p>
             </div>
-            <div class="p-3 d-flex flex-column " @onclick="async ()=> await RoundCake.ShowAsync()">
+            <div class="p-3 d-flex flex-column " @onclick="async ()=> {await RoundCake.ShowAsync(); layers=1;}">
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/customcake.png" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                 <p class="text-center">Round Cakes</p>
             </div>
-            <div class="p-3 d-flex flex-column " @onclick="async ()=> await SheetCake.ShowAsync()">
+            <div class="p-3 d-flex flex-column " @onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Sheetcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                 <p class="text-center">Sheet Cakes</p>
             </div>
@@ -52,95 +52,12 @@
 
 <Modal @ref="Cupcake" Title="Customize a Cupcake">
     <BodyTemplate>
-        @(iterator = 1)
-        <div>
-            <label>What frosting flavor do you want</label>
-
-            <select @onchange="(e) => OnFrostingChange(e, iterator)">
-                <option>---</option>
-                @foreach (Addon frosting in frostings)
-                {
-                    @if (frosting.Addonflavor is not null)
-                    {
-                        <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
-                    }
-                }
-            </select>
-        </div>
-        <div>
-            <label>What flavor of cupcake do you want</label>
-
-            <select @onchange="(e) => OnFlavorChange(e, iterator)">
-                <option>---</option>
-                @foreach (Addon cake in cupcakeFlavors)
-                {
-                    @if (cake.Addonflavor is not null)
-                    {
-                        <option value="@cake.Addonflavor.Flavor"> @cake.Addonflavor.Flavor</option>
-                    }
-                }
-            </select>
-        </div>
-
-        <div>
-            <label>Any flavored fillings</label>
-
-            <select @onchange="(e) => OnFillingChange(e, iterator)">
-                <option>---</option>
-                @foreach (Addon filling in fillings)
-                {
-                    @if (filling.Addonflavor is not null)
-                    {
-                        <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
-                    }
-
-                }
-            </select>
-        </div>
-
-        <div>
-            <label>Count (in Dozens)</label>
-            <input type="number" @bind-value="quantity" />
-        </div>
-
-        <div>
-            <input rows="4" cols="50" @bind-value="description" placeholder="What additional customization do you want with this cupcake?" />
-        </div>
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button Color="ButtonColor.Secondary " @onclick="async () => { await Cupcake.HideAsync(); }">Close</Button>
-        <Button Color="ButtonColor.Primary" @onclick='async () => { await addToCart(" cupcake");}'> Add To Cart</Button>
-    </FooterTemplate>
-</Modal>
-
-<Modal @ref="SheetCake" Title="Customize Your Sheet Cake">
-    <BodyTemplate>
-        @(iterator = 1)
-        <div>
-            <label>What size do you want</label>
-            <select @onchange="(e) => OnSizeChange(e, iterator)">
-                <option>---</option>
-                @foreach (Addontype size in sheetSizes)
-                {
-                    <option value="@size.Basetype">@size.Basetype</option>
-                }
-            </select>
-        </div>
-
-        <div>
-            <h4>Frosting or Fondant</h4>
-            <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
-            <label for="html">Fondant</label><br>
-            <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true">
-            <label for="css">Frosting</label><br>
-        </div>
-
-        @if (isFrosting)
-        {
+        <form>
 
             <div>
                 <label>What frosting flavor do you want</label>
-                <select @onchange="(e) => OnFrostingChange(e, iterator)">
+
+                <select @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
                     <option>---</option>
                     @foreach (Addon frosting in frostings)
                     {
@@ -151,80 +68,86 @@
                     }
                 </select>
             </div>
+            <div>
+                <label>What flavor of cupcake do you want</label>
+
+                <select @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
+                    <option>---</option>
+                    @foreach (Addon cake in cupcakeFlavors)
+                    {
+                        @if (cake.Addonflavor is not null)
+                        {
+                            <option value="@cake.Addonflavor.Flavor"> @cake.Addonflavor.Flavor</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label>Any flavored fillings</label>
+
+                <select @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                    <option>---</option>
+                    @foreach (Addon filling in fillings)
+                    {
+                        @if (filling.Addonflavor is not null)
+                        {
+                            <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
+                        }
+
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label>Count (in Dozens)</label>
+                <input type="number" @bind-value="quantity" />
+            </div>
+
+            <div>
+                <input rows="4" cols="50" @bind-value="description" placeholder="What additional customization do you want with this cupcake?" />
+            </div>
+        </form>
+        @if (validationString is not null)
+        {
+            <p>@validationString</p>
+
         }
-
-        <div>
-            <label>What flavor of cake do you want</label>
-            <select @onchange="(e) => OnFlavorChange(e, iterator)">
-                <option>---</option>
-                @foreach (Addon cake in sheetFlavors)
-                {
-                    @if (cake.Addonflavor is not null)
-                    {
-                        <option value="@cake.Addonflavor.Flavor">@cake.Addonflavor.Flavor</option>
-                    }
-                }
-            </select>
-        </div>
-
-        <div>
-            <label>Any flavored fillings? </label>
-            <select @onchange="(e) => OnFillingChange(e, iterator)">
-                <option>---</option>
-                @foreach (Addon filling in fillings)
-                {
-                    @if (filling.Addonflavor is not null)
-                    {
-                        <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
-                    }
-                }
-            </select>
-        </div>
-
-        <div>
-            <input @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
-        </div>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="async () => { await SheetCake.HideAsync(); }">Close</Button>
-        <Button Color="ButtonColor.Primary" @onclick='async () => { await addToCart(" sheetCake");}'>Add To Cart</Button>
+        <Button Color="ButtonColor.Secondary " @onclick="async () => { await Cupcake.HideAsync(); }">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await addToCart(" cupcake");}'> Add To Cart</Button>
     </FooterTemplate>
 </Modal>
 
-<Modal @ref="RoundCake" Title="Customize Your Round Cake">
+<Modal @ref="SheetCake" Title="Customize Your Sheet Cake">
     <BodyTemplate>
-        <div>
-            <label>How many layers</label>
-            <input @onchange="LayersChanged" type="number" />
-        </div>
-
-        @for (int i = 0; i < layers; i++)
-        {
-            int iterator = i+1;
+        <form>
             <div>
-                <label>What diameter do you want for layer @(iterator)</label>
-                <select @onchange="(e) => OnSizeChange(e, iterator)">
+                <label>What size do you want</label>
+                <select @onchange="(e) => DropDownChanged(e, iterator, sizeList)">
                     <option>---</option>
-                    @foreach (Addontype size in cakeSizes)
+                    @foreach (Addontype size in sheetSizes)
                     {
                         <option value="@size.Basetype">@size.Basetype</option>
                     }
                 </select>
             </div>
 
-            <div>
-                <label>Frosting or Fondant</label>
-                <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
-                <label for="html">Fondant</label>
-                <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
-                <label for="css">Frosting</label>
-            </div>
+
+            <p>Frosting or Fondant</p>
+            <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
+            <label for="html">Fondant</label><br>
+            <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true">
+            <label for="css">Frosting</label><br>
+
 
             @if (isFrosting)
             {
+
                 <div>
-                    <label>What frosting flavor do you want for layer @(iterator)</label>
-                    <select @onchange="(e) => OnSizeChange(e, iterator)">
+                    <label>What frosting flavor do you want</label>
+                    <select @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
                         <option>---</option>
                         @foreach (Addon frosting in frostings)
                         {
@@ -238,10 +161,10 @@
             }
 
             <div>
-                <label>What flavor of cake do you want for layer @(iterator)</label>
-                <select @onchange="(e) => OnSizeChange(e, iterator)">
+                <label>What flavor of cake do you want</label>
+                <select @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
                     <option>---</option>
-                    @foreach (Addon cake in cakeFlavors)
+                    @foreach (Addon cake in sheetFlavors)
                     {
                         @if (cake.Addonflavor is not null)
                         {
@@ -252,50 +175,147 @@
             </div>
 
             <div>
-                @if (layers > 1)
-                {
-                    <label>Any flavored fillings between layers @(iterator) and @(iterator + 1)</label>
-
-                    <select @onchange="(e) => OnSizeChange(e, iterator)">
-                        <option>---</option>
-                        @foreach (Addon filling in fillings)
+                <label>Any flavored fillings? </label>
+                <select @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                    <option>---</option>
+                    @foreach (Addon filling in fillings)
+                    {
+                        @if (filling.Addonflavor is not null)
                         {
-                            @if (filling.Addonflavor is not null)
-                            {
-                                <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
-                            }
+                            <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
                         }
-                    </select>
-                }
-                else
-                {
-                    <label>Any flavored filling?</label>
-                    <select @onchange="(e) => OnSizeChange(e, iterator)">
-                        <option>---</option>
-
-                        @foreach (Addon filling in fillings)
-                        {
-                            @if (filling.Addonflavor is not null)
-                            {
-                                <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
-                            }
-                        }
-                    </select>
-                }
+                    }
+                </select>
             </div>
 
-            <hr />
+            <div>
+                <input @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
+            </div>
+        </form>
+        @if (validationString is not null)
+        {
+            <p>@validationString</p>
 
         }
-        
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="async () => { await SheetCake.HideAsync(); }">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await addToCart(" Sheet Cake");}'>Add To Cart</Button>
+    </FooterTemplate>
+</Modal>
 
-        <div>
-            <input type="textarea" @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
-        </div>
+<Modal @ref="RoundCake" Title="Customize Your Round Cake">
+    <BodyTemplate>
+        <form>
+
+            <div>
+                <label>How many layers</label> @*max of 3 right now*@
+                <input @onchange="LayersChanged" type="number" />
+            </div>
+
+            @for (int i = 0; i < layers; i++)
+            {
+                int iterator = i + 1;
+                <div>
+                    <label>What diameter do you want for layer @(iterator)</label>
+                    <select @onchange="(e) => DropDownChanged(e, iterator, sizeList)">
+                        <option>---</option>
+                        @foreach (Addontype size in cakeSizes)
+                        {
+                            <option value="@size.Basetype">@size.Basetype</option>
+                        }
+                    </select>
+                </div>
+
+                <div>
+                    <label>Frosting or Fondant</label>
+                    <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
+                    <label for="html">Fondant</label>
+                    <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
+                    <label for="css">Frosting</label>
+                </div>
+
+                @if (isFrosting)
+                {
+                    <div>
+                        <label>What frosting flavor do you want for layer @(iterator)</label>
+                        <select @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
+                            <option>---</option>
+                            @foreach (Addon frosting in frostings)
+                            {
+                                @if (frosting.Addonflavor is not null)
+                                {
+                                    <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                }
+
+                <div>
+                    <label>What flavor of cake do you want for layer @(iterator)</label>
+                    <select @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
+                        <option>---</option>
+                        @foreach (Addon cake in cakeFlavors)
+                        {
+                            @if (cake.Addonflavor is not null)
+                            {
+                                <option value="@cake.Addonflavor.Flavor">@cake.Addonflavor.Flavor</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div>
+                    @if (layers > 1)
+                    {
+                        <label>Any flavored fillings between layers @(iterator) and @(iterator + 1)</label>
+
+                        <select @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                            <option>---</option>
+                            @foreach (Addon filling in fillings)
+                            {
+                                @if (filling.Addonflavor is not null)
+                                {
+                                    <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <label>Any flavored filling?</label>
+                        <select @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                            <option>---</option>
+
+                            @foreach (Addon filling in fillings)
+                            {
+                                @if (filling.Addonflavor is not null)
+                                {
+                                    <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
+                                }
+                            }
+                        </select>
+                    }
+                </div>
+
+                <hr />
+
+            }
+
+            <div>
+                <input type="textarea" @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
+            </div>
+        </form>
+        @if (validationString is not null)
+        {
+            <p>@validationString</p>
+
+        }
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Secondary" @onclick="async () => { await RoundCake.HideAsync(); }">Close</Button>
-        <Button Color="ButtonColor.Primary" @onclick='async () => { await addToCart(" sheetCake");}'>Add To Cart</Button>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await addToCart(" Round Cake");}'>Add To Cart</Button>
     </FooterTemplate>
 </Modal>
 
@@ -305,6 +325,7 @@
     int quantity = 1;
     bool isFrosting = true;
     string? description;
+    string? validationString;
 
     Modal WeddingCake = new Modal();
     Modal Cupcake = new Modal();
@@ -334,76 +355,36 @@
         var layerString = e.Value?.ToString();
         if (!string.IsNullOrEmpty(layerString))
         {
-            layers =  Int32.Parse(layerString);
+            layers = Int32.Parse(layerString);
         }
+        ResetLists();
+    }
 
+    private void ResetLists()
+    {
         sizeList.Clear();
         frostingList.Clear();
         fillingList.Clear();
         flavorList.Clear();
     }
 
-    private void OnSizeChange(ChangeEventArgs e, int layer)
+    private void DropDownChanged(ChangeEventArgs e, int layer, List<string> ListAddedTo)
     {
-        var selectedSize = e.Value?.ToString();
-        if (!string.IsNullOrEmpty(selectedSize) && sizeList.Count < layer)
+        if (layer > 4)
         {
-            sizeList.Add(selectedSize);
+            layers = 4;
+            validationString = "We do not offer more than 4 layers at this moment";
+            return;
         }
-        else if (!string.IsNullOrEmpty(selectedSize) && sizeList.Count >= layer)
-        {
-            sizeList[layer - 1] = selectedSize;
-        }
-        else
-        {
-            throw new Exception("null value or index out of range");
-        }
-    }
 
-    private void OnFlavorChange(ChangeEventArgs e, int layer)
-    {
         var selectedSize = e.Value?.ToString();
-        if (!string.IsNullOrEmpty(selectedSize) && flavorList.Count < layer)
+        if (!string.IsNullOrEmpty(selectedSize) && ListAddedTo.Count < layer)
         {
-            flavorList.Add(selectedSize);
+            ListAddedTo.Add(selectedSize);
         }
-        else if (!string.IsNullOrEmpty(selectedSize) && sizeList.Count >= layer)
+        else if (!string.IsNullOrEmpty(selectedSize) && ListAddedTo.Count >= layer)
         {
-            flavorList[layer - 1] = selectedSize;
-        }
-        else
-        {
-            throw new Exception("null value or index out of range");
-        }
-    }
-
-    private void OnFillingChange(ChangeEventArgs e, int layer)
-    {
-        var selectedSize = e.Value?.ToString();
-        if (!string.IsNullOrEmpty(selectedSize) && fillingList.Count < layer)
-        {
-            fillingList.Add(selectedSize);
-        }
-        else if (!string.IsNullOrEmpty(selectedSize) && fillingList.Count >= layer)
-        {
-            fillingList[layer - 1] = selectedSize;
-        }
-        else
-        {
-            throw new Exception("null value or index out of range");
-        }
-    }
-
-    private void OnFrostingChange(ChangeEventArgs e, int layer)
-    {
-        var selectedSize = e.Value?.ToString();
-        if (!string.IsNullOrEmpty(selectedSize) && frostingList.Count < layer)
-        {
-            frostingList.Add(selectedSize);
-        }
-        else if (!string.IsNullOrEmpty(selectedSize) && frostingList.Count >= layer)
-        {
-            frostingList[layer - 1] = selectedSize;
+            ListAddedTo[layer - 1] = selectedSize;
         }
         else
         {
@@ -477,58 +458,80 @@
         else throw new Exception("Unable to find any addons");
     }
 
+    private bool IsValidInput()
+    {
+        validationString = null;
+        if (frostingList.Count < layers)
+        {
+            validationString += "Could not add to cart: Missing Frosting Values";
+            return false;
+        }
+        if (flavorList.Count < layers)
+        {
+            validationString += "Could not add to cart: Missing Flavor Values";
+            return false;
+        }
+        return true;
+    }
+
+    private async Task AddToCustomerAddonList(int productId, List<string> customerList, List<Addon> dbList)
+    {
+        foreach (string item in customerList)
+        {
+            var frosting = dbList.Find(f => f.Addonflavor!.Flavor == item);
+            if (frosting is not null)
+                await AddAddon(productId, frosting.Id);
+        }
+    }
+
+    private async Task AddToCustomerAddonList(int productId, List<string> customerList, List<Addontype> dbList)
+    {
+        foreach (string item in customerList)
+        {
+            var frosting = dbList.Find(f => f.Basetype == item);
+            if (frosting is not null)
+                await AddAddon(productId, frosting.Id);
+        }
+    }
+
     private async Task addToCart(string type)
     {
+        if (!IsValidInput())
+            return;
+
         Product prodToAdd = new()
             {
                 Description = description,
-                Productname = type // find some way to make this unique
+                Productname = flavorList[0] + " " + frostingList[0] + " "+ type
             };
         await product.CreateProductAsync(prodToAdd);
 
-        foreach (string item in frostingList)
+        await AddToCustomerAddonList(prodToAdd.Id, frostingList, frostings);
+        await AddToCustomerAddonList(prodToAdd.Id, fillingList, fillings);
+
+        if (type == " Round Cake")
         {
-            var frosting = frostings.Find(f => f.Addonflavor!.Flavor == item);
-            //    await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = frostings.Find(f => f.Addonflavor!.Flavor == cupcakeFrosting)!.Id, Basegoodid = 53 });
-            if (frosting is not null)
-                await AddAddon(prodToAdd.Id, frosting.Id);
+            await AddToCustomerAddonList(prodToAdd.Id, flavorList, cakeFlavors);
+            await AddToCustomerAddonList(prodToAdd.Id, sizeList, cakeSizes);
+        }
+
+        if (type == " Sheet Cake")
+        {
+            await AddToCustomerAddonList(prodToAdd.Id, flavorList, sheetFlavors);     
+            await AddToCustomerAddonList(prodToAdd.Id, sizeList, sheetSizes);
+        }
+
+        if (type == " Cupcake")
+        {
+            await AddToCustomerAddonList(prodToAdd.Id, flavorList, cupcakeFlavors);
 
         }
-            frostingList.Clear();
 
-        foreach (string item in sizeList)
-        {
-            var frosting = frostings.Find(f => f.Addonflavor!.Flavor == item);
-            //    await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = frostings.Find(f => f.Addonflavor!.Flavor == cupcakeFrosting)!.Id, Basegoodid = 53 });
-            if (frosting is not null)
-                await AddAddon(prodToAdd.Id, frosting.Id);
+        ResetLists();
 
-        }
-            sizeList.Clear();
-
-        foreach (string item in fillingList)
-        {
-            var filling = fillings.Find(f => f.Addonflavor!.Flavor == item);
-
-            if (filling is not null)
-                await AddAddon(prodToAdd.Id, filling.Id);
-
-            //     await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = fillings.Find(f => f.Addonflavor!.Flavor == cupcakeFilling)!.Id, Basegoodid = 53 });
-        }
-            fillingList.Clear();
-
-        foreach (string item in frostingList)
-        {
-            var filling = fillings.Find(f => f.Addonflavor!.Flavor == item);
-
-            if (filling is not null)
-                await AddAddon(prodToAdd.Id, filling.Id);
-            //     await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = prodToAdd.Id, Addonid = cakeFlavors.Find(f => f.Addonflavor!.Flavor == cupcakeFlavor)!.Id, Basegoodid = 53 });
-        }
-            frostingList.Clear();
         //TODO: get customer ID
         // Once we get the CustomerId, uncomment this
-        //await AddToCart(prodToAdd.Id, cupcakeDozens, customerId);
+        await AddToCart(prodToAdd.Id, quantity, 18);
 
         //await cart.CreateCartAsync(new() { Productid = prodToAdd.Id, Quantity = cupcakeDozens, Customerid = });
 
