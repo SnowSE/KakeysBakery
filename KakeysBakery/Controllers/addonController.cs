@@ -14,14 +14,12 @@ public class AddonController : ControllerBase
     }
 
     [HttpGet("getall")]
-    [Authorize]
     public async Task<List<Addon>> GetAddonsAsync()
     {
         return await addonService.GetAddonListAsync();
     }
 
     [HttpGet("get/{id}")]
-    [Authorize]
     public async Task<IActionResult> GetAddonAsync(int id)
     {
         var addon = await addonService.GetAddonAsync(id);
