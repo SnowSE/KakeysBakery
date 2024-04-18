@@ -17,7 +17,7 @@ public class WebAuthenticationManager() : IAuthenticationManager
             return;
         }
 
-            state = await authenticationState;
+        state = await authenticationState;
     }
 
     public async Task SetAuthState(Task<AuthenticationState>? authState)

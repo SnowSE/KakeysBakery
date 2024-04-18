@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+
 using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Security.Claims;
 
 namespace MauiKakeys.MauiAuth0;
 
@@ -19,7 +20,7 @@ public class MauiUserState
         this.authProvider = authProvider;
         user = new ClaimsPrincipal();
     }
-    private ClaimsPrincipal user;
+    private readonly ClaimsPrincipal user;
 
     public ClaimsPrincipal User => user;
 
