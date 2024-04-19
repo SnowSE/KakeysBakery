@@ -90,7 +90,8 @@ builder.Services.AddScoped(o =>
 {
     var client = new HttpClient
     {
-        BaseAddress = new Uri("https://localhost:7196")
+        //BaseAddress = new Uri("https://localhost:7196")
+        BaseAddress = new Uri("https://kakeysbakery20240319120850.azurewebsites.net/")
     };
     return client;
 });
