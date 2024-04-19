@@ -1,12 +1,13 @@
 ﻿@using BlazorBootstrap
+@using TextCopy
 
 <Modal @ref="PhoneModal" Title="Phone Information">
     <BodyTemplate>
         <p>You can call or text me between 9am - 4pm at 555-555-5555 </p>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Primary" @onclick="async () => { await PhoneModal.HideAsync(); }">Copy to Clipboard</Button>
-        <Button Color="ButtonColor.Danger" @onclick="async () => { await PhoneModal.HideAsync(); }">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await PhoneModal!.HideAsync(); await ClipboardService.SetTextAsync("5555555555");}'>Copy to Clipboard</Button>
+        <Button Color="ButtonColor.Danger" @onclick="async () => { await PhoneModal!.HideAsync(); }">Close</Button>
     </FooterTemplate>
 </Modal> 
 
@@ -15,8 +16,8 @@
         <p>You can reach me at ____ and I will get back to you within 1-2 buisness days</p>
         </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Primary" @onclick="async () => { await PhoneModal.HideAsync(); }">Copy to Clipboard</Button>
-        <Button Color="ButtonColor.Danger" @onclick="async () => { await EmailModal.HideAsync(); }">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await PhoneModal!.HideAsync(); await ClipboardService.SetTextAsync("example@email.com");}'>Copy to Clipboard</Button>
+        <Button Color="ButtonColor.Danger" @onclick="async () => { await EmailModal!.HideAsync(); }">Close</Button>
     </FooterTemplate>
 </Modal> 
 
@@ -25,7 +26,7 @@
         <p>Buisness location: 123 w center Ephraim 84627</p>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Danger" @onclick="async () => { await LocationModal.HideAsync(); }">Close</Button>
+        <Button Color="ButtonColor.Danger" @onclick="async () => { await LocationModal!.HideAsync(); }">Close</Button>
     </FooterTemplate>
 </Modal> 
 
@@ -39,21 +40,22 @@
             <li class="ms-lg-3"><a class="text-body-secondary" href="https://m.facebook.com/people/Kakeys-Bakery/100092969621403/"><i class="bi bi-facebook" /></a></li>
             @* <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-instagram" /></a></li> *@
             @* <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-twitter" /></a></li> *@
-            <li class="ms-lg-3" @onclick="GarionTest"><a class="text-body-secondary" href="#"><i class="bi bi-envelope-at" /></a></li>
-            <li class="ms-lg-3" @onclick="PhoneModal.ShowAsync"><a class="text-body-secondary" href="#"><i class="bi bi-telephone" /></a></li>
-            <li class="ms-lg-3" @onclick="LocationModal.ShowAsync"><a class=" text-body-secondary" href="#"><i class="bi bi-building" /></a></li>
-
+            <li class="ms-lg-3"><a class="text-body-secondary" @onclick="async () => {await PhoneModal.ShowAsync();}"><i class=" bi bi-envelope-at" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" @onclick="async () => {await PhoneModal.ShowAsync();}"><i class="bi bi-telephone" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" @onclick="async () => {await LocationModal.ShowAsync();}"><i class="bi bi-building" /></a></li>
         </ul>
     </div>
 </footer>
 
 @code {
-    Modal PhoneModal = new();
-    Modal EmailModal = new();
-    Modal LocationModal = new();
-
-    public void GarionTest()
+    protected override void OnInitialized()
     {
-        EmailModal.ShowAsync();
+        PhoneModal = new();
+        EmailModal =  new();
+        LocationModal = new();
     }
+
+    Modal? PhoneModal;
+    Modal? EmailModal;
+    Modal? LocationModal;
 }
