@@ -83,6 +83,8 @@ jobs:
     steps:
     - name: Kubectl Up
       run: |
+        echo $GITHUB_RUN_ID
+
         docker build -t 144.17.92.12:5000/kakey-1/blazor-web:$GITHUB_RUN_ID .
         docker push 144.17.92.12:5000/kakey-1/blazor-web:$GITHUB_RUN_ID
 
