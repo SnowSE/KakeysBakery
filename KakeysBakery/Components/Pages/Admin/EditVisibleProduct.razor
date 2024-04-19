@@ -1,4 +1,5 @@
 ﻿@page "/admin/edit-product"
+@using BlazorBootstrap
 @inject IAddonFlavorService addonFlavor
 @inject IAddonService addon
 @inject IAddonTypeService addonType
@@ -11,377 +12,381 @@
 
 @if (!isEditingProduct && !isEditingTopping && !isAddingProduct && !isAddingTopping)
 {
-	<p>What would you like to edit or add?</p>
-	<button @onclick='() => ShowOption("EditTopping")'>Edit or Delete a Topping</button>
-	<button @onclick='() => ShowOption("EditProduct")'>Edit or Delete a Product</button>
-	<button @onclick='() => ShowOption("AddProduct")'>Add New Product</button>
-	<button @onclick='() => ShowOption("AddTopping")'>Add New Topping</button>
+    <div style="margin-top:2%">
+
+        <p>What would you like to edit or add?</p>
+        <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("EditTopping")'>Edit or Delete a Topping</Button>
+        <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("EditProduct")'>Edit or Delete a Product</Button>
+        <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("AddProduct")'>Add New Product</Button>
+        <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("AddTopping")'>Add New Topping</Button>
+    </div>
 }
 
 @if (errorString is not null)
 {
-	<p>@errorString</p>
+    <p>@errorString</p>
 }
 @if (confirmationString is not null)
 {
-	<p>@confirmationString</p>
+    <p>@confirmationString</p>
 }
 
-<div>
-	@if (isEditingProduct)
-	{
-		<h4>Editing products</h4>
-		if (baseGoodTypes is null)
-		{
-			<p> Please wait while we grab the product list</p>
-		}
-		else
-		{
-			<div>
-				<label>First select the category</label>
-				<select @onchange="SelectChanged">
-					<option>---</option>
-					@foreach (Basegoodtype good in baseGoodTypes)
-					{
-						<option value="@good.Id">@good.Basegood</option>
-					}
-				</select>
-			</div>
-			<div>
-				@if (baseGoods is not null)
-				{
-					<label>Select which product to edit</label>
-					<select @onchange="SecondarySelectChanged">
-						<option>---</option>
-						@foreach (Basegood flavor in baseGoods)
-						{
-							<option value="@flavor.Id">@flavor.Flavor!.Flavorname</option>
-						}
-					</select>
-				}
-			</div>
-			@if (secondarySelectId != -1)
-			{
-				<div>
-					<label> what's the price of this product</label>
-					<input @bind="productCost" type="number" />
-				</div>
+<div style="margin-top:2%">
+    @if (isEditingProduct)
+    {
+        <h4>Editing products</h4>
+        if (baseGoodTypes is null)
+        {
+            <p> Please wait while we grab the product list</p>
+        }
+        else
+        {
+            <div>
+                <label>First select the category</label>
+                <select @onchange="SelectChanged">
+                    <option>---</option>
+                    @foreach (Basegoodtype good in baseGoodTypes)
+                    {
+                        <option value="@good.Id">@good.Basegood</option>
+                    }
+                </select>
+            </div>
+            <div>
+                @if (baseGoods is not null)
+                {
+                    <label>Select which product to edit</label>
+                    <select @onchange="SecondarySelectChanged">
+                        <option>---</option>
+                        @foreach (Basegood flavor in baseGoods)
+                        {
+                            <option value="@flavor.Id">@flavor.Flavor!.Flavorname</option>
+                        }
+                    </select>
+                }
+            </div>
+            @if (secondarySelectId != -1)
+            {
+                <div>
+                    <label> what's the price of this product</label>
+                    <input @bind="productCost" type="number" />
+                </div>
 
-				<div>
-					<label> What's the name of this product</label>
-					<input @bind="productString" type="text" placeholder="" />
-				</div>
+                <div>
+                    <label> What's the name of this product</label>
+                    <input @bind="productString" type="text" placeholder="" />
+                </div>
 
-				<div>
-					<label>Is this product currently available</label>
-					<input @bind="isAvailable" type="checkbox" />
-				</div>
+                <div>
+                    <label>Is this product currently available</label>
+                    <input @bind="isAvailable" type="checkbox" />
+                </div>
 
-				<div>
-					<label>What is the quantity that this product comes in</label>
-					<input @bind="quantity" type="number" />
-				</div>
-			}
-			<div>
-				<button @onclick="() => DeleteProduct(secondarySelectId)">Delete Selected Product</button>
-				<button @onclick="() => EditProduct(secondarySelectId)">Edit Selected Product</button>
-			</div>
-		}
-	}
-	@if (isEditingTopping)
-	{
-		<h4>Editing toppings</h4>
-		if (addonTypes is null)
-		{
-			<p> Please wait while we grab the product list</p>
-		}
-		else
-		{
-			<div>
-				<label>First select the category</label>
-				<select @onchange="SelectChanged">
-					<option>---</option>
-					@foreach (Addontype addon in addonTypes)
-					{
-						<option value="@addon.Id">@addon.Basetype</option>
-					}
-				</select>
-			</div>
-			<div>
-				@if (addons is not null)
-				{
-					<label>Select the flavor</label>
-					<select @onchange="SecondarySelectChanged">
-						<option>---</option>
-						@foreach (Addon addon in addons)
-						{
-							<option value="@addon.Id">@addon.Addonflavor!.Flavor</option>
-						}
-					</select>
-				}
-			</div>
-			<div>
-				@if (secondarySelectId != -1)
-				{
-					<div>
-						<label>What is the topping name</label>
-						<input @bind="productString" type="text" />
-					</div>
+                <div>
+                    <label>What is the quantity that this product comes in</label>
+                    <input @bind="quantity" type="number" />
+                </div>
+            }
+            <div>
+                <button @onclick="() => DeleteProduct(secondarySelectId)">Delete Selected Product</button>
+                <button @onclick="() => EditProduct(secondarySelectId)">Edit Selected Product</button>
+            </div>
+        }
+    }
+    @if (isEditingTopping)
+    {
+        <h4>Editing toppings</h4>
+        if (addonTypes is null)
+        {
+            <p> Please wait while we grab the product list</p>
+        }
+        else
+        {
+            <div>
+                <label>First select the category</label>
+                <select @onchange="SelectChanged">
+                    <option>---</option>
+                    @foreach (Addontype addon in addonTypes)
+                    {
+                        <option value="@addon.Id">@addon.Basetype</option>
+                    }
+                </select>
+            </div>
+            <div>
+                @if (addons is not null)
+                {
+                    <label>Select the flavor</label>
+                    <select @onchange="SecondarySelectChanged">
+                        <option>---</option>
+                        @foreach (Addon addon in addons)
+                        {
+                            <option value="@addon.Id">@addon.Addonflavor!.Flavor</option>
+                        }
+                    </select>
+                }
+            </div>
+            <div>
+                @if (secondarySelectId != -1)
+                {
+                    <div>
+                        <label>What is the topping name</label>
+                        <input @bind="productString" type="text" />
+                    </div>
 
-					<div>
-						<label>How much does it cost to add</label>
-						<input @bind="productCost" type="number" />
-					</div>
-				}
-			</div>
-			<div>
-				<button @onclick="() => DeleteTopping(secondarySelectId)">Delete Selected Topping</button>
-				<button @onclick="() => EditTopping(secondarySelectId)">Edit Selected Topping</button>
-			</div>
-		}
-	}
-	@if (isAddingProduct)
-	{
-		<h4>Adding products</h4>
-		if (baseGoodTypes is null)
-		{
-			<p>Please wait while we grab the product list</p>
-		}
-		else
-		{
-			<div>
-				<label>What category does this fall under</label>
-				<select @onchange="SelectChanged">
-					<option>---</option>
-					@foreach (Basegoodtype basegood in baseGoodTypes)
-					{
-						<option value="@basegood.Id">@basegood.Basegood</option>
-					}
-				</select>
-			</div>
-			<div>
-				<label>How much will this product cost</label>
-				<input @bind="productCost" type="number" />
-			</div>
+                    <div>
+                        <label>How much does it cost to add</label>
+                        <input @bind="productCost" type="number" />
+                    </div>
+                }
+            </div>
+            <div>
+                <button @onclick="() => DeleteTopping(secondarySelectId)">Delete Selected Topping</button>
+                <button @onclick="() => EditTopping(secondarySelectId)">Edit Selected Topping</button>
+            </div>
+        }
+    }
+    @if (isAddingProduct)
+    {
+        <h4>Adding products</h4>
+        if (baseGoodTypes is null)
+        {
+            <p>Please wait while we grab the product list</p>
+        }
+        else
+        {
+            <div>
+                <label>What category does this fall under</label>
+                <select @onchange="SelectChanged">
+                    <option>---</option>
+                    @foreach (Basegoodtype basegood in baseGoodTypes)
+                    {
+                        <option value="@basegood.Id">@basegood.Basegood</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label>How much will this product cost</label>
+                <input @bind="productCost" type="number" />
+            </div>
 
 
-			<div>
-				<label>What is the product name</label>
-				<input type="text" @bind="productString" />
-			</div>
+            <div>
+                <label>What is the product name</label>
+                <input type="text" @bind="productString" />
+            </div>
 
-			<div>
-				<label>Is this product currently available</label>
-				<input @bind="isAvailable" type="checkbox" />
-			</div>
+            <div>
+                <label>Is this product currently available</label>
+                <input @bind="isAvailable" type="checkbox" />
+            </div>
 
-			<div>
-				<label>What is the quantity this product is sold in</label>
-				<input @bind="quantity" type="text" />
-			</div>
-			<button @onclick="AddNewBaseProduct">Add</button>
-		}
-	}
-	@if (isAddingTopping)
-	{
-		<h4>Adding toppings</h4>
-		if (addonTypes is null)
-		{
-			<p>Please wait while we grab the product list</p>
-		}
-		else
-		{
-			<label>How much will this addon cost</label>
-			<input @bind="productCost" type="number" />
+            <div>
+                <label>What is the quantity this product is sold in</label>
+                <input @bind="quantity" type="text" />
+            </div>
+            <button @onclick="AddNewBaseProduct">Add</button>
+        }
+    }
+    @if (isAddingTopping)
+    {
+        <h4>Adding toppings</h4>
+        if (addonTypes is null)
+        {
+            <p>Please wait while we grab the product list</p>
+        }
+        else
+        {
+            <label>How much will this addon cost</label>
+            <input @bind="productCost" type="number" />
 
-			<div>
-				<label>What category does this fall under</label>
-				<select @onchange="SelectChanged">
-					<option>---</option>
-					@foreach (Addontype addon in addonTypes)
-					{
-						<option value="@addon.Id">@addon.Basetype</option>
-					}
-				</select>
-			</div>
-			<div>
-				<label>What is the flavor</label>
-				<input type="text" @bind="productString" />
-			</div>
-		}
-		<button @onclick="AddNewTopping">Add</button>
-	}
-	@if (isEditingProduct || isEditingTopping || isAddingProduct || isAddingTopping)
-	{
-		<button @onclick="ResetViews">Cancel</button>
-	}
+            <div>
+                <label>What category does this fall under</label>
+                <select @onchange="SelectChanged">
+                    <option>---</option>
+                    @foreach (Addontype addon in addonTypes)
+                    {
+                        <option value="@addon.Id">@addon.Basetype</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label>What is the flavor</label>
+                <input type="text" @bind="productString" />
+            </div>
+        }
+        <button @onclick="AddNewTopping">Add</button>
+    }
+    @if (isEditingProduct || isEditingTopping || isAddingProduct || isAddingTopping)
+    {
+        <button @onclick="ResetViews">Cancel</button>
+    }
 </div>
 
 @code {
-	public int selectedId;
-	public int secondarySelectId = -1;
-	public string productString = "";
-	public decimal productCost = 0.0m;
-	public bool isAvailable;
-	public string quantity = "";
 
-	public string? errorString;
-	public string? confirmationString;
+    public int selectedId;
+    public int secondarySelectId = -1;
+    public string productString = "";
+    public decimal productCost = 0.0m;
+    public bool isAvailable;
+    public string quantity = "";
 
-	private List<Addon>? addons;
-	private List<Addonflavor>? addonFlavors;
-	private List<Addontype>? addonTypes;
-	private List<Basegood>? baseGoods;
-	private List<Basegoodflavor>? baseGoodFlavors;
-	private List<Basegoodtype>? baseGoodTypes;
-	// private Basegood? selectedBaseGood;
+    public string? errorString;
+    public string? confirmationString;
 
-	private bool isEditingTopping = false;
-	private bool isEditingProduct = false;
-	private bool isAddingProduct = false;
-	private bool isAddingTopping = false;
+    private List<Addon>? addons;
+    private List<Addonflavor>? addonFlavors;
+    private List<Addontype>? addonTypes;
+    private List<Basegood>? baseGoods;
+    private List<Basegoodflavor>? baseGoodFlavors;
+    private List<Basegoodtype>? baseGoodTypes;
+    // private Basegood? selectedBaseGood;
 
-	protected override async Task OnInitializedAsync()
-	{
-		addonFlavors = await addonFlavor.GetAddonFlavorListAsync();
-		addonTypes = await addonType.GetAddonTypeListAsync();
+    private bool isEditingTopping = false;
+    private bool isEditingProduct = false;
+    private bool isAddingProduct = false;
+    private bool isAddingTopping = false;
 
-		baseGoodFlavors = await baseGoodFlavor.GetBaseGoodFlavorListAsync();
-		baseGoodTypes = await baseGoodType.GetBaseGoodTypeListAsync();
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        addonFlavors = await addonFlavor.GetAddonFlavorListAsync();
+        addonTypes = await addonType.GetAddonTypeListAsync();
 
-	public async Task SelectChanged(ChangeEventArgs e)
-	{
-		if (e.Value is null) { return; }
-		selectedId = Convert.ToInt32(e.Value.ToString());
+        baseGoodFlavors = await baseGoodFlavor.GetBaseGoodFlavorListAsync();
+        baseGoodTypes = await baseGoodType.GetBaseGoodTypeListAsync();
+    }
 
-		baseGoods = null;
-		addons = null;
+    public async Task SelectChanged(ChangeEventArgs e)
+    {
+        if (e.Value is null) { return; }
+        selectedId = Convert.ToInt32(e.Value.ToString());
 
-		if (isEditingProduct)
-		{
-			baseGoods = await baseGood.GetBasegoodsFromTypeAsync(selectedId);
-		}
-		if (isEditingTopping)
-		{
-			addons = await addon.GetAddonListFromType(selectedId);
-		}
-		await Task.CompletedTask;
-	}
+        baseGoods = null;
+        addons = null;
 
-	public async Task SecondarySelectChanged(ChangeEventArgs e)
-	{
-		if (e.Value is null) { return; }
-		secondarySelectId = Convert.ToInt32(e.Value.ToString());
+        if (isEditingProduct)
+        {
+            baseGoods = await baseGood.GetBasegoodsFromTypeAsync(selectedId);
+        }
+        if (isEditingTopping)
+        {
+            addons = await addon.GetAddonListFromType(selectedId);
+        }
+        await Task.CompletedTask;
+    }
 
-		if (isEditingProduct)
-		{
-			try
-			{
-				var product = await baseGood.GetBaseGoodAsync(secondarySelectId);
+    public async Task SecondarySelectChanged(ChangeEventArgs e)
+    {
+        if (e.Value is null) { return; }
+        secondarySelectId = Convert.ToInt32(e.Value.ToString());
 
-				productString = product!.Flavor!.Flavorname!;
-				productCost = (decimal)product!.Suggestedprice!;
-				isAvailable = (bool)product!.Isavailable!;
-				//quantity = product.GoodsizeNavigation.Size;
-			}
-			catch
-			{
+        if (isEditingProduct)
+        {
+            try
+            {
+                var product = await baseGood.GetBaseGoodAsync(secondarySelectId);
 
-			}
+                productString = product!.Flavor!.Flavorname!;
+                productCost = (decimal)product!.Suggestedprice!;
+                isAvailable = (bool)product!.Isavailable!;
+                //quantity = product.GoodsizeNavigation.Size;
+            }
+            catch
+            {
 
-		}
-		if (isEditingTopping)
-		{
-			var addons = await addon.GetAddonAsync(secondarySelectId);
-			productString = addons!.Addonflavor!.Flavor!;
-			productCost = (decimal)addons.Suggestedprice!;
-		}
-	}
+            }
 
-	public void ShowOption(string option)
-	{
-		ResetViews();
-		confirmationString = null;
-		switch (option)
-		{
-			case "AddProduct":
-				isAddingProduct = true;
-				break;
-			case "AddTopping":
-				isAddingTopping = true;
-				break;
-			case "EditProduct":
-				isEditingProduct = true;
-				break;
-			case "EditTopping":
-				isEditingTopping = true;
-				break;
-			default:
-				break;
-		}
-	}
+        }
+        if (isEditingTopping)
+        {
+            var addons = await addon.GetAddonAsync(secondarySelectId);
+            productString = addons!.Addonflavor!.Flavor!;
+            productCost = (decimal)addons.Suggestedprice!;
+        }
+    }
 
-	public void ResetViews()
-	{
-		ResetForm();
-		isEditingTopping = false;
-		isEditingProduct = false;
-		isAddingProduct = false;
-		isAddingTopping = false;
-	}
+    public void ShowOption(string option)
+    {
+        ResetViews();
+        confirmationString = null;
+        switch (option)
+        {
+            case "AddProduct":
+                isAddingProduct = true;
+                break;
+            case "AddTopping":
+                isAddingTopping = true;
+                break;
+            case "EditProduct":
+                isEditingProduct = true;
+                break;
+            case "EditTopping":
+                isEditingTopping = true;
+                break;
+            default:
+                break;
+        }
+    }
 
-	public async Task AddNewBaseProduct()
-	{
-		CEDProducts products = new(baseGoodFlavor, baseGood, baseGoodSize);
+    public void ResetViews()
+    {
+        ResetForm();
+        isEditingTopping = false;
+        isEditingProduct = false;
+        isAddingProduct = false;
+        isAddingTopping = false;
+    }
 
-		confirmationString = await products.Create(productString, productCost, selectedId, isAvailable, quantity);
-		ResetViews();
-	}
+    public async Task AddNewBaseProduct()
+    {
+        CEDProducts products = new(baseGoodFlavor, baseGood, baseGoodSize);
 
-	public async Task AddNewTopping()
-	{
-		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
+        confirmationString = await products.Create(productString, productCost, selectedId, isAvailable, quantity);
+        ResetViews();
+    }
 
-		confirmationString = await toppings.Create(productString, productCost, selectedId);
-		ResetViews();
-	}
+    public async Task AddNewTopping()
+    {
+        CEDToppings toppings = new CEDToppings(addonFlavor, addon);
 
-	public void ResetForm()
-	{
-		productString = "";
-		productCost = 0.0m;
-	}
+        confirmationString = await toppings.Create(productString, productCost, selectedId);
+        ResetViews();
+    }
 
-	public async Task DeleteProduct(int id)
-	{
-		CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood, baseGoodSize);
+    public void ResetForm()
+    {
+        productString = "";
+        productCost = 0.0m;
+    }
 
-		confirmationString = await products.Delete(id);
-		ResetViews();
-	}
+    public async Task DeleteProduct(int id)
+    {
+        CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood, baseGoodSize);
 
-	public async Task DeleteTopping(int id)
-	{
-		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
+        confirmationString = await products.Delete(id);
+        ResetViews();
+    }
 
-		confirmationString = await toppings.Delete(id);
-		ResetViews();
-	}
+    public async Task DeleteTopping(int id)
+    {
+        CEDToppings toppings = new CEDToppings(addonFlavor, addon);
 
-	public async Task EditProduct(int id)
-	{
-		CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood, baseGoodSize);
+        confirmationString = await toppings.Delete(id);
+        ResetViews();
+    }
 
-		confirmationString = await products.Edit(id, productString, productCost, quantity.ToString(), isAvailable);
-		ResetViews();
-	}
+    public async Task EditProduct(int id)
+    {
+        CEDProducts products = new CEDProducts(baseGoodFlavor, baseGood, baseGoodSize);
 
-	public async Task EditTopping(int id)
-	{
-		CEDToppings toppings = new CEDToppings(addonFlavor, addon);
+        confirmationString = await products.Edit(id, productString, productCost, quantity.ToString(), isAvailable);
+        ResetViews();
+    }
 
-		confirmationString = await toppings.Edit(id, productString, productCost);
-		ResetViews();
-	}
+    public async Task EditTopping(int id)
+    {
+        CEDToppings toppings = new CEDToppings(addonFlavor, addon);
+
+        confirmationString = await toppings.Edit(id, productString, productCost);
+        ResetViews();
+    }
 }
