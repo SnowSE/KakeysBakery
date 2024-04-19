@@ -19,10 +19,19 @@
     </FooterTemplate>
 </Modal>
 
+<Modal @ref="LocationModal" Title="Location Information">
+    <BodyTemplate>
+        <p>Buisness location: 123 w center Ephraim 84627</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="async () => { await EmailModal.HideAsync(); }">Close</Button>
+    </FooterTemplate>
+</Modal>
+
 <footer class="footer mt-auto py-4 d-flex justify-content-center layout" data-bs-theme="dark">
     <div class="container d-flex align-items-center justify-content-center">
         <div class="col-md-4 d-flex align-items-center">
-            <span class="d-flex align-items-center justify-content-center text-body-secondary">© 2024 Company, Inc</span>
+            <span class="d-flex align-items-center justify-content-center text-body-secondary">© 2024 Kakey's Bakery</span>
         </div>
 
         <ul class="nav col-md-4 justify-content-end list-unstyled d-flex ps-5 pe-lg-5">
@@ -31,6 +40,8 @@
             @* <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-twitter" /></a></li> *@
             <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-envelope-at" @onclick="EmailModal.ShowAsync" /></a></li>
             <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-telephone" @onclick="PhoneModal.ShowAsync" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-building" @onclick="LocationModal.ShowAsync" /></a></li>
+
         </ul>
     </div>
 </footer>
@@ -38,4 +49,5 @@
 @code {
     Modal PhoneModal = new();
     Modal EmailModal = new();
+    Modal LocationModal = new();
 }
