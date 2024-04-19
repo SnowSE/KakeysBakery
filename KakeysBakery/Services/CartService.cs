@@ -116,6 +116,37 @@ public class CartService : ICartService
         carts = _context.Carts.Where(c => c.Customerid == customerId)
             .ToList();
 
+        // Get the total price in the cart
+        // (stolen from cart controller)
+        decimal price = 0m;
+        foreach (Cart c in carts)
+        {
+            decimal total = 0.0m;
+            var pabs = await _context.ProductAddonBasegoods
+                .Include(p => p.Product)
+                .Include(p => p.Basegood)
+                .Where(p => p.Productid == c.Productid)
+                .ToListAsync();
+
+            foreach (var pab in pabs)
+            {
+
+                if (pab.Basegood is not null && pab.Basegood.Suggestedprice is not null)
+                {
+                    total += (decimal)pab.Basegood!.Suggestedprice;
+                }
+                if (pab.Addon is not null && pab.Addon.Suggestedprice is not null)
+                {
+                    total += (decimal)pab.Addon!.Suggestedprice;
+                }
+            }
+            if (c.Quantity is null || c.Quantity < 1)
+            {
+                c.Quantity = 1;
+            }
+            price += total * (decimal)c.Quantity;
+        }
+
         //create a default purchase
         Purchase newPurchase = new()
         {
@@ -124,6 +155,7 @@ public class CartService : ICartService
             Orderdate = DateTime.Today,
             //have a way for them to input specifications to their order
             Isfulfilled = false,
+            Actualprice = price, // Temp for now
             Fulfillmentdate = null //Have a way for her to fulfill orders
         };
 

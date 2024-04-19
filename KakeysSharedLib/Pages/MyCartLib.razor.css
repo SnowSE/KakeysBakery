@@ -23,7 +23,7 @@
 
 .cartCard {
     padding: 50px;
-    vertical-align: middle;
+    vertical-align: middle; 
 }
 
 .price {
@@ -50,3 +50,12 @@
     font-size: 200%;
     font: bold;
 }
+
+.customDelete {
+    background-color: green;
+}
+
+    .customDelete:hover {
+        /*background-color: #dc3545;*/
+        background-color: blue;
+    }
