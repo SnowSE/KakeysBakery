@@ -7,6 +7,8 @@
 
 @inject HttpClient client
 
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
 @if (IsDataLoaded)
 {
 <div class="align-content-center p-5" id="totalCart">
@@ -186,9 +188,20 @@ else
         }
         else //It failed and returned an invalid purchaseID
         {
-            
+            CreateToastMessage(ToastType.Danger, "Error occured when checking out");
         }
         IsDataLoaded = true;
     }
 
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private void CreateToastMessage(ToastType type, string message)
+    {
+        messages.Add(
+            new ToastMessage
+                {
+                    Type = type,
+                    Message = message,
+                });
+    }
 }
