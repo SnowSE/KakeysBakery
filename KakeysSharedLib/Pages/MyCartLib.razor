@@ -11,51 +11,55 @@
 
 @if (IsDataLoaded)
 {
-<div class="align-content-center p-5" id="totalCart">
-    <div class="text-center">
-        <h2 id="pageTitle"> YOUR CART </h2>
-    </div>
+    <div class="align-content-center p-5" id="totalCart">
+        <div class="text-center">
+            <h2 id="pageTitle"> YOUR CART </h2>
+        </div>
 
 
-    <div class="p-4" style="background-color: #EBDCCE;">
-        <table>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th class="px-3 itemDescription" scope="col">Qty</th>
-                    <th class="px-3 itemDescription" scope="col">Price</th>
-                    <th class="px-3 removeColumn" scope="col">Remove</th>
-                </tr>
-            <tr><td colspan="4"><hr /></td></tr>
-            </thead>
-            <tbody>
-                @foreach (var cart in allCartItemsForCustomer!)
-                {
-                    <tr class="cartCard flex-row">
-                        <td class="pe-4"><img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cookie.jpg" /></td>
-                        <td>
-                            <h1 class="itemName">@cart.Product!.Productname</h1> 
-                            <p class="itemDescription">
-                                @(@cart.Product!.Description ?? "Product has no description")
-                            </p>
-                        </td>
-                        <td class="ps-4 itemDescription"><input type="number" min="1" max="100" @bind="@cart.Quantity"/></td>
-                        <td class="px-3 itemDescription">$@getPrice(cart)</td>
-                    <td class="removalButtom"><button class="btn btn-danger" @onclick="async () => { await removeFromCartAsync(cart.Id);}">Remove</button></td>
+        <div class="p-4" style="background-color: #EBDCCE;">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th class="px-3 itemDescription" scope="col"></th>
+                        <th class="px-3 itemDescription" scope="col"></th>
+                        <th class="px-3 removeColumn" scope="col"></th>
                     </tr>
                     <tr><td colspan="4"><hr /></td></tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach (var cart in allCartItemsForCustomer!)
+                    {
+                        <tr class="cartCard flex-row">
+                            <td class="pe-4"><img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cookie.jpg" /></td>
+                            <td>
+                                <h1 class="itemName">@cart.Product!.Productname</h1>
+                                <p class="itemDescription">
+                                    @(@cart.Product!.Description ?? "Product has no description")
+                                </p>
+                            </td>
+                            <td class="ps-4 itemDescription">
+                                <input class="form-control" type="number" min="1" max="100" @bind="cart.Quantity" @oninput="@(e => UpdateCartQuantity(e, cart))" />
+                            </td>
+                            <td class="px-3 itemDescription">$@getPrice(cart)</td>
+                            <td class="d-flex justify-content-center text-danger">
+                                <h3 class="customDelete bi bi-trash p-1" @onclick="async () => { await removeFromCartAsync(cart.Id);}" />
+                            </td>
+                        </tr>
+                        <tr><td colspan="4"><hr /></td></tr>
+                    }
 
-                <tr id="">
-                    <td colspan="4" style="text-align: right;" class="itemDescription" id="displayTotal">TOTAL: $@getPrice(allCartItemsForCustomer)</td>
-                </tr>
-            </tbody>
-        </table>
-        <div><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
+                    <tr id="">
+                        <td colspan="4" style="text-align: right;" class="itemDescription" id="displayTotal">TOTAL: $@getPrice(allCartItemsForCustomer)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
+        </div>
+
     </div>
-
-</div>
 }
 else
 {
@@ -95,7 +99,7 @@ else
                 var userEmail = state?.User.Claims.Where(c => c.Type.Contains("emailaddress")).FirstOrDefault()!.Value;
                 email = userEmail ?? "no email found";
             }
-            catch(Exception e) { email = "getting email threw error"; throw e; }
+            catch (Exception e) { email = "getting email threw error"; throw e; }
         }
 
         try
@@ -151,7 +155,7 @@ else
                 total += (decimal)pab.Addon!.Suggestedprice;
             }
         }
-        if(cart.Quantity is null || cart.Quantity < 1)
+        if (cart.Quantity is null || cart.Quantity < 1)
         {
             cart.Quantity = 1;
         }
@@ -183,6 +187,7 @@ else
         if (purchaseId > 0)
         {
             allCartItemsForCustomer = new();
+            CreateToastMessage(ToastType.Success, "Success!");
             StateHasChanged();
         }
         else //It failed and returned an invalid purchaseID
@@ -201,5 +206,18 @@ else
                     Type = type,
                     Message = message,
                 });
+    }
+
+    private async Task UpdateCartQuantity(ChangeEventArgs e, Cart cart)
+    {
+        try
+        {
+            var newQuantity = Convert.ToInt32(e.Value!.ToString());
+            if (newQuantity < 1 || newQuantity > 100) { return; }
+
+            cart.Quantity = newQuantity;
+            await client.PatchAsJsonAsync<Cart>($"api/cart/update/", cart);
+        }
+        catch { }
     }
 }
