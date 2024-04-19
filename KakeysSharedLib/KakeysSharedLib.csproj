@@ -4,7 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <NoWarn>NU1701;NETSDK1206</NoWarn> <!--Suppress PayPal, Alpine warning-->
+    <NoWarn>NU1701;NETSDK1206</NoWarn>
+    <UserSecretsId>7a86a38e-23c2-4c9e-88b3-2ee1aca4ece3</UserSecretsId> <!--Suppress PayPal, Alpine warning-->
   </PropertyGroup>
 
 
