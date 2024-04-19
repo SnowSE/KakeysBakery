@@ -1,4 +1,5 @@
-﻿@page "/Customize"
+﻿
+@page "/Customize"
 
 @* @using Microsoft.AspNetCore.Components.Authorization *@
 @using KakeysSharedLib.Data
@@ -258,7 +259,7 @@
                     </td>
 
                     <td>
-                        <input class="form-control" @onchange="LayersChanged" type="number" />
+                        <input class="form-control" @onchange="LayersChanged" min="1" max="4" type="number" />
                     </td>
                 </tr>
                 @for (int i = 0; i < layers; i++)
