@@ -91,20 +91,20 @@ jobs:
           kubectl -n kakey-1 create configmap blazor-web-postgres-init --from-file=Apr15ddl.sql
         cd ../
 
-        cd kube-configs
+        cd Telemetry/kube-configs
           kubectl -n kakey-1 delete configmap grafana-datasource-config || true
           kubectl -n kakey-1 create configmap grafana-datasource-config --from-file=grafana-datasource.yml
         
           kubectl -n kakey-1 delete configmap otel-config || true
           kubectl -n kakey-1 create configmap otel-config --from-file=otel-collector-config.yml
-        cd ../
+        cd ../../
 
         kubectl -n kakey-1 delete svc blazor-web-db-service || true
         kubectl -n kakey-1 delete ingress kakey-blazor-ingress || true
         kubectl -n kakey-1 delete deployment blazor-web-db-deployment || true
         kubectl -n kakey-1 delete deployment kakey-blazor-web-deployment || true
 
-        for file in ./kube/*; do
+        for file in ./Telemetry/kube/*; do
           echo "Applying $file"
           cat $file | envsubst | kubectl apply -f -
         done
