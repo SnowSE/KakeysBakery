@@ -62,6 +62,10 @@
     aspect-ratio: 1/1;
 }
 
+.img-thumbnail {
+    max-width: 50%;
+}
+
 /*large*/
 @media screen and (min-width: 992px) {
     .order-container {
