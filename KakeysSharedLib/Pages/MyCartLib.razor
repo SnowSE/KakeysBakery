@@ -44,8 +44,10 @@
                                 <input class="form-control" type="number" min="1" max="100" @bind="cart.Quantity" @oninput="@(e => UpdateCartQuantity(e, cart))" />
                             </td>
                             <td class="px-3 itemDescription">$@getPrice(cart)</td>
-                            <td class="d-flex justify-content-center text-danger">
-                                <h3 class="customDelete bi bi-trash p-1" @onclick="async () => { await removeFromCartAsync(cart.Id);}" />
+                            <td class="d-flex justify-content-center">
+                                <button class="btn btn-danger" @onclick="async () => { await removeFromCartAsync(cart.Id);}">
+                                    <h3 class="bi bi-trash rounded mt-2" />
+                                </button>
                             </td>
                         </tr>
                         <tr><td colspan="4"><hr /></td></tr>
@@ -63,7 +65,7 @@
 }
 else
 {
-    <div class="mt-5 border">
+    <div class="mt-5">
         <div class="d-flex flex-wrap justify-content-center">
             <Spinner Type="SpinnerType.Dots" />
         </div>
