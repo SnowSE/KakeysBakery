@@ -90,7 +90,8 @@ builder.Services.AddScoped(o =>
 {
     var client = new HttpClient
     {
-        BaseAddress = new Uri("https://localhost:7196")
+        //BaseAddress = new Uri("https://localhost:7196")
+        BaseAddress = new Uri(builder.Configuration["BaseUri"]!)
     };
     return client;
 });
