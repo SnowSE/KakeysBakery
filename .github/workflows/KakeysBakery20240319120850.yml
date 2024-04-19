@@ -1,18 +1,12 @@
 name: Build and deploy .NET Core application to Web App KakeysBakery20240319120850
 
-# on:
-#   pull_request:
-#     types:
-#         - opened
 on:
   push:
-    branches:
-    - main
+    branches: [main]
 env:
   AZURE_WEBAPP_NAME: KakeysBakery20240319120850
   AZURE_WEBAPP_PACKAGE_PATH: KakeysBakery/published
   CONFIGURATION: Release
-  # DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: KakeysBakery
 jobs:
   Build:
@@ -70,23 +64,55 @@ jobs:
         steps: ${{ toJson(steps) }}
         overwrite: "{title: `Runner failed! ${workflow_link}`}"  
 
-  docker:
+  # docker:
+  #   runs-on: self-hosted
+  #   needs: build
+  #   steps:
+  #   - name: Docker Down
+  #     run: |
+  #         cd ./docker-staging 
+  #         docker compose down -v
+  #   - name: Docker Up
+  #     run: |
+  #       cd ./docker-staging 
+  #       docker compose up --build -d
+
+  kubernetes:
     runs-on: self-hosted
-    needs: build
+    needs: Build
     steps:
-    - name: Docker Down
+    - name: Kubectl Up
       run: |
-          cd ./docker-staging 
-          docker compose down -v
-    - name: Docker Up
-      run: |
-        cd ./docker-staging 
-        docker compose up --build -d
+        docker build -t 144.17.92.12:5000/kakey-1/blazor-web:$GITHUB_RUN_ID .
+        docker push 144.17.92.12:5000/kakey-1/blazor-web:$GITHUB_RUN_ID
+
+        cd KakeysBakery.Tests
+          kubectl -n kakey-1 delete configmap blazor-web-postgres-init || true
+          kubectl -n kakey-1 create configmap blazor-web-postgres-init --from-file=*.sql
+        cd ../
+
+        cd kube-configs
+          kubectl -n kakey-1 delete configmap grafana-datasource-config || true
+          kubectl -n kakey-1 create configmap grafana-datasource-config --from-file=grafana-datasource.yml
+        
+          kubectl -n kakey-1 delete configmap otel-config || true
+          kubectl -n kakey-1 create configmap otel-config --from-file=otel-collector-config.yml
+        cd ../
+
+        kubectl -n kakey-1 delete svc blazor-web-db-service || true
+        kubectl -n kakey-1 delete ingress kakey-blazor-ingress || true
+        kubectl -n kakey-1 delete deployment blazor-web-db-deployment || true
+        kubectl -n kakey-1 delete deployment kakey-blazor-web-deployment || true
+
+        for file in ./kube/*; do
+          echo "Applying $file"
+          cat $file | envsubst | kubectl apply -f -
+        done
   
 
   deploy:
     runs-on: self-hosted
-    needs: build
+    needs: Build
     steps:
     - name: Download artifact from build job
       uses: actions/download-artifact@v4

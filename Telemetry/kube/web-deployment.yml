@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ${NAMESPACE}
+  name: kakey-blazor-web-deployment
+  labels:
+    app: kakey-blazor-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kakey-blazor-web
+  template:
+    metadata:
+      labels:
+        app: kakey-blazor-web
+    spec:
+      containers:
+      - name: kakey-blazor-web
+        image: 144.17.92.12:5000/kakey-1/blazor-web:${RUN_SALT}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: COLLECTOR_URL
+          value: http://otel-collector-service:4317/
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: db
+          value: server=blazor-web-db-service;user id=postgres;database=kakeydb;password=password
+        - name: DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE
+          value: "false"

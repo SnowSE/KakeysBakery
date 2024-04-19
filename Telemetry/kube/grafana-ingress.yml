@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: kakey-1
+  name: kakey-grafana-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: grafana.kakey-telemetry-ts.duckdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kakey-grafana-service
+            port:
+              number: 3000
