@@ -60,6 +60,7 @@ builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
 builder.Services.AddScoped<IBasegoodSizeService, BaseGoodSizeService>();
 builder.Services.AddScoped<IAuthenticationManager, WebAuthenticationManager>();
 builder.Services.AddScoped<IPayPalAuthentication, PayPalAuthentication>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options =>

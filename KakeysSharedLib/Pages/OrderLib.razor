@@ -75,7 +75,7 @@
                 @foreach (Basegoodtype type in manager.AvailableGoodTypes)
                 {
                     
-                    <div class="d-flex position-relative order-container rounded-5 m-3 p-3" 
+                    <div class="d-flex position-relative order-container rounded-5 m-3 p-3"
                         @onclick='async () => {
                                await manager.SelectGoodTypeCard(type.Id);
                                if(type.Basegood == "Cake"){

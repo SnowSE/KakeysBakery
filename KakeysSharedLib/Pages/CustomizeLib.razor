@@ -17,25 +17,28 @@
 @inject ICartService cart
 
 <body>
-    <h3>This form is for pastries with a small to medium amount of customization. If you wish for a highly customized cake or a cake with lots of detail, please contact me directly [link to contact me]</h3>
-    <div class="mt-5 bg-light border vh-100 ">
-        <div class="d-flex flex-wrap justify-content-between p-5">
+    <div style="padding: 2%">
 
-            <div class="p-3 d-flex flex-column" @onclick="async ()=>await WeddingCake.ShowAsync()">
+    <h3  >This form is for pastries with a small to medium amount of customization. If you wish for a highly customized cake or a cake with lots of detail, please contact me directly [link to contact me]</h3>
+    </div>
+    <div class="mt-5 border totalPage ">
+        <div class="d-flex flex-wrap justify-content-center">
+
+            <div  class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=>await WeddingCake.ShowAsync()">
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/weddingcake.png" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <p class="text-center">Wedding Cake</p>
+                <h3 class="typelabel" style="z-index: 1;">Wedding Cake</h3>
             </div>
-            <div class="p-3 d-flex flex-column" @onclick="async ()=> {await Cupcake.ShowAsync(); layers=1;}">
+            <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await Cupcake.ShowAsync(); layers=1;}">
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cupcakes.png" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <p class="text-center">Cupcakes</p>
+                <h3 class="typelabel" style="z-index: 1;">Cupcake</h3>
             </div>
-            <div class="p-3 d-flex flex-column " @onclick="async ()=> {await RoundCake.ShowAsync(); layers=1;}">
+            <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await RoundCake.ShowAsync(); layers=1;}">
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/customcake.png" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <p class="text-center">Round Cakes</p>
+                <h3 class="typelabel" style="z-index: 1;">Round Cake</h3>
             </div>
-            <div class="p-3 d-flex flex-column " @onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
+            <div class="d-flex position-relative order-container rounded-5 m-3 p-3 "@onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Sheetcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <p class="text-center">Sheet Cakes</p>
+                <h3 class="typelabel" style="z-index: 1;">Sheet Cake</h3>
             </div>
         </div>
     </div>
@@ -52,62 +55,79 @@
 
 <Modal @ref="Cupcake" Title="Customize a Cupcake">
     <BodyTemplate>
-        <form>
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <td>
+                        <label>What frosting flavor do you want</label>
+                    </td>
+                    <td>
+                        <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
+                            <option>---</option>
+                            @foreach (Addon frosting in frostings)
+                            {
+                                @if (frosting.Addonflavor is not null)
+                                {
+                                    <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>What flavor of cupcake do you want</label>
+                    </td>
+                    <td>
+                        <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
+                            <option>---</option>
+                            @foreach (Addon cake in cupcakeFlavors)
+                            {
+                                @if (cake.Addonflavor is not null)
+                                {
+                                    <option value="@cake.Addonflavor.Flavor"> @cake.Addonflavor.Flavor</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
 
-            <div>
-                <label>What frosting flavor do you want</label>
+                    <td>
+                        <label>Any flavored fillings</label>
+                    </td>
+                    <td>
+                        <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                            <option>---</option>
+                            @foreach (Addon filling in fillings)
+                            {
+                                @if (filling.Addonflavor is not null)
+                                {
+                                    <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
+                                }
 
-                <select @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
-                    <option>---</option>
-                    @foreach (Addon frosting in frostings)
-                    {
-                        @if (frosting.Addonflavor is not null)
-                        {
-                            <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
-                        }
-                    }
-                </select>
-            </div>
-            <div>
-                <label>What flavor of cupcake do you want</label>
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
 
-                <select @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
-                    <option>---</option>
-                    @foreach (Addon cake in cupcakeFlavors)
-                    {
-                        @if (cake.Addonflavor is not null)
-                        {
-                            <option value="@cake.Addonflavor.Flavor"> @cake.Addonflavor.Flavor</option>
-                        }
-                    }
-                </select>
-            </div>
+                    <td>
+                        <label>Count (in Dozens)</label>
+                    </td>
+                    <td>
+                        <input class="form-control" type="number" @bind-value="quantity" />
+                    </td>
+                </tr>
 
-            <div>
-                <label>Any flavored fillings</label>
+                <tr>
 
-                <select @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
-                    <option>---</option>
-                    @foreach (Addon filling in fillings)
-                    {
-                        @if (filling.Addonflavor is not null)
-                        {
-                            <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
-                        }
-
-                    }
-                </select>
-            </div>
-
-            <div>
-                <label>Count (in Dozens)</label>
-                <input type="number" @bind-value="quantity" />
-            </div>
-
-            <div>
-                <input rows="4" cols="50" @bind-value="description" placeholder="What additional customization do you want with this cupcake?" />
-            </div>
-        </form>
+                    <div>
+                        <input rows="4" cols="50" @bind-value="description" placeholder="What additional customization do you want with this cupcake?" />
+                    </div>
+                </tr>
+            </tbody>
+        </table>
         @if (validationString is not null)
         {
             <p>@validationString</p>
@@ -122,76 +142,100 @@
 
 <Modal @ref="SheetCake" Title="Customize Your Sheet Cake">
     <BodyTemplate>
-        <form>
-            <div>
-                <label>What size do you want</label>
-                <select @onchange="(e) => DropDownChanged(e, iterator, sizeList)">
-                    <option>---</option>
-                    @foreach (Addontype size in sheetSizes)
-                    {
-                        <option value="@size.Basetype">@size.Basetype</option>
-                    }
-                </select>
-            </div>
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <td>
 
-
-            <p>Frosting or Fondant</p>
-            <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
-            <label for="html">Fondant</label><br>
-            <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true">
-            <label for="css">Frosting</label><br>
-
-
-            @if (isFrosting)
-            {
-
-                <div>
-                    <label>What frosting flavor do you want</label>
-                    <select @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
-                        <option>---</option>
-                        @foreach (Addon frosting in frostings)
-                        {
-                            @if (frosting.Addonflavor is not null)
+                        <label>What size do you want</label>
+                    </td>
+                    <td>
+                        <select class="form-select"  @onchange="(e) => DropDownChanged(e, iterator, sizeList)">
+                            <option>---</option>
+                            @foreach (Addontype size in sheetSizes)
                             {
-                                <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
+                                <option value="@size.Basetype">@size.Basetype</option>
                             }
-                        }
-                    </select>
-                </div>
-            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Frosting or Fondant</p>
+                    </td>
+                    <td>
+                        <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
+                        <label for="html">Fondant</label><br>
+                        <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true">
+                        <label for="css">Frosting</label><br>
+                    </td>
+                </tr>
 
-            <div>
-                <label>What flavor of cake do you want</label>
-                <select @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
-                    <option>---</option>
-                    @foreach (Addon cake in sheetFlavors)
+
+                <tr>
+                    @if (isFrosting)
                     {
-                        @if (cake.Addonflavor is not null)
-                        {
-                            <option value="@cake.Addonflavor.Flavor">@cake.Addonflavor.Flavor</option>
-                        }
-                    }
-                </select>
-            </div>
 
-            <div>
-                <label>Any flavored fillings? </label>
-                <select @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
-                    <option>---</option>
-                    @foreach (Addon filling in fillings)
-                    {
-                        @if (filling.Addonflavor is not null)
-                        {
-                            <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
-                        }
+                        <td>
+                            <label>What frosting flavor do you want</label>
+                        </td>
+                        <td>
+                            <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
+                                <option>---</option>
+                                @foreach (Addon frosting in frostings)
+                                {
+                                    @if (frosting.Addonflavor is not null)
+                                    {
+                                        <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
+                                    }
+                                }
+                            </select>
+                        </td>
                     }
-                </select>
-            </div>
+                </tr>
 
-            <div>
-                <input @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
-            </div>
-        </form>
+                <tr>
+                    <td>
+                        <label>What flavor of cake do you want</label>
+                    </td>
+                    <td>
+                        <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
+                            <option>---</option>
+                            @foreach (Addon cake in sheetFlavors)
+                            {
+                                @if (cake.Addonflavor is not null)
+                                {
+                                    <option value="@cake.Addonflavor.Flavor">@cake.Addonflavor.Flavor</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Any flavored fillings? </label>
+                    </td>
+
+                    <td>
+                        <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                            <option>---</option>
+                            @foreach (Addon filling in fillings)
+                            {
+                                @if (filling.Addonflavor is not null)
+                                {
+                                    <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <input  @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
+                </tr>
+            </tbody>
+        </table>
         @if (validationString is not null)
         {
             <p>@validationString</p>
@@ -206,107 +250,130 @@
 
 <Modal @ref="RoundCake" Title="Customize Your Round Cake">
     <BodyTemplate>
-        <form>
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <td>
+                        <label>How many layers</label> @*max of 4 right now*@
+                    </td>
 
-            <div>
-                <label>How many layers</label> @*max of 3 right now*@
-                <input @onchange="LayersChanged" type="number" />
-            </div>
-
-            @for (int i = 0; i < layers; i++)
-            {
-                int iterator = i + 1;
-                <div>
-                    <label>What diameter do you want for layer @(iterator)</label>
-                    <select @onchange="(e) => DropDownChanged(e, iterator, sizeList)">
-                        <option>---</option>
-                        @foreach (Addontype size in cakeSizes)
-                        {
-                            <option value="@size.Basetype">@size.Basetype</option>
-                        }
-                    </select>
-                </div>
-
-                <div>
-                    <label>Frosting or Fondant</label>
-                    <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
-                    <label for="html">Fondant</label>
-                    <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
-                    <label for="css">Frosting</label>
-                </div>
-
-                @if (isFrosting)
+                    <td>
+                        <input class="form-control" @onchange="LayersChanged" type="number" />
+                    </td>
+                </tr>
+                @for (int i = 0; i < layers; i++)
                 {
-                    <div>
-                        <label>What frosting flavor do you want for layer @(iterator)</label>
-                        <select @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
-                            <option>---</option>
-                            @foreach (Addon frosting in frostings)
-                            {
-                                @if (frosting.Addonflavor is not null)
-                                {
-                                    <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
-                                }
-                            }
-                        </select>
-                    </div>
-                }
+                    int iterator = i + 1;
+                    <tr>
+                        <td>
 
-                <div>
-                    <label>What flavor of cake do you want for layer @(iterator)</label>
-                    <select @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
-                        <option>---</option>
-                        @foreach (Addon cake in cakeFlavors)
+                            <label>What diameter do you want for layer @(iterator)</label>
+                        </td>
+                        <td>
+                            <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, sizeList)">
+                                <option>---</option>
+                                @foreach (Addontype size in cakeSizes)
+                                {
+                                    <option value="@size.Basetype">@size.Basetype</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <label>Frosting or Fondant</label>
+                        <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
+                        <label for="html">Fondant</label>
+                        <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
+                        <label for="css">Frosting</label>
+                    </tr>
+                    @if (isFrosting)
+                    {
+                        <tr>
+                            <td>
+
+                                <label>What frosting flavor do you want for layer @(iterator)</label>
+                            </td>
+                            <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
+                                <option>---</option>
+                                @foreach (Addon frosting in frostings)
+                                {
+                                    @if (frosting.Addonflavor is not null)
+                                    {
+                                        <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
+                                    }
+                                }
+                            </select>
+                            <td></td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+
+                            <label>What flavor of cake do you want for layer @(iterator)</label>
+                        </td>
+                        <td>
+                            <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
+                                <option>---</option>
+                                @foreach (Addon cake in cakeFlavors)
+                                {
+                                    @if (cake.Addonflavor is not null)
+                                    {
+                                        <option value="@cake.Addonflavor.Flavor">@cake.Addonflavor.Flavor</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        @if (layers > 1)
                         {
-                            @if (cake.Addonflavor is not null)
-                            {
-                                <option value="@cake.Addonflavor.Flavor">@cake.Addonflavor.Flavor</option>
-                            }
+                            <td>
+                                <label>Any flavored fillings between layers @(iterator) and @(iterator + 1)</label>
+                            </td>
+                            <td>
+                                <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                                    <option>---</option>
+                                    @foreach (Addon filling in fillings)
+                                    {
+                                        @if (filling.Addonflavor is not null)
+                                        {
+                                            <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
+                                        }
+                                    }
+                                </select>
+                            </td>
                         }
-                    </select>
-                </div>
+                        else
+                        {
+                            <td>
 
-                <div>
-                    @if (layers > 1)
-                    {
-                        <label>Any flavored fillings between layers @(iterator) and @(iterator + 1)</label>
+                                <label>Any flavored filling?</label>
+                            </td>
+                            <td>
+                                <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                                    <option>---</option>
 
-                        <select @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
-                            <option>---</option>
-                            @foreach (Addon filling in fillings)
-                            {
-                                @if (filling.Addonflavor is not null)
-                                {
-                                    <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
-                                }
-                            }
-                        </select>
-                    }
-                    else
-                    {
-                        <label>Any flavored filling?</label>
-                        <select @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
-                            <option>---</option>
-
-                            @foreach (Addon filling in fillings)
-                            {
-                                @if (filling.Addonflavor is not null)
-                                {
-                                    <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
-                                }
-                            }
-                        </select>
-                    }
-                </div>
-
-                <hr />
-
-            }
-
-            <div>
-                <input type="textarea" @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
-            </div>
-        </form>
+                                    @foreach (Addon filling in fillings)
+                                    {
+                                        @if (filling.Addonflavor is not null)
+                                        {
+                                            <option value="@filling.Addonflavor.Flavor">@filling.Addonflavor.Flavor</option>
+                                        }
+                                    }
+                                </select>
+                            </td>
+                        }
+                    </tr>
+                    <hr />
+                }
+                <tr>
+                    <div>
+                        <input  type="textarea" @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
+                    </div>
+                </tr>
+            </tbody>
+        </table>
         @if (validationString is not null)
         {
             <p>@validationString</p>
@@ -502,7 +569,7 @@
         Product prodToAdd = new()
             {
                 Description = description,
-                Productname = flavorList[0] + " " + frostingList[0] + " "+ type
+                Productname = flavorList[0] + " " + frostingList[0] + " " + type
             };
         await product.CreateProductAsync(prodToAdd);
 
@@ -517,7 +584,7 @@
 
         if (type == " Sheet Cake")
         {
-            await AddToCustomerAddonList(prodToAdd.Id, flavorList, sheetFlavors);     
+            await AddToCustomerAddonList(prodToAdd.Id, flavorList, sheetFlavors);
             await AddToCustomerAddonList(prodToAdd.Id, sizeList, sheetSizes);
         }
 
