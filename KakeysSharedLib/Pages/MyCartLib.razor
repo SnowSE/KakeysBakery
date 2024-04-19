@@ -72,11 +72,10 @@ else
 
     private string Username = "";
     private string email = "";
-    //HttpClient client = clien;
+    List<ToastMessage> messages = new List<ToastMessage>();
     Customer? currentCustomer = new();
     List<Cart>? allCartItemsForCustomer = new();
     bool IsDataLoaded = false;
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -193,7 +192,6 @@ else
         IsDataLoaded = true;
     }
 
-    List<ToastMessage> messages = new List<ToastMessage>();
 
     private void CreateToastMessage(ToastType type, string message)
     {

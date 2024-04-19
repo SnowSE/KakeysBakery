@@ -13,6 +13,8 @@
 @inject HttpClient client
 @inject IAuthenticationManager authManager
 
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
 <h3 class="pageTitle">Order</h3>
 @if (IsDataLoaded)
 {
@@ -106,9 +108,9 @@ else
     private Task<AuthenticationState>? authenticationState { get; set; }
     [Inject] protected PreloadService PreloadService { get; set; } = default!;
 
+    List<ToastMessage> messages = new List<ToastMessage>();
     private Modal modal = default!;
     bool IsDataLoaded = false;
-
 
     CartManager? manager;
 
@@ -129,15 +131,35 @@ else
     {
         PreloadService.Show(SpinnerColor.Light, "Adding to Cart...");
 
-        if (!(await authManager!.IsUserLoggedIn()))
+        try
         {
-            navManager.NavigateTo("Account/Login?redirectUri=/Order", forceLoad: true);
-            return;
+            if (!(await authManager!.IsUserLoggedIn()))
+            {
+                navManager.NavigateTo("Account/Login?redirectUri=/Order", forceLoad: true);
+                return;
+            }
+
+            string email = await authManager.GetUserEmail();
+            await manager!.AddToCart(email);
+
+            CreateToastMessage(ToastType.Success, "Added to cart!");
+        }
+        catch
+        {
+            CreateToastMessage(ToastType.Danger, "Error occured when adding to cart");
         }
 
-        string email = await authManager.GetUserEmail();
-        await manager!.AddToCart(email);
-
         PreloadService.Hide();
+    }
+
+
+    private void CreateToastMessage(ToastType type, string message)
+    {
+        messages.Add(
+            new ToastMessage
+                {
+                    Type = type,
+                    Message = message,
+                });
     }
 }
