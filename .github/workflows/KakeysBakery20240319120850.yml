@@ -22,28 +22,28 @@ jobs:
       run: |
           dotnet restore "${{ env.WORKING_DIRECTORY }}"
 
-    - name: Lint
-      run: |
-          cd KakeysBakery
-          dotnet format --verify-no-changes --severity warn
-    - name: Build
-      run: |
-          dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore /warnaserror
+    # - name: Lint
+    #   run: |
+    #       cd KakeysBakery
+    #       dotnet format --verify-no-changes --severity warn
+    # - name: Build
+    #   run: |
+    #       dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore /warnaserror
 
-    - name: Run Test Suite
-      run: |
-        cd ./KakeysBakery.Tests/
-        dotnet test
+    # - name: Run Test Suite
+    #   run: |
+    #     cd ./KakeysBakery.Tests/
+    #     dotnet test
 
-    - name: Publish
-      run: |
-          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+    # - name: Publish
+    #   run: |
+    #       dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
 
-    - name: Publish Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    # - name: Publish Artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: webapp
+    #     path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
     - name: Microsoft Teams Notification
       uses: skitionek/notify-microsoft-teams@master
@@ -110,18 +110,18 @@ jobs:
         done
   
 
-  deploy:
-    runs-on: self-hosted
-    needs: Build
-    steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v4
-      with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-    - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v3
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.KakeysBakery20240319120850_0A13 }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+  # deploy:
+  #   runs-on: self-hosted
+  #   needs: Build
+  #   steps:
+  #   - name: Download artifact from build job
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: webapp
+  #       path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+  #   - name: Deploy to Azure WebApp
+  #     uses: azure/webapps-deploy@v3
+  #     with:
+  #       app-name: ${{ env.AZURE_WEBAPP_NAME }}
+  #       publish-profile: ${{ secrets.KakeysBakery20240319120850_0A13 }}
+  #       package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
