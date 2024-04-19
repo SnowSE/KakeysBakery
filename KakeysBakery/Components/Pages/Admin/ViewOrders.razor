@@ -45,9 +45,9 @@
                     {
                         <tr>
                             <td>@_purchase.Customer!.Forename</td>
+                            <td>@_purchase.Customer.Email</td>
                             <td>@_purchase.Orderdate.ToString()</td>
                             <td>@_purchase.Fulfillmentdate.ToString()</td>
-                            <td>@_purchase.Customer.Email</td>
                             @if (showProducts)
                             {
                                 <td>
