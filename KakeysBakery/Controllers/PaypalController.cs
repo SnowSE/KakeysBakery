@@ -134,7 +134,7 @@ namespace KakeysBakery.Controllers
             // Configure Redirect Urls here with RedirectUrls object  
             var redirUrls = new RedirectUrls()
             {
-                cancel_url = "https://localhost:7196/",
+                cancel_url = _configuration.GetValue<string>("BaseUri"),   //changed to 
                 return_url = redirectUrl
             };
             // Adding Tax, shipping and Subtotal details  

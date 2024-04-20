@@ -1,8 +1,7 @@
-﻿@* @page "/OrderTest"
-
+﻿@page "/OrderTest"
 @using KakeysBakery.Components.PayPalAuth.Orders
-@using PayPal.Api
 @using Refit
+
 
 
 @rendermode InteractiveServer
@@ -17,13 +16,14 @@
     //var paypalapi = RestService.For<IPayments>("https://api-m.sandbox.paypal.com/");
 
 
-    public void testorder()
+    public async void testorder()
     {
-        var paypalapi = RestService.For<Order>("https://api-m.sandbox.paypal.com/");
+        var paypalapi = RestService.For<IOrders>("https://api-m.sandbox.paypal.com/");
         //paypalapi.OrdersCreate();
     }
 
     public void captureorder()
     {
+        
     }
-} *@
+}
