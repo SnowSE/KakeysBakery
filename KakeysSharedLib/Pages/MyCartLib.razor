@@ -82,13 +82,15 @@ else
     </div>
 }
 
+<button @onclick="paypalbutton">paypal</button>
+
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private string email = "";
     List<ToastMessage> messages = new List<ToastMessage>();
-    Customer? currentCustomer = new();
+    Data.Customer? currentCustomer = new();
     List<Cart>? allCartItemsForCustomer = new();
     bool IsDataLoaded = false;
 
@@ -112,7 +114,7 @@ else
 
         try
         {
-            currentCustomer = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+            currentCustomer = await client.GetFromJsonAsync<Data.Customer>($"api/customer/get_by_email/{email}");
             var products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
 
             //get the cart and then filter itself to only get items connected to the current customer
@@ -198,9 +200,9 @@ else
             return; 
         }
         await updateLocalCartToDatabaseAsync(allCartItemsForCustomer!);
-        
+
         //TODO: ADD PAY PALL Logic and redirection HERE
-        
+
         int purchaseId = await client.GetFromJsonAsync<int>($"api/cart/CheckoutLogic/{customerId}");
         if (purchaseId > 0)
         {
@@ -237,5 +239,10 @@ else
             await client.PatchAsJsonAsync<Cart>($"api/cart/update/", cart);
         }
         catch { }
+    }
+    private void paypalbutton()
+    {
+        
+       //var paypalapi = RestService.For<IOrders>("https://api-m.sandbox.paypal.com/");
     }
 }

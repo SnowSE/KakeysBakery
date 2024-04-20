@@ -25,6 +25,7 @@
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+      <PackageReference Include="Refit" Version="7.0.0" />
       <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
       <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.2" />
