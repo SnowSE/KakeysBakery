@@ -2600,7 +2600,9 @@ namespace KakeysBakery.Components.PayPalAuth.Payment
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
+#pragma warning disable CS8981
     public partial class details
+#pragma warning restore CS8981
     {
 
         private IDictionary<string, object> _additionalProperties;
