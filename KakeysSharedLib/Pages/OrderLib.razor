@@ -13,7 +13,7 @@
 @inject HttpClient client
 @inject IAuthenticationManager authManager
 
-<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="1500" Placement="ToastsPlacement.TopRight" />
 
 <h3 class="pageTitle">Order</h3>
 @if (IsDataLoaded)
@@ -81,7 +81,7 @@
                         @onclick='async () => {
                                await manager.SelectGoodTypeCard(type.Id);
                                if(type.Basegood == "Cake"){
-                                   navManager.NavigateTo("https://localhost:7196/Customize");
+                                   navManager.NavigateTo("/Customize");
                                }
                                await modal.ShowAsync();
                         }'>
@@ -149,6 +149,7 @@ else
             CreateToastMessage(ToastType.Danger, "Error occured when adding to cart");
         }
 
+        await modal.HideAsync();
         PreloadService.Hide();
     }
 
