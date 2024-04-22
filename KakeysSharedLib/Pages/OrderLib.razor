@@ -124,11 +124,18 @@ else
     {
         PreloadService.Show(SpinnerColor.Light, "Loading data...");
 
-        manager = new(client);
-        await manager.PopulateAvailableGoodTypes();
+        try
+        {
+            manager = new(client);
+            await manager.PopulateAvailableGoodTypes();
 
-        await authManager.SetAuthState(authenticationState);
-        IsDataLoaded = true;
+            await authManager.SetAuthState(authenticationState);
+            IsDataLoaded = true;
+        }
+        catch
+        {
+            CreateToastMessage(ToastType.Danger, "Error loading data");
+        }
 
         PreloadService.Hide();
     }
