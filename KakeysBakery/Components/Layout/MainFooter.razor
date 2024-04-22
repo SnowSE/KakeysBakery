@@ -35,16 +35,16 @@
 <footer class="footer mt-auto py-4 d-flex justify-content-center layout" data-bs-theme="dark">
     <div class="container d-flex align-items-center justify-content-center">
         <div class="col-md-4 d-flex align-items-center">
-            <span class="d-flex align-items-center justify-content-center text-body-secondary">© 2024 Kakey's Bakery</span>
+            <h4 class="d-flex align-items-center justify-content-center text-body-secondary">© 2024 Kakey's Bakery</h4>
         </div>
 
         <ul class="nav col-md-4 justify-content-end list-unstyled d-flex ps-5 pe-lg-5">
-            <li class="ms-lg-3"><a class="text-body-secondary" href="https://m.facebook.com/people/Kakeys-Bakery/100092969621403/"><i class="bi bi-facebook" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="https://m.facebook.com/people/Kakeys-Bakery/100092969621403/"><h4 class="bi bi-facebook" /></a></li>
             @* <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-instagram" /></a></li> *@
             @* <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-twitter" /></a></li> *@
-            <li class="ms-lg-3"><a class="text-body-secondary" @onclick="async () => {await EmailModal!.ShowAsync();}"><i class=" bi bi-envelope-at" /></a></li>
-            <li class="ms-lg-3"><a class="text-body-secondary" @onclick="async () => {await PhoneModal!.ShowAsync();}"><i class="bi bi-telephone" /></a></li>
-            <li class="ms-lg-3"><a class="text-body-secondary" @onclick="async () => {await LocationModal!.ShowAsync();}"><i class="bi bi-building" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#" @onclick="async () => {await EmailModal!.ShowAsync();}"><h4 class="bi bi-envelope-at" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#" @onclick="async () => {await PhoneModal!.ShowAsync();}"><h4 class="bi bi-telephone" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#" @onclick="async () => {await LocationModal!.ShowAsync();}"><h4 class="bi bi-building" /></a></li>
         </ul>
     </div>
 </footer>
