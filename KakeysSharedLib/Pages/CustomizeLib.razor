@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using BlazorBootstrap
+@using TextCopy
 
 @inject IAddonService addon
 @inject IBaseGoodService basegood
@@ -17,10 +18,12 @@
 @inject IProductAddonBasegoodService prod_basegood_addon
 @inject ICartService cart
 
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
 <body>
     <div class="mt-5" style="padding: 2%">
 
-    <h3  >This form is for pastries with a small to medium amount of customization. If you wish for a highly customized cake or a cake with lots of detail, please contact me directly [link to contact me]</h3>
+        <h3>This form is for pastries with a small to medium amount of customization. If you wish for a highly customized cake or a cake with lots of detail, please contact me directly <a href="mailto:kakeysbakery@yahoo.com">kakeysbakery@yahoo.com</a></h3>
     </div>
     <div class="mt-5 totalPage ">
         <div class="d-flex flex-wrap justify-content-center">
@@ -53,9 +56,11 @@
 
 <Modal @ref="WeddingCake" Title="Wedding Cake" >
     <BodyTemplate>
-        <p>Sorry, at this time I do not accept customizing wedding cakes online. If you wish to order a wedding cake from me, you can contact me at _____ or _____ anytime to set up a consultation and I will get back with you as soon as I can.</p>
+        <p>Sorry, at this time I do not accept customizing wedding cakes online. If you wish to order a wedding cake from me, you can contact me at <a href="mailto:kakeysbakery@yahoo.com">kakeysbakery@yahoo.com</a> or <a href="tel:8017214703">(801) 721-4703</a> anytime to set up a consultation and I will get back with you as soon as I can.</p>
     </BodyTemplate>
     <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await WeddingCake.HideAsync(); await ClipboardService.SetTextAsync("8017214703"); CreateToastMessage(ToastType.Success, "Copied to Clipboard!");}'>Copy Phone to Clipboard</Button>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await WeddingCake.HideAsync(); await ClipboardService.SetTextAsync("kakeysbakery@yahoo.com"); CreateToastMessage(ToastType.Success, "Copied to Clipboard!");}'>Copy Email to Clipboard</Button>
         <Button Color="ButtonColor.Secondary" @onclick="async () => { await WeddingCake.HideAsync(); }">Close</Button>
     </FooterTemplate>
 </Modal>
@@ -394,6 +399,7 @@
 </Modal>
 
 @code {
+    List<ToastMessage> messages = new List<ToastMessage>();
     int iterator = 1;
     int layers = 1;
     int quantity = 1;
@@ -423,6 +429,17 @@
     List<string> frostingList = new();
     List<string> fillingList = new();
     List<string> flavorList = new();
+
+    private void CreateToastMessage(ToastType type, string message)
+    {
+        messages.Add(
+            new ToastMessage
+                {
+                    Type = type,
+                    Message = message,
+                    AutoHide = true
+                });
+    }
 
     private void LayersChanged(ChangeEventArgs e)
     {
