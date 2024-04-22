@@ -6,6 +6,8 @@
 @using Microsoft.EntityFrameworkCore
 @using KakeysSharedLib.Data
 
+@attribute [Authorize(Roles = "Admin")]
+
 <div class="my-5 p-3" style="background-color: white;">
     <BlazoredTextEditor @ref="@QuillHtml">
         <ToolbarContent>

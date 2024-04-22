@@ -3,6 +3,7 @@
 @inject HttpClient client
 @inject IPurchaseService purchaseService
 
+@attribute [Authorize(Roles = "Admin")]
 
 @rendermode InteractiveServer
 <h1>ORDERS</h1>

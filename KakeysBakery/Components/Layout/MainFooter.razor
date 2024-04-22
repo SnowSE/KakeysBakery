@@ -12,7 +12,7 @@
 
 <Modal @ref="PhoneModal" Title="Phone Information">
     <BodyTemplate>
-        <p>You can call or text me between 9am - 4pm at (801) 721-4703 </p>
+        <p>You can call or text me between 9am - 4pm at <a href="tel:8017214703">(801) 721-4703</a> </p>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Primary" @onclick='async () => { await PhoneModal!.HideAsync(); await ClipboardService.SetTextAsync("(801) 721-4703"); CreateToastMessage(ToastType.Success, "Copied to Clipboard!");}'>Copy to Clipboard</Button>
@@ -22,7 +22,7 @@
 
  <Modal @ref="EmailModal" Title="Email Information">
     <BodyTemplate>
-        <p>You can reach me at kakeysbakery@yahoo.com and I will get back to you within 1-2 buisness days</p>
+        <p>You can reach me at <a href="mailto:kakeysbakery@yahoo.com">kakeysbakery@yahoo.com</a> and I will get back to you within 1-2 buisness days</p>
         </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Primary" @onclick='async () => { await EmailModal!.HideAsync(); await ClipboardService.SetTextAsync("kakeysbakery@yahoo.com"); CreateToastMessage(ToastType.Success, "Copied to Clipboard!");}'>Copy to Clipboard</Button>
@@ -35,6 +35,7 @@
         <p>Buisness location: 123 w center Ephraim 84627</p>
     </BodyTemplate>
     <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await EmailModal!.HideAsync(); await ClipboardService.SetTextAsync("123 w center Ephraim 84627"); CreateToastMessage(ToastType.Success, "Copied to Clipboard!");}'>Copy to Clipboard</Button>
         <Button Color="ButtonColor.Danger" @onclick="async () => { await LocationModal!.HideAsync(); }">Close</Button>
     </FooterTemplate>
 </Modal> 
@@ -42,16 +43,16 @@
 <footer class="footer mt-auto py-4 d-flex justify-content-center layout" data-bs-theme="dark">
     <div class="container d-flex align-items-center justify-content-center">
         <div class="col-md-4 d-flex align-items-center">
-            <span class="d-flex align-items-center justify-content-center text-body-secondary">© 2024 Kakey's Bakery</span>
+            <h4 class="d-flex align-items-center justify-content-center text-body-secondary">© 2024 Kakey's Bakery</h4>
         </div>
 
         <ul class="nav col-md-4 justify-content-end list-unstyled d-flex ps-5 pe-lg-5">
-            <li class="ms-lg-3"><a class="text-body-secondary" href="https://m.facebook.com/people/Kakeys-Bakery/100092969621403/"><i class="bi bi-facebook" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="https://m.facebook.com/people/Kakeys-Bakery/100092969621403/"><h4 class="bi bi-facebook" /></a></li>
             @* <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-instagram" /></a></li> *@
             @* <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-twitter" /></a></li> *@
-            <li class="ms-lg-3"><a class="text-body-secondary" @onclick="async () => {await EmailModal!.ShowAsync();}"><i class=" bi bi-envelope-at" /></a></li>
-            <li class="ms-lg-3"><a class="text-body-secondary" @onclick="async () => {await PhoneModal!.ShowAsync();}"><i class="bi bi-telephone" /></a></li>
-            <li class="ms-lg-3"><a class="text-body-secondary" @onclick="async () => {await LocationModal!.ShowAsync();}"><i class="bi bi-building" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#" @onclick="async () => {await EmailModal!.ShowAsync();}"><h4 class="bi bi-envelope-at" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#" @onclick="async () => {await PhoneModal!.ShowAsync();}"><h4 class="bi bi-telephone" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#" @onclick="async () => {await LocationModal!.ShowAsync();}"><h4 class="bi bi-building" /></a></li>
         </ul>
     </div>
 </footer>
@@ -77,6 +78,7 @@
                 {
                     Type = type,
                     Message = message,
+                    AutoHide = true
                 });
     }
 }

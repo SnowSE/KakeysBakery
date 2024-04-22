@@ -3,6 +3,7 @@
 @using BlazorBootstrap
 @using KakeysSharedLib.Components
 @using KakeysSharedLib.OAuth
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
@@ -12,6 +13,8 @@
 @inject NavigationManager navManager
 @inject HttpClient client
 @inject IAuthenticationManager authManager
+
+
 
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="1500" Placement="ToastsPlacement.TopRight" />
 
@@ -174,6 +177,7 @@ else
                 {
                     Type = type,
                     Message = message,
+                    AutoHide = true
                 });
     }
 }
