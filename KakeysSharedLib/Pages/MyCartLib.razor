@@ -157,6 +157,7 @@ else
         decimal total = 0.0m;
         foreach (var pab in cart.Product!.ProductAddonBasegoods)
         {
+            if (cart.Productid != pab.Productid) { continue; }
 
             if (pab.Basegood is not null && pab.Basegood.Suggestedprice is not null)
             {
