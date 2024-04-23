@@ -1,8 +1,8 @@
 ﻿namespace KakeysBakery.Data;
 
-public static class FeatureFlag
+public static class FeatureFlagService
 {
-    public static bool IsAvailable = false;
+    public static bool IsAvailable { get; set; }
 
     public static void SetVariable(bool value)
     {

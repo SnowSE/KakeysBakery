@@ -9,7 +9,7 @@ namespace KakeysSharedLib.Telemetry;
 
 public class Metrics
 {
-    public static string Name = "";
+    public static string Name = "KakeyMetrics";
     public static Meter DashboardMeter = new(Name, "1.0.0");
 
     public static Counter<int> homePageAccessCount = DashboardMeter.CreateCounter<int>("homepage.count");
