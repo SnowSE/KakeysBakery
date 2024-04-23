@@ -15,7 +15,7 @@ namespace KakeysBakery.Controllers
         private readonly IHttpContextAccessor httpContextAccessor;
         readonly IConfiguration _configuration;
         readonly IAuthenticationManager authManager;
-        public HomeController(IAuthenticationManager authManger, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
+        public HomeController( IAuthenticationManager authManger, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
         {
             _logger = logger;
             httpContextAccessor = context;
@@ -176,14 +176,16 @@ namespace KakeysBakery.Controllers
         }
 
         [CascadingParameter]
-        private Task<AuthenticationState>? authenticationState { get; set; }
+        private Task<AuthenticationState>? payPalAuthenticationState { get; set; }
         private async Task<decimal> getPrice()
         {
+            
+
             HttpClient client = new HttpClient();
             KakeysSharedLib.Data.Customer? currentCustomer = new();
-            await authManager.SetAuthState(authenticationState);
+            await authManager.SetAuthState(payPalAuthenticationState);
             string email = await authManager.GetUserEmail();
-            currentCustomer = await client.GetFromJsonAsync<KakeysSharedLib.Data.Customer>($"api/customer/get_by_email/{email}");
+            currentCustomer = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
 
 
 
