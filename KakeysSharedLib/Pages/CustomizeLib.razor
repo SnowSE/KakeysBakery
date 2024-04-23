@@ -273,6 +273,12 @@
                         <input class="form-control" @onchange="LayersChanged" min="1" max="4" type="number" />
                     </td>
                 </tr>
+                <tr>
+                    <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
+                    <label for="html">Fondant</label>
+                    <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
+                    <label for="css">Frosting</label>
+                </tr>
                 @for (int i = 0; i < layers; i++)
                 {
                     int iterator = i + 1;
@@ -291,13 +297,7 @@
                             </select>
                         </td>
                     </tr>
-                    <tr>
-                        <label>Frosting or Fondant</label>
-                        <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
-                        <label for="html">Fondant</label>
-                        <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
-                        <label for="css">Frosting</label>
-                    </tr>
+                   
                     @if (isFrosting)
                     {
                         <tr>
@@ -338,7 +338,7 @@
                     </tr>
 
                     <tr>
-                        @if (layers > 1)
+                        @if (layers > 1 && i < layers-1)
                         {
                             <td>
                                 <label>Any flavored fillings between layers @(iterator) and @(iterator + 1)</label>
@@ -356,7 +356,7 @@
                                 </select>
                             </td>
                         }
-                        else
+                        else if (layers == 1)
                         {
                             <td>
 
