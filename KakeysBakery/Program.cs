@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using KakeysBakery.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,6 +100,8 @@ builder.Services.AddScoped(o =>
     return client;
 });
 
+//for feature flag requirement
+FeatureFlag.SetVariable(builder.Configuration.GetValue<string>("FeatureFlag") == "true"); 
 builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
