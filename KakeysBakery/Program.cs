@@ -5,6 +5,7 @@ using Auth0.AspNetCore.Authentication;
 using KakeysBakery.Components;
 using KakeysBakery.Components.AuthenticationStateSyncer;
 using KakeysBakery.Components.OAuth;
+using KakeysBakery.Data;
 using KakeysBakery.Services;
 
 using KakeysSharedLib.Pages;
@@ -18,7 +19,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
-using KakeysBakery.Data;
 
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
