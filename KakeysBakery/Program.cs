@@ -7,13 +7,7 @@ using KakeysBakery.Components.AuthenticationStateSyncer;
 using KakeysBakery.Components.OAuth;
 using KakeysBakery.Services;
 
-using OpenTelemetry.Logs;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-
 using KakeysSharedLib.Pages;
-
 using KakeysSharedLib.Services.Implementations;
 using KakeysSharedLib.Telemetry;
 
@@ -25,6 +19,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using KakeysBakery.Data;
+
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
