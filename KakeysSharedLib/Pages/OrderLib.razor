@@ -146,7 +146,7 @@ else
 
         PreloadService.Hide();
         watch.Stop();
-        Metrics.histogramGreetings.Record((int)(watch.ElapsedMilliseconds));
+        Metrics.orderPageLoadTimes.Record((int)(watch.ElapsedMilliseconds));
     }
 
     public async Task AddToCart()

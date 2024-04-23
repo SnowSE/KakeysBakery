@@ -1,4 +1,5 @@
 ﻿@page "/AboutUs"
+@using KakeysSharedLib.Telemetry
 
 
 <h3>AboutUs</h3>
@@ -15,5 +16,8 @@
 
 
 @code {
-
+    protected override void OnInitialized()
+    {
+        Metrics.AboutUsAccessCount.Add(1);
+    }
 }

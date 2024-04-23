@@ -1,5 +1,6 @@
 ﻿@page "/admin/edit-product"
 @using BlazorBootstrap
+@using KakeysBakery.Data
 @inject IAddonFlavorService addonFlavor
 @inject IAddonService addon
 @inject IAddonTypeService addonType
@@ -12,16 +13,19 @@
 
 @rendermode InteractiveServer
 
-@if (!isEditingProduct && !isEditingTopping && !isAddingProduct && !isAddingTopping)
+@if (FeatureFlagService.IsAvailable)
 {
-    <div style="margin-top:2%">
+    @if (!isEditingProduct && !isEditingTopping && !isAddingProduct && !isAddingTopping)
+    {
+        <div style="margin-top:2%">
 
-        <p>What would you like to edit or add?</p>
-        <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("EditTopping")'>Edit or Delete a Topping</Button>
-        <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("EditProduct")'>Edit or Delete a Product</Button>
-        <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("AddProduct")'>Add New Product</Button>
-        <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("AddTopping")'>Add New Topping</Button>
-    </div>
+            <p>What would you like to edit or add?</p>
+            <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("EditTopping")'>Edit or Delete a Topping</Button>
+            <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("EditProduct")'>Edit or Delete a Product</Button>
+            <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("AddProduct")'>Add New Product</Button>
+            <Button Color="ButtonColor.Light" Active="true" @onclick='() => ShowOption("AddTopping")'>Add New Topping</Button>
+        </div>
+    }
 }
 
 @if (errorString is not null)
@@ -254,6 +258,7 @@
 
         baseGoodFlavors = await baseGoodFlavor.GetBaseGoodFlavorListAsync();
         baseGoodTypes = await baseGoodType.GetBaseGoodTypeListAsync();
+
     }
 
     public async Task SelectChanged(ChangeEventArgs e)

@@ -3,6 +3,7 @@
 
 @using KakeysSharedLib.Data
 @using KakeysSharedLib.Services.Interfaces
+@using KakeysSharedLib.Telemetry
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using BlazorBootstrap
@@ -522,6 +523,7 @@
         await PopulateLists();
         await authManager.SetAuthState(authenticationState);
         if (!(await authManager!.IsUserLoggedIn())) warnNotLoggedIn = "You are not logged in, changes to cart will not be saved";
+        Metrics.CustomizeAccessCount.Add(1);
     }
 
 

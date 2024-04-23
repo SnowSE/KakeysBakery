@@ -9,7 +9,7 @@ using KakeysBakery.Services;
 
 using KakeysSharedLib.Pages;
 using KakeysSharedLib.Services.Implementations;
-//using KakeysSharedLib.Telemetry;
+using KakeysSharedLib.Telemetry;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -24,6 +24,7 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,7 +101,8 @@ builder.Services.AddScoped(o =>
 });
 
 //for feature flag requirement
-FeatureFlag.SetVariable(builder.Configuration.GetValue<string>("FeatureFlag") == "true"); 
+FeatureFlagService.SetVariable(builder.Configuration.GetValue<string>("FeatureFlag") == "true");
+
 builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
@@ -149,17 +151,17 @@ builder.Logging.AddOpenTelemetry(options =>
 
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(resource => resource.AddService("FirstTrace"))
-    //.WithTracing(tracing => tracing
-    //    .AddSource(serviceName)
-    //    .AddSource(Traces.Name)
-    //    .AddSource(Traces.Name2)
-    //    .AddAspNetCoreInstrumentation()
-    //    //.AddConsoleExporter()
-    //    .AddOtlpExporter(o =>
-    //        o.Endpoint = new Uri(otelEndpoint)))
+    .WithTracing(tracing => tracing
+        //.AddSource(serviceName)
+        //.AddSource(Traces.Name)
+        //.AddSource(Traces.Name2)
+        .AddAspNetCoreInstrumentation()
+        .AddConsoleExporter()
+        .AddOtlpExporter(o =>
+            o.Endpoint = new Uri(otelEndpoint)))
     .WithMetrics(metrics => metrics
         .AddAspNetCoreInstrumentation()
-        //.AddMeter(Metrics.Name)
+        .AddMeter(Metrics.Name)
         .AddConsoleExporter()
         .AddOtlpExporter(o =>
             o.Endpoint = new Uri(otelEndpoint)));
