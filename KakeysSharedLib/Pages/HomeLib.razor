@@ -1,4 +1,5 @@
 @page "/"
+@using KakeysSharedLib.Telemetry
 
 <div class="d-flex justify-content-center position-relative my-3 ">
     <img class="bshadow" id="cupcake1" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/SweetnessCupcakes.jpg" />
@@ -17,3 +18,10 @@
         Join us in savoring the sweetness of diversity and making a difference, one scrumptious treat at a time.
     </div>
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Metrics.homePageAccessesCount.Add(1);
+    }
+}

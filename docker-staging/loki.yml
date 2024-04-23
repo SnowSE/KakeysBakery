@@ -4,8 +4,6 @@ server:
   http_listen_port: 3100
   grpc_listen_port: 9096    # Default
 
-
-
 common:
   path_prefix: /loki
   storage:
