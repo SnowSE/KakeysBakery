@@ -9,7 +9,7 @@ using KakeysBakery.Services;
 
 using KakeysSharedLib.Pages;
 using KakeysSharedLib.Services.Implementations;
-using KakeysSharedLib.Telemetry;
+//using KakeysSharedLib.Telemetry;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -159,7 +159,7 @@ builder.Services.AddOpenTelemetry()
     //        o.Endpoint = new Uri(otelEndpoint)))
     .WithMetrics(metrics => metrics
         .AddAspNetCoreInstrumentation()
-        .AddMeter(Metrics.Name)
+        //.AddMeter(Metrics.Name)
         .AddConsoleExporter()
         .AddOtlpExporter(o =>
             o.Endpoint = new Uri(otelEndpoint)));
