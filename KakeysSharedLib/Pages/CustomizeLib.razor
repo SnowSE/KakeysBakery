@@ -1,13 +1,16 @@
 ﻿
 @page "/Customize"
 
-@* @using Microsoft.AspNetCore.Components.Authorization *@
 @using KakeysSharedLib.Data
 @using KakeysSharedLib.Services.Interfaces
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using BlazorBootstrap
 @using TextCopy
+@using KakeysSharedLib.OAuth
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Net.Http.Json;
 
 @inject IAddonService addon
 @inject IBaseGoodService basegood
@@ -17,6 +20,9 @@
 @inject ICustomerService customer
 @inject IProductAddonBasegoodService prod_basegood_addon
 @inject ICartService cart
+@inject IAuthenticationManager authManager
+@inject NavigationManager navManager
+@inject HttpClient client
 
 <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
@@ -69,6 +75,13 @@
     <BodyTemplate>
         <table class="table table-borderless">
             <tbody>
+                @if (warnNotLoggedIn is not null)
+                { <tr>
+                    <td>
+                        <label style="color: red; font-weight: bold;">@warnNotLoggedIn</label>
+                    </td>
+                  </tr>
+                }
                 <tr>
                     <td>
                         <label>What frosting flavor do you want</label>
@@ -156,6 +169,14 @@
     <BodyTemplate>
         <table class="table table-borderless">
             <tbody>
+                @if (warnNotLoggedIn is not null)
+                {
+                    <tr>
+                        <td>
+                            <label style="color: red; font-weight: bold;">@warnNotLoggedIn</label>
+                        </td>
+                    </tr>
+                }
                 <tr>
                     <td>
 
@@ -264,6 +285,14 @@
     <BodyTemplate>
         <table class="table table-borderless">
             <tbody>
+                @if (warnNotLoggedIn is not null)
+                {
+                    <tr>
+                        <td>
+                            <label style="color: red; font-weight: bold;">@warnNotLoggedIn</label>
+                        </td>
+                    </tr>
+                }
                 <tr>
                     <td>
                         <label>How many layers</label> @*max of 4 right now*@
@@ -399,6 +428,9 @@
 </Modal>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
     List<ToastMessage> messages = new List<ToastMessage>();
     int iterator = 1;
     int layers = 1;
@@ -406,6 +438,7 @@
     bool isFrosting = true;
     string? description;
     string? validationString;
+    string? warnNotLoggedIn;
 
     Modal WeddingCake = new Modal();
     Modal Cupcake = new Modal();
@@ -487,6 +520,8 @@
     {
         await GetNeededData();
         await PopulateLists();
+        await authManager.SetAuthState(authenticationState);
+        if (!(await authManager!.IsUserLoggedIn())) warnNotLoggedIn = "You are not logged in, changes to cart will not be saved";
     }
 
 
@@ -589,7 +624,11 @@
     {
         if (!IsValidInput())
             return;
-
+        if (!(await authManager!.IsUserLoggedIn()))
+        {
+            navManager.NavigateTo("Account/Login?redirectUri=/Order", forceLoad: true);
+            return;
+        }
         Product prodToAdd = new()
             {
                 Description = description,
@@ -620,13 +659,20 @@
 
         ResetLists();
 
-        //TODO: get customer ID
-        // Once we get the CustomerId, uncomment this
-        await AddToCart(prodToAdd.Id, quantity, 18);
+        int id = await get_customer_Id();
+        await AddToCart(prodToAdd.Id, quantity, id);
 
         //await cart.CreateCartAsync(new() { Productid = prodToAdd.Id, Quantity = cupcakeDozens, Customerid = });
 
         await Cupcake.HideAsync();
+        await SheetCake.HideAsync();
+        await RoundCake.HideAsync();
+    }
+    private async Task<int> get_customer_Id()
+    {
+        string email = await authManager.GetUserEmail();
+        var customer = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+        return customer!.Id;
     }
 
     public async Task AddAddon(int productId, int addonId)
