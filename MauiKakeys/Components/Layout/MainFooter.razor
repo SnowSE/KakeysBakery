@@ -1,13 +1,75 @@
-﻿<footer class="footer mt-auto py-4 d-flex justify-content-center layout" data-bs-theme="dark">
+﻿@using BlazorBootstrap
+@using TextCopy
+
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
+<Modal @ref="PhoneModal" Title="Phone Information">
+    <BodyTemplate>
+        <p>You can call or text me between 9am - 4pm at 555-555-5555 </p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await PhoneModal!.HideAsync(); await ClipboardService.SetTextAsync("5555555555"); CreateToastMessage(ToastType.Success, "Copied to Clipboard!");}'>Copy to Clipboard</Button>
+        <Button Color="ButtonColor.Danger" @onclick="async () => { await PhoneModal!.HideAsync(); }">Close</Button>
+    </FooterTemplate>
+</Modal>
+
+<Modal @ref="EmailModal" Title="Email Information">
+    <BodyTemplate>
+        <p>You can reach me at ____ and I will get back to you within 1-2 buisness days</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick='async () => { await EmailModal!.HideAsync(); await ClipboardService.SetTextAsync("example@email.com"); CreateToastMessage(ToastType.Success, "Copied to Clipboard!");}'>Copy to Clipboard</Button>
+        <Button Color="ButtonColor.Danger" @onclick="async () => { await EmailModal!.HideAsync(); }">Close</Button>
+    </FooterTemplate>
+</Modal>
+
+<Modal @ref="LocationModal" Title="Location Information">
+    <BodyTemplate>
+        <p>Buisness location: 123 w center Ephraim 84627</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Danger" @onclick="async () => { await LocationModal!.HideAsync(); }">Close</Button>
+    </FooterTemplate>
+</Modal>
+
+<footer class="footer mt-auto py-4 d-flex justify-content-center layout" data-bs-theme="dark">
     <div class="container d-flex align-items-center justify-content-center">
         <div class="col-md-4 d-flex align-items-center">
-            <span class="d-flex align-items-center justify-content-center text-body-secondary">© 2024 Company, Inc</span>
+            <h4 class="d-flex align-items-center justify-content-center text-body-secondary">© 2024 Kakey's Bakery</h4>
         </div>
 
         <ul class="nav col-md-4 justify-content-end list-unstyled d-flex ps-5 pe-lg-5">
-        <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-facebook" /></a></li>
-        <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-instagram" /></a></li>
-        <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-twitter" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="https://m.facebook.com/people/Kakeys-Bakery/100092969621403/"><h4 class="bi bi-facebook" /></a></li>
+            @* <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-instagram" /></a></li> *@
+            @* <li class="ms-lg-3"><a class="text-body-secondary" href="#"><i class="bi bi-twitter" /></a></li> *@
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#" @onclick="async () => {await EmailModal!.ShowAsync();}"><h4 class="bi bi-envelope-at" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#" @onclick="async () => {await PhoneModal!.ShowAsync();}"><h4 class="bi bi-telephone" /></a></li>
+            <li class="ms-lg-3"><a class="text-body-secondary" href="#" @onclick="async () => {await LocationModal!.ShowAsync();}"><h4 class="bi bi-building" /></a></li>
         </ul>
     </div>
 </footer>
+
+@code {
+    Modal? PhoneModal;
+    Modal? EmailModal;
+    Modal? LocationModal;
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+
+    protected override void OnInitialized()
+    {
+        PhoneModal = new();
+        EmailModal = new();
+        LocationModal = new();
+    }
+
+    private void CreateToastMessage(ToastType type, string message)
+    {
+        messages.Add(
+            new ToastMessage
+                {
+                    Type = type,
+                    Message = message,
+                });
+    }
+}

@@ -1,8 +1,7 @@
-﻿@* @page "/OrderTest"
-
-@using KakeysBakery.Components.PayPalAuth.Orders
-@using PayPal.Api
+﻿@page "/OrderTest"
+@* @using KakeysBakery.Components.PayPalAuth.Orders *@
 @using Refit
+
 
 
 @rendermode InteractiveServer
@@ -13,17 +12,18 @@
 <a class="btn btn-primary" href="/Home/PaymentWithPaypal">Pay Now</a>
 
 @code {
-    string orderid = "";
+    // string orderid = "";
     //var paypalapi = RestService.For<IPayments>("https://api-m.sandbox.paypal.com/");
 
 
     public void testorder()
     {
-        var paypalapi = RestService.For<Order>("https://api-m.sandbox.paypal.com/");
+        // var paypalapi = RestService.For<IOrders>("https://api-m.sandbox.paypal.com/");
         //paypalapi.OrdersCreate();
     }
 
     public void captureorder()
     {
+        
     }
-} *@
+}

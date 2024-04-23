@@ -55,7 +55,7 @@ services:
     volumes:
       - ./loki.yml:/etc/loki/local-config.yaml
     ports:
-      - 6100:3100
+      - 3215:3100
     networks:
       otel:
       

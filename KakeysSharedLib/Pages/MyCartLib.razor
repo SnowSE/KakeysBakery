@@ -11,7 +11,7 @@
 @inject NavigationManager navManager
 
 
-<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="1500" Placement="ToastsPlacement.TopRight" />
 
 @if (IsDataLoaded)
 {
@@ -37,7 +37,11 @@
                     @foreach (var cart in allCartItemsForCustomer!)
                     {
                         <tr class="cartCard flex-row">
-                            <td class="pe-4"><img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cookie.jpg" /></td>
+                            <td class="pe-4">
+                                <div class="d-flex position-relative order-container rounded-5 m-3 p-3">
+                                    <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/@(cart!.Product!.ProductAddonBasegoods!.FirstOrDefault()!.Basegood!.Type!.Basegood).jpg">
+                                </div>
+                            </td>
                             <td>
                                 <h1 class="itemName">@cart.Product!.Productname</h1>
                                 <p class="itemDescription">
@@ -47,7 +51,7 @@
                             <td class="ps-4 itemDescription">
                                 <input class="form-control" type="number" min="1" max="100" @bind="cart.Quantity" @oninput="@(e => UpdateCartQuantity(e, cart))" />
                             </td>
-                            <td class="px-3 itemDescription">$@getPrice(cart)</td>
+                            <td class="px-3 itemDescription"><h2>$@getPrice(cart)</h2></td>
                             <td class="d-flex justify-content-center">
                                 <button class="btn btn-danger" @onclick="async () => { await removeFromCartAsync(cart.Id);}">
                                     <h3 class="bi bi-trash rounded mt-2" />
@@ -62,7 +66,9 @@
                     </tr>
                 </tbody>
             </table>
-            <div><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
+            @if (allCartItemsForCustomer!.Count > 0) {
+                <div><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
+            }
         </div>
 
     </div>
@@ -76,15 +82,19 @@ else
     </div>
 }
 
+<a class="btn btn-primary" href="/Home/PaymentWithPaypal">Pay Now</a>
+
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private string email = "";
     List<ToastMessage> messages = new List<ToastMessage>();
-    Customer? currentCustomer = new();
+    Data.Customer? currentCustomer = new();
     List<Cart>? allCartItemsForCustomer = new();
     bool IsDataLoaded = false;
+
+    public static decimal currentPrice = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -106,7 +116,7 @@ else
 
         try
         {
-            currentCustomer = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+            currentCustomer = await client.GetFromJsonAsync<Data.Customer>($"api/customer/get_by_email/{email}");
             var products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
 
             //get the cart and then filter itself to only get items connected to the current customer
@@ -115,6 +125,7 @@ else
             List<ProductAddonBasegood>? PABs = await client.GetFromJsonAsync<List<ProductAddonBasegood>>("api/productAddonBasegood/getall");
             List<Basegood>? basegoods = await client.GetFromJsonAsync<List<Basegood>>("api/Basegood/getall");
             List<Addon>? addons = await client.GetFromJsonAsync<List<Addon>>("api/Addon/getall");
+            List<Basegoodtype>? types = await client.GetFromJsonAsync<List<Basegoodtype>>("api/Basegoodtype/getall");
             foreach (var cart in allCartItemsForCustomer)
             {
                 cart.Product = products!.Find(p => p.Id == cart.Productid);
@@ -123,9 +134,11 @@ else
                 {
                     pab.Addon = addons!.Find(a => a.Id == pab.Addonid);
                     pab.Basegood = basegoods!.Find(b => b.Id == pab.Basegoodid);
+                    pab.Basegood!.Type = types!.Find(t => t.Id == pab.Basegood.Typeid);
                 }
             }
 
+            setPrice();
         }
         catch (Exception e) { throw e; }
         StateHasChanged();
@@ -133,6 +146,7 @@ else
         await base.OnInitializedAsync();
         IsDataLoaded = true;
     }
+
     private decimal getPrice(List<Cart> carts)
     {
         decimal toReturn = 0m;
@@ -142,11 +156,18 @@ else
         }
         return toReturn;
     }
+
+    private void setPrice()
+    {
+        currentPrice = getPrice(allCartItemsForCustomer);
+    }
+
     private decimal getPrice(Cart cart)
     {
         decimal total = 0.0m;
         foreach (var pab in cart.Product!.ProductAddonBasegoods)
         {
+            if (cart.Productid != pab.Productid) { continue; }
 
             if (pab.Basegood is not null && pab.Basegood.Suggestedprice is not null)
             {
@@ -163,6 +184,7 @@ else
         }
         return total * (decimal)cart.Quantity;
     }
+
     private async Task updateLocalCartToDatabaseAsync(List<Cart> carts)
     {
         foreach (var cart in carts)
@@ -183,8 +205,16 @@ else
     public async Task CheckoutCart(int customerId)
     {
         IsDataLoaded = false;
+
+        if (allCartItemsForCustomer!.Count < 1) { 
+            CreateToastMessage(ToastType.Danger, "No items in cart");
+            IsDataLoaded = true; 
+            return; 
+        }
         await updateLocalCartToDatabaseAsync(allCartItemsForCustomer!);
+
         //TODO: ADD PAY PALL Logic and redirection HERE
+
         int purchaseId = await client.GetFromJsonAsync<int>($"api/cart/CheckoutLogic/{customerId}");
         if (purchaseId > 0)
         {
@@ -207,6 +237,7 @@ else
                 {
                     Type = type,
                     Message = message,
+                    AutoHide = true
                 });
     }
 

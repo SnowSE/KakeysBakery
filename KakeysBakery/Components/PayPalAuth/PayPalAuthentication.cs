@@ -1,11 +1,16 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
+﻿using System;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-using Microsoft.Extensions.Configuration;
+using MimeKit;
 
-namespace KakeysSharedLib.PayPalAuth;
+using Newtonsoft.Json.Linq;
+
+using static System.Net.WebRequestMethods;
+
+namespace KakeysBakery.Components.PayPalAuth;
+
 
 public class PayPalAuthentication(HttpClient client, IConfiguration config) : IPayPalAuthentication
 {

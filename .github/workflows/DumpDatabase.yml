@@ -1,0 +1,14 @@
+name: Dump Database
+on:
+  schedule:
+    - cron: "* * * * *"
+jobs:
+  backup:
+    runs-on: self-hosted
+    steps:
+      - name: Debugging Step
+        run: echo "Debugging step executed"
+      - name: backup
+        run: |
+          echo "Current directory: $(pwd)"
+          # Add your backup script here

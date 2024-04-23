@@ -35,6 +35,14 @@ jobs:
         cd ./KakeysBakery.Tests/
         dotnet test
 
+    # - name: Compile Code Coverage
+    #   run: |
+    #    cd KakeysBakery.Tests
+    #     rm -rf TestResults || true
+    #     dotnet test --collect:"XPlat Code Coverage" 
+    #     pycobertura show --format html --output /home/garion/coverage.html */*/*/coverage.cobertura.xml -s Search
+    #    cd ..
+
     - name: Publish
       run: |
           dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
@@ -83,6 +91,10 @@ jobs:
     steps:
     - name: Kubectl Up
       run: |
+        echo $GITHUB_RUN_ID
+
+        export NAMESPACE="kakey-1"
+
         docker build -t 144.17.92.12:5000/kakey-1/blazor-web:$GITHUB_RUN_ID .
         docker push 144.17.92.12:5000/kakey-1/blazor-web:$GITHUB_RUN_ID
 

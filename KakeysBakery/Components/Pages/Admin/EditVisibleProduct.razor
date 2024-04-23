@@ -8,6 +8,8 @@
 @inject IBaseGoodTypeService baseGoodType
 @inject IBasegoodSizeService baseGoodSize
 
+@attribute [Authorize(Roles = "Admin")]
+
 @rendermode InteractiveServer
 
 @if (!isEditingProduct && !isEditingTopping && !isAddingProduct && !isAddingTopping)
@@ -222,7 +224,6 @@
 </div>
 
 @code {
-
     public int selectedId;
     public int secondarySelectId = -1;
     public string productString = "";

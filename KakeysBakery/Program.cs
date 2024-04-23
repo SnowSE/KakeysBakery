@@ -7,15 +7,18 @@ using KakeysBakery.Components.AuthenticationStateSyncer;
 using KakeysBakery.Components.OAuth;
 using KakeysBakery.Services;
 
-using KakeysSharedLib.OAuth;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+
 using KakeysSharedLib.Pages;
-using KakeysSharedLib.PayPalAuth;
+
 using KakeysSharedLib.Services.Implementations;
-using KakeysSharedLib.Services.Interfaces;
+using KakeysSharedLib.Telemetry;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +62,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICustomerRoleService, CustomerRoleService>();
 builder.Services.AddScoped<IBasegoodSizeService, BaseGoodSizeService>();
 builder.Services.AddScoped<IAuthenticationManager, WebAuthenticationManager>();
-builder.Services.AddScoped<IPayPalAuthentication, PayPalAuthentication>();
+//builder.Services.AddScoped<IPayPalAuthentication, PayPalAuthentication>();
 builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services
@@ -91,7 +94,7 @@ builder.Services.AddScoped(o =>
     var client = new HttpClient
     {
         //BaseAddress = new Uri("https://localhost:7196")
-        BaseAddress = new Uri(builder.Configuration["BaseUri"]!)
+        BaseAddress = new Uri(builder.Configuration["BaseUri"] ?? "https://kakeysbakery20240319120850.azurewebsites.net/")
     };
     return client;
 });
@@ -126,6 +129,39 @@ builder.Services.AddSwaggerGen(c =>
               { securitySchema, new[] { "Bearer" } }
           });
 });
+
+
+
+const string serviceName = "otelService";
+const string otelEndpoint = "http://otel-collector:4317/";
+
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options
+        .SetResourceBuilder(
+            ResourceBuilder.CreateDefault().AddService(serviceName))
+        .AddOtlpExporter(o =>
+            o.Endpoint = new Uri(otelEndpoint))
+        .AddConsoleExporter();
+});
+
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource.AddService("FirstTrace"))
+    //.WithTracing(tracing => tracing
+    //    .AddSource(serviceName)
+    //    .AddSource(Traces.Name)
+    //    .AddSource(Traces.Name2)
+    //    .AddAspNetCoreInstrumentation()
+    //    //.AddConsoleExporter()
+    //    .AddOtlpExporter(o =>
+    //        o.Endpoint = new Uri(otelEndpoint)))
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddMeter(Metrics.Name)
+        .AddConsoleExporter()
+        .AddOtlpExporter(o =>
+            o.Endpoint = new Uri(otelEndpoint)));
+
 
 var app = builder.Build();
 
@@ -186,7 +222,6 @@ pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddAdditionalAssemblies(typeof(HomeLib).Assembly);
-
 app.Run();
 
 public partial class Program { };
