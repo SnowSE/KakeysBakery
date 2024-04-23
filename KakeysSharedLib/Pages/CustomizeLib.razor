@@ -4,6 +4,7 @@
 @* @using Microsoft.AspNetCore.Components.Authorization *@
 @using KakeysSharedLib.Data
 @using KakeysSharedLib.Services.Interfaces
+@using KakeysSharedLib.Telemetry
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using BlazorBootstrap
@@ -487,6 +488,7 @@
     {
         await GetNeededData();
         await PopulateLists();
+        Metrics.CustomizeAccessCount.Add(1);
     }
 
 
