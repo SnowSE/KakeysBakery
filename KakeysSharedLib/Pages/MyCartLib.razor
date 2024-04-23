@@ -160,6 +160,7 @@ else
 
     private void setPrice()
     {
+        if (allCartItemsForCustomer is null) { throw new NullReferenceException("Cart is empty!"); }
         currentPrice = getPrice(allCartItemsForCustomer);
     }
 

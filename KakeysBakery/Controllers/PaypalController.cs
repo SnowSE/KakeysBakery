@@ -211,7 +211,7 @@ namespace KakeysBakery.Controllers
                         total += (decimal)pab.Addon!.Suggestedprice;
                     }
                 }
-                finalTotal += total * (decimal)cart.Quantity;
+                finalTotal += total * (cart.Quantity ?? 0);
             }
             return finalTotal;
         }
