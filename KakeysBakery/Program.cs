@@ -222,7 +222,6 @@ pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddAdditionalAssemblies(typeof(HomeLib).Assembly);
-
 app.Run();
 
 public partial class Program { };

@@ -82,7 +82,7 @@ else
     </div>
 }
 
-<button @onclick="paypalbutton">paypal</button>
+<a class="btn btn-primary" href="/Home/PaymentWithPaypal">Pay Now</a>
 
 @code {
     [CascadingParameter]
@@ -93,6 +93,8 @@ else
     Data.Customer? currentCustomer = new();
     List<Cart>? allCartItemsForCustomer = new();
     bool IsDataLoaded = false;
+
+    public static decimal currentPrice = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,6 +138,7 @@ else
                 }
             }
 
+            setPrice();
         }
         catch (Exception e) { throw e; }
         StateHasChanged();
@@ -143,6 +146,7 @@ else
         await base.OnInitializedAsync();
         IsDataLoaded = true;
     }
+
     private decimal getPrice(List<Cart> carts)
     {
         decimal toReturn = 0m;
@@ -152,6 +156,12 @@ else
         }
         return toReturn;
     }
+
+    private void setPrice()
+    {
+        currentPrice = getPrice(allCartItemsForCustomer);
+    }
+
     private decimal getPrice(Cart cart)
     {
         decimal total = 0.0m;
@@ -174,6 +184,7 @@ else
         }
         return total * (decimal)cart.Quantity;
     }
+
     private async Task updateLocalCartToDatabaseAsync(List<Cart> carts)
     {
         foreach (var cart in carts)
@@ -241,10 +252,5 @@ else
             await client.PatchAsJsonAsync<Cart>($"api/cart/update/", cart);
         }
         catch { }
-    }
-    private void paypalbutton()
-    {
-        
-       //var paypalapi = RestService.For<IOrders>("https://api-m.sandbox.paypal.com/");
     }
 }
