@@ -5,6 +5,7 @@ using KakeysSharedLib.Pages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using PayPal.Api;
 
 namespace KakeysBakery.Controllers
@@ -15,7 +16,7 @@ namespace KakeysBakery.Controllers
         private readonly IHttpContextAccessor httpContextAccessor;
         readonly IConfiguration _configuration;
         readonly IAuthenticationManager authManager;
-        public HomeController( IAuthenticationManager authManger, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
+        public HomeController(IAuthenticationManager authManger, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
         {
             _logger = logger;
             httpContextAccessor = context;
@@ -124,7 +125,7 @@ namespace KakeysBakery.Controllers
             //Adding Item Details like name, currency, price etc  
             itemList.items.Add(new Item()
             {
-               
+
                 name = "Item Detail",
                 currency = "USD",
                 price = getPrice().ToString(),
@@ -153,7 +154,7 @@ namespace KakeysBakery.Controllers
             {
                 currency = "USD",
                 total = getPrice().ToString(), // Total must be equal to sum of tax, shipping and subtotal.  
-                                  //details = details
+                                               //details = details
             };
             var transactionList = new List<Transaction>();
             // Adding description about the transaction  
@@ -179,7 +180,7 @@ namespace KakeysBakery.Controllers
         private Task<AuthenticationState>? payPalAuthenticationState { get; set; }
         private async Task<decimal> getPrice()
         {
-            
+
 
             HttpClient client = new HttpClient();
             KakeysSharedLib.Data.Customer? currentCustomer = new();
@@ -209,8 +210,8 @@ namespace KakeysBakery.Controllers
                     {
                         total += (decimal)pab.Addon!.Suggestedprice;
                     }
-                }                
-            finalTotal += total * (decimal)cart.Quantity;
+                }
+                finalTotal += total * (decimal)cart.Quantity;
             }
             return finalTotal;
         }
