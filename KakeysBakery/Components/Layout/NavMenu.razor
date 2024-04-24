@@ -40,6 +40,16 @@
 
                 <div class="nav-item px-1 d-flex justify-content-center align-items-center">
                     <CascadingAuthenticationState>
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                <NavLink class="nav-link mx-1" href="/admin/edit-product" style="z-index:2" Match="NavLinkMatch.All">
+                                    <span class="nav-item d-none d-xl-inline p-3" href="#">Admin</span>
+                                    <span class="nav-item d-xl-none" href="#">Admin</span>
+
+                                </NavLink>
+                            </Authorized>
+                        </AuthorizeView>
+
                         <AuthorizeView>
                             <Authorized>
                                 <NavLink class="nav-link mx-1" href="Account/Logout" style="z-index:2" Match="NavLinkMatch.All">
@@ -56,16 +66,6 @@
 
                                 </NavLink>
                             </NotAuthorized>
-                    
-                        </AuthorizeView>
-                        <AuthorizeView Roles="Admin">
-                            <Authorized>
-                                <NavLink class="nav-link mx-1" href="/admin/edit-product" style="z-index:2" Match="NavLinkMatch.All">
-                                    <span class="nav-item d-none d-xl-inline p-3" href="#">Edit Products</span>
-                                    <span class="nav-item d-xl-none" href="#">Edit Products</span>
-
-                                </NavLink>
-                            </Authorized>
                         </AuthorizeView>
                     </CascadingAuthenticationState>
                 </div>
