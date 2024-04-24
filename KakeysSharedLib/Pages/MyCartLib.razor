@@ -82,7 +82,8 @@ else
     </div>
 }
 
-<a class="btn btn-primary" href="/Home/PaymentWithPaypal">Pay Now</a>
+@* <a class="btn btn-primary" href="/Home/PaymentWithPaypal")>Pay Now</a> *@
+<a class="btn btn-primary" href=@($"/Home/PaymentWithPaypal?email={email}")>Pay Now</a>
 
 @code {
     [CascadingParameter]
