@@ -8,9 +8,7 @@ namespace KakeysBakery.Services;
 public partial class ProductService : IProductService
 {
     private readonly PostgresContext _context;
-    private readonly ILogger<ProductService> _logger;
-    [LoggerMessage(Level = LogLevel.Information, Message = "Getting All Products.")]
-    static partial void GetAllProducts(ILogger logger, string description);
+
 
     public ProductService(PostgresContext pc)
     {
@@ -34,7 +32,6 @@ public partial class ProductService : IProductService
 
     public async Task<List<Product>> GetProductListAsync()
     {
-        GetAllProducts(_logger, $"Inside getAllProducts now. Number of products is {_context.Products.Count()}");
         return await _context.Products.ToListAsync() ?? [];
     }
 

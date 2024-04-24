@@ -7,11 +7,7 @@ namespace KakeysBakery.Services;
 public partial class BaseGoodService : IBaseGoodService
 {
     private readonly PostgresContext _context;
-    private readonly ILogger<BaseGoodService> _logger;
 
-
-    [LoggerMessage(Level = LogLevel.Information, Message = "Getting All BaseGoods.")]
-    static partial void GetAllBaseGoods(ILogger logger, string description);
     public BaseGoodService(PostgresContext pc)
     {
         _context = pc;
@@ -34,7 +30,6 @@ public partial class BaseGoodService : IBaseGoodService
 
     public async Task<List<Basegood>> GetBaseGoodListAsync()
     {
-        GetAllBaseGoods(_logger, $"Inside getAllBaseGoods now. Number of BaseGoods is {_context.Basegoods.Count()}");
 
         return await _context.Basegoods.ToListAsync() ?? [];
     }
