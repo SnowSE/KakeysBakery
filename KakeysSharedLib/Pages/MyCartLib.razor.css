@@ -10,6 +10,7 @@
 
 .itemName {
     font-family: testFont2;
+    font-size: large;
 }
 
 .itemDescription {
@@ -52,7 +53,6 @@
 }
 
 .order-container {
-    width: 350px;
     overflow: hidden;
 }
 
@@ -63,7 +63,23 @@
 }
 
 .img-thumbnail {
-    max-width: 50%;
+    max-width: 100%;
+}
+
+/*small*/
+@media screen and (min-width: 576px) {
+
+}
+
+/*medium*/
+@media screen and (min-width: 786px) {
+    .img-thumbnail {
+        max-width: 50%;
+    }
+
+    .itemName {
+        font-size: x-large;
+    }
 }
 
 /*large*/
@@ -78,10 +94,21 @@
     .order-container {
         width: 350px;
     }
+
+    .img-thumbnail {
+        max-width: 100%;
+    }
+
+    .itemName {
+        font-size: xx-large;
+    }
 }
 
 /*extra extra large*/
 @media screen and (min-width: 1400px) {
+    .itemName {
+        font-size: xxx-large;
+    }
 }
 
 /*gargantuan*/

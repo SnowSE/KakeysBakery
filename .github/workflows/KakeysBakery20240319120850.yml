@@ -72,19 +72,6 @@ jobs:
         steps: ${{ toJson(steps) }}
         overwrite: "{title: `Runner failed! ${workflow_link}`}"  
 
-  # docker:
-  #   runs-on: self-hosted
-  #   needs: build
-  #   steps:
-  #   - name: Docker Down
-  #     run: |
-  #         cd ./docker-staging 
-  #         docker compose down -v
-  #   - name: Docker Up
-  #     run: |
-  #       cd ./docker-staging 
-  #       docker compose up --build -d
-
   kubernetes:
     runs-on: self-hosted
     needs: Build
@@ -93,6 +80,7 @@ jobs:
       run: |
         echo $GITHUB_RUN_ID
 
+        export WEB_ID="1"
         export NAMESPACE="kakey-1"
 
         docker build -t 144.17.92.12:5000/kakey-1/blazor-web:$GITHUB_RUN_ID .
