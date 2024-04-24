@@ -1,6 +1,7 @@
 ﻿using BlazorBootstrap;
 
 using Bunit.Asserting;
+
 using KakeysBakery.Data;
 
 using KakeysSharedLib.Pages;
@@ -21,7 +22,7 @@ public class HomeController : Controller
     readonly IConfiguration _configuration;
     readonly HttpClient client;
 
-    public HomeController( HttpClient client, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
+    public HomeController(HttpClient client, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
     {
         _logger = logger;
         httpContextAccessor = context;
@@ -59,7 +60,7 @@ public class HomeController : Controller
                 var guidd = Convert.ToString((new Random()).Next(100000));
                 //CreatePayment function gives us the payment approval url  
                 //on which payer is redirected for paypal account payment  
-                var createdPayment = await this.CreatePayment(email, apiContext, baseURI + "guid=" + guidd);
+                var createdPayment = await this.CreatePayment(email!, apiContext, baseURI + "guid=" + guidd);
                 //get links returned from paypal in response to Create function call  
                 var links = createdPayment.links.GetEnumerator();
                 string? paypalRedirectUrl = null;
@@ -100,7 +101,7 @@ public class HomeController : Controller
                 return Redirect(confirmationRedirectUrl!);
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return Redirect("http://localhost:7196/");
 
@@ -134,7 +135,7 @@ public class HomeController : Controller
         //Adding Item Details like name, currency, price etc  
         itemList.items.Add(new Item()
         {
-           
+
             name = "Purchase",
             currency = "USD",
             price = products.ToString(),
@@ -172,7 +173,7 @@ public class HomeController : Controller
         {
             currency = "USD",
             total = (products).ToString(), // Total must be equal to sum of tax, shipping and subtotal.  
-                              //details = details
+                                           //details = details
         };
         var transactionList = new List<Transaction>();
         // Adding description about the transaction  
