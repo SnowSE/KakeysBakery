@@ -1,5 +1,6 @@
-﻿using Bunit.Asserting;
+﻿using BlazorBootstrap;
 
+using Bunit.Asserting;
 using KakeysBakery.Data;
 
 using KakeysSharedLib.Pages;
@@ -18,23 +19,23 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly IHttpContextAccessor httpContextAccessor;
     readonly IConfiguration _configuration;
-    readonly IAuthenticationManager authManager;
+    readonly HttpClient client;
 
-    public HomeController( IAuthenticationManager authManger, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
+    public HomeController( HttpClient client, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
     {
         _logger = logger;
         httpContextAccessor = context;
         _configuration = iconfiguration;
-        this.authManager = authManger;
+        this.client = client;
     }
 
     [HttpGet("PaymentWithPaypal")]
-    public async Task<ActionResult> PaymentWithPaypal(string email, string? Cancel = null, string blogId = "", string PayerID = "", string guid = "")
+    public async Task<ActionResult> PaymentWithPaypal(string? email, string? Cancel = null, string blogId = "", string PayerID = "", string guid = "")
     {
-        if(string.IsNullOrEmpty(email))
-        {
-            throw new ArgumentNullException("email");
-        }
+        //if(string.IsNullOrEmpty(email))
+        //{
+        //    throw new ArgumentNullException("email");
+        //}
         //getting the apiContext
         var ClientID = _configuration.GetValue<string>("PayPalKey");
         var ClientSecret = _configuration.GetValue<string>("PayPalSecret");
@@ -56,10 +57,9 @@ public class HomeController : Controller
                 //here we are generating guid for storing the paymentID received in session  
                 //which will be used in the payment execution  
                 var guidd = Convert.ToString((new Random()).Next(100000));
-                guid = guidd;
                 //CreatePayment function gives us the payment approval url  
                 //on which payer is redirected for paypal account payment  
-                var createdPayment = await this.CreatePayment(email, apiContext, baseURI + "guid=" + guid, blogId);
+                var createdPayment = await this.CreatePayment(email, apiContext, baseURI + "guid=" + guidd);
                 //get links returned from paypal in response to Create function call  
                 var links = createdPayment.links.GetEnumerator();
                 string? paypalRedirectUrl = null;
@@ -121,9 +121,11 @@ public class HomeController : Controller
         };
         return payment.Execute(apiContext, paymentExecution);
     }
-    private async Task<Payment> CreatePayment(string email, APIContext apiContext, string redirectUrl, string blogId)
+    private async Task<Payment> CreatePayment(string email, APIContext apiContext, string redirectUrl)
     {
-        decimal subtotal = await getPrice(email);
+        decimal products = await getPrice(email);
+        decimal tax = products * 0.0725m;
+        decimal service = (products * .035m) + .5m;
         //create itemlist and add item objects to it  
         var itemList = new ItemList()
         {
@@ -133,12 +135,21 @@ public class HomeController : Controller
         itemList.items.Add(new Item()
         {
            
-            name = "Item Detail",
+            name = "Purchase",
             currency = "USD",
-            price = subtotal.ToString(),
+            price = products.ToString(),
             quantity = "1",
             sku = "asd"
         });
+        //itemList.items.Add(new Item()
+        //{
+
+        //    name = "Service Fees",
+        //    currency = "USD",
+        //    price = service.ToString(),
+        //    quantity = "1",
+        //    sku = "asd"
+        //});
         var payer = new Payer()
         {
             payment_method = "paypal"
@@ -152,15 +163,15 @@ public class HomeController : Controller
         // Adding Tax, shipping and Subtotal details  
         //var details = new Details()
         //{
-        //    tax = "1",
-        //    shipping = "1",
-        //    subtotal = "1"
+        //    tax = tax.ToString(),
+        //    shipping = "0",
+        //    subtotal = (1).ToString()
         //};
         //Final amount with details  
         var amount = new Amount()
         {
             currency = "USD",
-            total = subtotal.ToString(), // Total must be equal to sum of tax, shipping and subtotal.  
+            total = (products).ToString(), // Total must be equal to sum of tax, shipping and subtotal.  
                               //details = details
         };
         var transactionList = new List<Transaction>();
@@ -187,36 +198,62 @@ public class HomeController : Controller
     //private Task<AuthenticationState>? payPalAuthenticationState { get; set; }
     private async Task<decimal> getPrice(string email)
     {
-        
-
-        HttpClient client = new HttpClient();
         //KakeysSharedLib.Data.Customer? currentCustomer = new();
         var currentCustomer = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+        var products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
+        List<ProductAddonBasegood>? PABs = await client.GetFromJsonAsync<List<ProductAddonBasegood>>("api/productAddonBasegood/getall");
+        List<Basegood>? basegoods = await client.GetFromJsonAsync<List<Basegood>>("api/Basegood/getall");
+        List<Addon>? addons = await client.GetFromJsonAsync<List<Addon>>("api/Addon/getall");
+        List<Basegoodtype>? types = await client.GetFromJsonAsync<List<Basegoodtype>>("api/Basegoodtype/getall");
 
         List<Cart>? allCartItemsForCustomer = new();
         allCartItemsForCustomer = await client.GetFromJsonAsync<List<Cart>>("api/cart/getall");
         allCartItemsForCustomer = allCartItemsForCustomer!.Where(i => i.Customerid == currentCustomer!.Id).ToList();
-
-        decimal total = 0.0m;
-        decimal finalTotal = 0.0m;
         foreach (var cart in allCartItemsForCustomer)
         {
+            cart.Product = products!.Find(p => p.Id == cart.Productid);
+            cart.Product!.ProductAddonBasegoods = PABs!.FindAll(pab => pab.Productid == cart.Productid);
             foreach (var pab in cart.Product!.ProductAddonBasegoods)
             {
-                if (cart.Productid != pab.Productid) { continue; }
-
-                if (pab.Basegood is not null && pab.Basegood.Suggestedprice is not null)
-                {
-                    total += (decimal)pab.Basegood!.Suggestedprice;
-                }
-                if (pab.Addon is not null && pab.Addon.Suggestedprice is not null)
-                {
-                    total += (decimal)pab.Addon!.Suggestedprice;
-                }
-            }                
-        finalTotal += total * (decimal)cart.Quantity;
+                pab.Addon = addons!.Find(a => a.Id == pab.Addonid);
+                pab.Basegood = basegoods!.Find(b => b.Id == pab.Basegoodid);
+                pab.Basegood!.Type = types!.Find(t => t.Id == pab.Basegood.Typeid);
+            }
         }
-        return finalTotal;
+        return getPrice(allCartItemsForCustomer);
+    }
+
+    private decimal getPrice(Cart cart)
+    {
+        decimal total = 0.0m;
+        foreach (var pab in cart.Product!.ProductAddonBasegoods)
+        {
+            if (cart.Productid != pab.Productid) { continue; }
+
+            if (pab.Basegood is not null && pab.Basegood.Suggestedprice is not null)
+            {
+                total += (decimal)pab.Basegood!.Suggestedprice;
+            }
+            if (pab.Addon is not null && pab.Addon.Suggestedprice is not null)
+            {
+                total += (decimal)pab.Addon!.Suggestedprice;
+            }
+        }
+        if (cart.Quantity is null || cart.Quantity < 1)
+        {
+            cart.Quantity = 1;
+        }
+        return total * (decimal)cart.Quantity;
+    }
+
+    private decimal getPrice(List<Cart> carts)
+    {
+        decimal toReturn = 0m;
+        foreach (Cart c in carts)
+        {
+            toReturn += getPrice(c);
+        }
+        return toReturn;
     }
 
 }

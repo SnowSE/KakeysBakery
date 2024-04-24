@@ -1,17 +1,47 @@
 ﻿@page "/Confirmation"
 
-@using KakeysSharedLib.Services.Interfaces
-@inject ICustomerService customer
 
+@using System.Net.Http.Json
+@using KakeysSharedLib.OAuth
+@using KakeysSharedLib.Services.Interfaces
+@using Microsoft.AspNetCore.Components.Authorization
+@inject ICustomerService customer
+@inject IAuthenticationManager authManager
+@inject HttpClient client
+@inject NavigationManager navManager
+
+@if (currentCustomer is not null)
+{
 <div class="p-5 bg-light">
-<h2 class="text-center">Thank you {user} for placing an order at Kakey's Bakery!</h2>
-<p class="text-center">I will get in contact with you shortly to go over your order and pricing in more detail using {preferred contact}. You can expect a {contact method} from me within 5 buisness days</p>
+<h2 class="text-center">Thank you @currentCustomer.Forename! for placing an order at Kakey's Bakery!</h2>
+<p class="text-center">I will get in contact with you shortly to go over your order in more detail using @currentCustomer.Email. You can expect an email from me within 5 buisness days</p>
 </div>
+}
 
 <p>Would you like to keep in contact with me for news, promotions and other information? If so sign up for my mailing list</p>
-<input type="text" placeholder="Email"/>
-
+<input value="@subscribe" @onchange="async () => subscribe = await updateSubscribe(!subscribe)" type="checkbox">
 
 @code {
+    private bool subscribe;
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    private string email = "";
+    Data.Customer? currentCustomer = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        await authManager.SetAuthState(authenticationState);
+        email = await authManager.GetUserEmail();
+
+        currentCustomer = await client.GetFromJsonAsync<Data.Customer>($"api/customer/get_by_email/{email}");
+
+        subscribe = currentCustomer!.Issubscribed ?? false;
+    }
+
+    private async Task<bool> updateSubscribe(bool subscribed)
+    {
+        currentCustomer!.Issubscribed = subscribed;
+        await client.PatchAsJsonAsync("api/customer/update", currentCustomer);
+        return currentCustomer.Issubscribed ?? subscribed;
+    }
 }
