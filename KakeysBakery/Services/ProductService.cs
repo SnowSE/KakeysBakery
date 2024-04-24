@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
-public class ProductService : IProductService
+public partial class ProductService : IProductService
 {
     private readonly PostgresContext _context;
+
+
     public ProductService(PostgresContext pc)
     {
         _context = pc;
@@ -35,6 +37,7 @@ public class ProductService : IProductService
 
     public async Task<Product?> GetProductAsync(int id)
     {
+
         return await _context.Products
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();

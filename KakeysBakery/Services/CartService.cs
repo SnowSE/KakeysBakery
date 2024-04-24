@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
-public class CartService : ICartService
+public partial class CartService : ICartService
 {
     private readonly PostgresContext _context;
+
+
     public CartService(PostgresContext pc)
     {
         _context = pc;
@@ -30,6 +32,7 @@ public class CartService : ICartService
 
     public async Task<List<Cart>> GetCartListAsync()
     {
+
         return await _context.Carts.ToListAsync() ?? [];
     }
 

@@ -2,9 +2,10 @@
 
 namespace KakeysBakery.Services;
 
-public class BaseGoodTypeService : IBaseGoodTypeService
+public partial class BaseGoodTypeService : IBaseGoodTypeService
 {
     private readonly PostgresContext _context;
+
     public BaseGoodTypeService(PostgresContext pc)
     {
         _context = pc;
@@ -27,6 +28,7 @@ public class BaseGoodTypeService : IBaseGoodTypeService
 
     public async Task<List<Basegoodtype>> GetBaseGoodTypeListAsync()
     {
+
         return await _context.Basegoodtypes.ToListAsync() ?? [];
     }
 
