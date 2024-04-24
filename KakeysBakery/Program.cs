@@ -5,22 +5,26 @@ using Auth0.AspNetCore.Authentication;
 using KakeysBakery.Components;
 using KakeysBakery.Components.AuthenticationStateSyncer;
 using KakeysBakery.Components.OAuth;
+using KakeysBakery.Data;
 using KakeysBakery.Services;
 
-using KakeysSharedLib.OAuth;
 using KakeysSharedLib.Pages;
-
 using KakeysSharedLib.Services.Implementations;
-using KakeysSharedLib.Services.Interfaces;
+using KakeysSharedLib.Telemetry;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -96,6 +100,9 @@ builder.Services.AddScoped(o =>
     return client;
 });
 
+//for feature flag requirement
+FeatureFlagService.SetVariable(builder.Configuration.GetValue<string>("FeatureFlag") == "true");
+
 builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // Prevent circular dependencies
@@ -126,6 +133,39 @@ builder.Services.AddSwaggerGen(c =>
               { securitySchema, new[] { "Bearer" } }
           });
 });
+
+
+
+const string serviceName = "otelService";
+const string otelEndpoint = "http://otel-collector:4317/";
+
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options
+        .SetResourceBuilder(
+            ResourceBuilder.CreateDefault().AddService(serviceName))
+        .AddOtlpExporter(o =>
+            o.Endpoint = new Uri(otelEndpoint))
+        .AddConsoleExporter();
+});
+
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource.AddService("FirstTrace"))
+    .WithTracing(tracing => tracing
+        //.AddSource(serviceName)
+        //.AddSource(Traces.Name)
+        //.AddSource(Traces.Name2)
+        .AddAspNetCoreInstrumentation()
+        .AddConsoleExporter()
+        .AddOtlpExporter(o =>
+            o.Endpoint = new Uri(otelEndpoint)))
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddMeter(Metrics.Name)
+        .AddConsoleExporter()
+        .AddOtlpExporter(o =>
+            o.Endpoint = new Uri(otelEndpoint)));
+
 
 var app = builder.Build();
 

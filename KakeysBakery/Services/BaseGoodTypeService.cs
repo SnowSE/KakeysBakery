@@ -2,9 +2,13 @@
 
 namespace KakeysBakery.Services;
 
-public class BaseGoodTypeService : IBaseGoodTypeService
+public partial class BaseGoodTypeService : IBaseGoodTypeService
 {
     private readonly PostgresContext _context;
+    private readonly ILogger<BaseGoodTypeService> _logger;
+    [LoggerMessage(Level = LogLevel.Information, Message = "Getting All BaseGoodTypes.")]
+    static partial void GetAllBaseGoodTypes(ILogger logger, string description);
+
     public BaseGoodTypeService(PostgresContext pc)
     {
         _context = pc;
@@ -27,6 +31,8 @@ public class BaseGoodTypeService : IBaseGoodTypeService
 
     public async Task<List<Basegoodtype>> GetBaseGoodTypeListAsync()
     {
+        GetAllBaseGoodTypes(_logger, $"Inside getAllBaseGoodTypes now. Number of BasegoodTypes is {_context.Basegoodtypes.Count()}");
+
         return await _context.Basegoodtypes.ToListAsync() ?? [];
     }
 

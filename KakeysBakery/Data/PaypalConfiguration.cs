@@ -23,7 +23,7 @@ namespace KakeysBakery.Data
         private static string GetAccessToken(string ClientId, string ClientSecret, string mode)
         {
             // getting accesstocken from paypal  
-            string accessToken = new OAuthTokenCredential(ClientId, ClientSecret, new Dictionary<string, string>()
+            string accessToken = new OAuthTokenCredential("AQtwU8oAij50ZxqcGY8QW929UjZ1swQEG3nBrk4lehIjlpnnUdGRhxdAeEFAyrsrlYUJIKzpZHTmjFLr", "ED356bHpLQolGcFaeAstDicQ4Rx1X1wqgaCYml811zCHq6IiPWO7rmWg8sG5LTg_EA4-FgYydDA0HkWX", new Dictionary<string, string>()
 {
 {"mode",mode}
 }).GetAccessToken();
