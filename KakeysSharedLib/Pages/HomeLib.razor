@@ -1,6 +1,8 @@
 @page "/"
 @using KakeysSharedLib.Telemetry
+@using Microsoft.Extensions.Logging
 @implements IDisposable
+@inject ILogger<HomeLib> logger
 
 <div class="d-flex justify-content-center position-relative my-3 ">
     <img class="bshadow" id="cupcake1" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/SweetnessCupcakes.jpg" />
@@ -23,6 +25,7 @@
 @code {
     protected override void OnInitialized()
     {
+        logger.LogInformation("Loading the home page");
         Metrics.homePageAccessCount.Add(1);
     }
 

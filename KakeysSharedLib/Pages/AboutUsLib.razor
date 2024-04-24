@@ -1,6 +1,7 @@
 ﻿@page "/AboutUs"
 @using KakeysSharedLib.Telemetry
-
+@using Microsoft.Extensions.Logging
+@inject ILogger<AboutUsLib> logger
 
 <h3 class="mt-5">Kakey's Bakery: A Journey of Passion</h3>
 <div class="d-flex flex-column flex-xl-row align-items-center mx-5">
@@ -17,6 +18,7 @@
 @code {
     protected override void OnInitialized()
     {
+        logger.LogInformation("Populating about us page");
         Metrics.AboutUsAccessCount.Add(1);
     }
 }

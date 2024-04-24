@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using BlazorBootstrap
+@using Microsoft.Extensions.Logging
 @using TextCopy
 @using KakeysSharedLib.OAuth
 @using Microsoft.AspNetCore.Authorization
@@ -23,6 +24,7 @@
 @inject IAuthenticationManager authManager
 @inject NavigationManager navManager
 @inject HttpClient client
+@inject ILogger<CustomizeLib> logger
 
 <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
@@ -495,6 +497,7 @@
 
     private void ResetLists()
     {
+        logger.LogInformation("Resetting all of the populated lists");
         isFondant.Clear();
         sizeList.Clear();
         frostingList.Clear();
@@ -528,6 +531,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        logger.LogInformation("Loading the customize page");
         isFondant.Add(true);
         await GetNeededData();
         await PopulateLists();
@@ -547,6 +551,7 @@
     private async Task PopulateLists()
     {
 
+        logger.LogInformation("Populating the lists");
         // figure out way for cake/sheet size
         for (int i = 0; i <= 2; i++)
         {
@@ -569,6 +574,7 @@
 
     private void PopulateFlavors()
     {
+        logger.LogInformation("populating flavors");
         //figure out more long term solution, but for now this works
         if (addons is not null)
         {
@@ -598,6 +604,7 @@
 
     private bool IsValidInput()
     {
+        logger.LogInformation("Checking for valid input");
         validationString = null;
         if (sizeList.Count < layers)
         {
@@ -639,6 +646,7 @@
 
     private async Task addToCart(string type)
     {
+        logger.LogInformation("Adding to cart");
         if (!IsValidInput())
             return;
         if (!(await authManager!.IsUserLoggedIn()))
