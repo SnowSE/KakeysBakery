@@ -1,6 +1,7 @@
 ﻿@page "/AboutUs"
 @using KakeysSharedLib.Telemetry
-
+@using Microsoft.Extensions.Logging
+@inject ILogger<AboutUsLib> logger
 
 <h3>AboutUs</h3>
 <div class="content-wrapper d-flex flex-md-row flex-col align-items-center">
@@ -18,6 +19,7 @@
 @code {
     protected override void OnInitialized()
     {
+        logger.LogInformation("Populating about us page");
         Metrics.AboutUsAccessCount.Add(1);
     }
 }

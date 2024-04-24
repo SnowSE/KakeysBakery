@@ -6,11 +6,12 @@
 @using KakeysSharedLib.OAuth
 @using KakeysSharedLib.Telemetry
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Logging
 
 @inject HttpClient client
 @inject IAuthenticationManager authManager
 @inject NavigationManager navManager
-
+@inject ILogger<MyCartLib> logger
 
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="1500" Placement="ToastsPlacement.TopRight" />
 
@@ -100,6 +101,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        logger.LogInformation("Page Loading");
         await authManager.SetAuthState(authenticationState);
 
         //https://github.com/paypal/paypal-rest-api-specifications/blob/main/openapi/payments_payment_v2.json
@@ -118,6 +120,8 @@ else
 
         try
         {
+            logger.LogInformation("Getting user email");
+
             currentCustomer = await client.GetFromJsonAsync<Data.Customer>($"api/customer/get_by_email/{email}");
             var products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
 
@@ -151,6 +155,7 @@ else
 
     private decimal getPrice(List<Cart> carts)
     {
+        logger.LogInformation("Getting price connected to current customer");
         decimal toReturn = 0m;
         foreach (Cart c in carts)
         {
@@ -190,6 +195,7 @@ else
 
     private async Task updateLocalCartToDatabaseAsync(List<Cart> carts)
     {
+        logger.LogInformation("Updating cart in the database");
         foreach (var cart in carts)
         {
             var skinnyCart = cart;
@@ -201,12 +207,14 @@ else
     }
     private async Task removeFromCartAsync(int cartId)
     {
+        logger.LogInformation("Removing from cart");
         await client.DeleteAsync($"api/cart/delete/{cartId}");
         allCartItemsForCustomer!.Remove(allCartItemsForCustomer.Find(c => c.Id == cartId)!);
         StateHasChanged();
     }
     public async Task CheckoutCart(int customerId)
     {
+        logger.LogInformation("Checking out cart");
         IsDataLoaded = false;
 
         if (allCartItemsForCustomer!.Count < 1) { 
@@ -246,6 +254,7 @@ else
 
     private async Task UpdateCartQuantity(ChangeEventArgs e, Cart cart)
     {
+        logger.LogInformation("Updating Cart quantity");
         try
         {
             var newQuantity = Convert.ToInt32(e.Value!.ToString());
