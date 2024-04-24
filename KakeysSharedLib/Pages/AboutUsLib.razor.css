@@ -14,28 +14,14 @@
 h3 {
     font-family: testFont2;
 }
+
 #bread {
     object-fit: contain;
     border-radius: 10px;
     max-width: 500px;
 }
 
-.content-wrapper {
-    display: flex;
-    flex-direction: column; 
-}
-
 #aboutus {
-    font-size: 16px; 
-    line-height: 1.6; 
-    font-family: testFont2;
-}
-
-
-
-@media screen and (min-width: 768px) {
-    .content-wrapper {
-        flex-direction: row; 
-    }
-
+    font-size: 150%;
+    font-family: 'Footlight MT', 'Sans-serif';
 }

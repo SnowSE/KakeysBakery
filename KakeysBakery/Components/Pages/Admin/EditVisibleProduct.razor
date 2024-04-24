@@ -13,7 +13,7 @@
 
 @rendermode InteractiveServer
 
-@if (FeatureFlagService.IsAvailable)
+@if (!FeatureFlagService.IsAvailable)
 {
     @if (!isEditingProduct && !isEditingTopping && !isAddingProduct && !isAddingTopping)
     {
