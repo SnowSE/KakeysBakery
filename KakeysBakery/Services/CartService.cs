@@ -5,9 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
-public class CartService : ICartService
+public partial class CartService : ICartService
 {
     private readonly PostgresContext _context;
+    private readonly ILogger<ProductService> _logger;
+    [LoggerMessage(Level = LogLevel.Information, Message = "Getting All Carts.")]
+    static partial void GetAllCarts(ILogger logger, string description);
+
     public CartService(PostgresContext pc)
     {
         _context = pc;
@@ -30,6 +34,8 @@ public class CartService : ICartService
 
     public async Task<List<Cart>> GetCartListAsync()
     {
+        GetAllCarts(_logger, $"Inside getAllCarts now. Number of carts is {_context.Carts.Count()}");
+
         return await _context.Carts.ToListAsync() ?? [];
     }
 

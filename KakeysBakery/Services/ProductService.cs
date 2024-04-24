@@ -5,9 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
-public class ProductService : IProductService
+public partial class ProductService : IProductService
 {
     private readonly PostgresContext _context;
+    private readonly ILogger<ProductService> _logger;
+    [LoggerMessage(Level = LogLevel.Information, Message = "Getting All Products.")]
+    static partial void GetAllProducts(ILogger logger, string description);
+
     public ProductService(PostgresContext pc)
     {
         _context = pc;
@@ -30,11 +34,13 @@ public class ProductService : IProductService
 
     public async Task<List<Product>> GetProductListAsync()
     {
+        GetAllProducts(_logger, $"Inside getAllProducts now. Number of products is {_context.Products.Count()}");
         return await _context.Products.ToListAsync() ?? [];
     }
 
     public async Task<Product?> GetProductAsync(int id)
     {
+
         return await _context.Products
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
