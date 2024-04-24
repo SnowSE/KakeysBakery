@@ -20,7 +20,7 @@ public class HomeController : Controller
     readonly IConfiguration _configuration;
     readonly IAuthenticationManager authManager;
 
-    public HomeController( IAuthenticationManager authManger, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
+    public HomeController(IAuthenticationManager authManger, ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration iconfiguration)
     {
         _logger = logger;
         httpContextAccessor = context;
@@ -31,7 +31,7 @@ public class HomeController : Controller
     [HttpGet("PaymentWithPaypal")]
     public async Task<ActionResult> PaymentWithPaypal(string email, string? Cancel = null, string blogId = "", string PayerID = "", string guid = "")
     {
-        if(string.IsNullOrEmpty(email))
+        if (string.IsNullOrEmpty(email))
         {
             throw new ArgumentNullException("email");
         }
@@ -132,7 +132,7 @@ public class HomeController : Controller
         //Adding Item Details like name, currency, price etc  
         itemList.items.Add(new Item()
         {
-           
+
             name = "Item Detail",
             currency = "USD",
             price = subtotal.ToString(),
@@ -161,7 +161,7 @@ public class HomeController : Controller
         {
             currency = "USD",
             total = subtotal.ToString(), // Total must be equal to sum of tax, shipping and subtotal.  
-                              //details = details
+                                         //details = details
         };
         var transactionList = new List<Transaction>();
         // Adding description about the transaction  
@@ -187,7 +187,7 @@ public class HomeController : Controller
     //private Task<AuthenticationState>? payPalAuthenticationState { get; set; }
     private async Task<decimal> getPrice(string email)
     {
-        
+
 
         HttpClient client = new HttpClient();
         //KakeysSharedLib.Data.Customer? currentCustomer = new();
@@ -213,8 +213,8 @@ public class HomeController : Controller
                 {
                     total += (decimal)pab.Addon!.Suggestedprice;
                 }
-            }                
-        finalTotal += total * (decimal)cart.Quantity;
+            }
+            finalTotal += total * (decimal)cart.Quantity;
         }
         return finalTotal;
     }
