@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: kakey-1
+  namespace: ${NAMESPACE}
   name: kakey-otel-collector-deployment
   labels:
     app: kakey-otel-collector
