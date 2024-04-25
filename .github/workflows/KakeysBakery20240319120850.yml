@@ -91,7 +91,7 @@ jobs:
     steps:
     - name: Kubectl Up
       run: |
-        export NAMESPACE="kakey-pr-$GITHUB_RUN_ID"
+        export NAMESPACE="kakey-1"
         export PULL_REQUEST_ID="1"
         echo "Pull request id $PULL_REQUEST_ID"
 
