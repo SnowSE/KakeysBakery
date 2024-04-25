@@ -42,10 +42,8 @@ jobs:
         export PULL_REQUEST_ID=${{ github.event.pull_request.number }}
         export NAMESPACE="kakey-pr-$PULL_REQUEST_ID"
         echo "Pull request id $PULL_REQUEST_ID"
-        export SUBDOMAIN=$PULL_REQUEST_ID
 
         kubectl create namespace $NAMESPACE || true
-
 
         docker build -t 144.17.92.12:5000/kakey-1/blazor-web:$GITHUB_RUN_ID .
         docker push 144.17.92.12:5000/kakey-1/blazor-web:$GITHUB_RUN_ID
@@ -55,20 +53,12 @@ jobs:
           kubectl -n $NAMESPACE create configmap blazor-web-postgres-init --from-file=Apr15ddl.sql
         cd ../
 
-        cd Telemetry/kube-configs
-          kubectl -n $NAMESPACE delete configmap grafana-datasource-config || true
-          kubectl -n $NAMESPACE create configmap grafana-datasource-config --from-file=grafana-datasource.yml
-        
-          kubectl -n $NAMESPACE delete configmap otel-config || true
-          kubectl -n $NAMESPACE create configmap otel-config --from-file=otel-collector-config.yml
-        cd ../../
-
         kubectl -n $NAMESPACE delete svc blazor-web-db-service || true
         kubectl -n $NAMESPACE delete ingress kakey-blazor-ingress || true
         kubectl -n $NAMESPACE delete deployment blazor-web-db-deployment || true
         kubectl -n $NAMESPACE delete deployment kakey-blazor-web-deployment || true
 
-        for file in ./Telemetry/kube/*; do
+        for file in ./Telemetry/kube-pr/*; do
           echo "Applying $file"
           cat $file | envsubst | kubectl apply -f -
         done
