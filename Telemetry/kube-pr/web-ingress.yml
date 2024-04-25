@@ -4,7 +4,7 @@ metadata:
   namespace: ${NAMESPACE}
   name: kakey-blazor-ingress
   annotations:
-    cert-manager.io/cluster-issuer: cert-manager-webhook-duckdns-kakey-1-production
+    cert-manager.io/cluster-issuer: cert-manager-webhook-duckdns-kakey-1-cert-manager-webhook-duckd-production
 spec:
   tls:
   - hosts:
