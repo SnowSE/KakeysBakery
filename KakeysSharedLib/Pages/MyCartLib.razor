@@ -89,7 +89,9 @@
                     </tbody>
                 </table>
 
-                <div class="d-flex justify-content-end ms-auto"><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
+                <a class="btn btn-primary" href=@($"/Home/PaymentWithPaypal?email={email}")>Pay Now</a>
+
+                @* <div class="d-flex justify-content-end ms-auto"><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div> *@
             }
 
         </div>
@@ -150,7 +152,9 @@
                 </tbody>
             </table>
 
-            <div class="d-flex justify-content-end ms-auto me-3"><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
+            <a class="btn btn-primary" href=@($"/Home/PaymentWithPaypal?email={email}")>Pay Now</a>
+
+            @* <div class="d-flex justify-content-end ms-auto me-3"><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div> *@
         }
     </div>
 }
@@ -164,7 +168,7 @@ else
 }
 
 @* <a class="btn btn-primary" href="/Home/PaymentWithPaypal")>Pay Now</a> *@
-<a class="btn btn-primary" href=@($"/Home/PaymentWithPaypal?email={email}")>Pay Now</a>
+@* <a class="btn btn-primary" href=@($"/Home/PaymentWithPaypal?email={email}")>Pay Now</a> *@
 
 @code {
     [CascadingParameter]

@@ -1,4 +1,6 @@
-﻿using BlazorBootstrap;
+﻿using System.Numerics;
+
+using BlazorBootstrap;
 
 using Bunit.Asserting;
 
@@ -77,6 +79,7 @@ public class HomeController : Controller
                         // save the desired redirect URL for confirmation
                         var confirmationRedirectUrl = "https://localhost:7196/Confirmation"; // Change this to your desired confirmation URL
                         httpContextAccessor.HttpContext.Session.SetString("confirmationRedirectUrl", confirmationRedirectUrl);
+                        paymentSuccess.didPaymentGoThrough = true;
                         // redirect the user to the PayPal approval URL
                         return Redirect(paypalRedirectUrl);
                     }
@@ -127,6 +130,7 @@ public class HomeController : Controller
         decimal products = await getPrice(email);
         decimal tax = products * 0.0725m;
         decimal service = (products * .035m) + .5m;
+        decimal total = Math.Round(products + tax + service, 2);
         //create itemlist and add item objects to it  
         var itemList = new ItemList()
         {
@@ -137,7 +141,7 @@ public class HomeController : Controller
         {
             name = "Purchase",
             currency = "USD",
-            price = products.ToString(),
+            price = total.ToString(),
             quantity = "1",
             sku = "asd",
             //tax = tax.ToString()
@@ -172,7 +176,7 @@ public class HomeController : Controller
         var amount = new Amount()
         {
             currency = "USD",
-            total = (products).ToString(), // Total must be equal to sum of tax, shipping and subtotal.  
+            total = (total).ToString(), // Total must be equal to sum of tax, shipping and subtotal.  
             //details = details
         };
         var transactionList = new List<Transaction>();
