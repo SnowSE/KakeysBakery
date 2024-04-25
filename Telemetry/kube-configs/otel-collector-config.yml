@@ -5,8 +5,8 @@ receivers:
       grpc:
 
 exporters:
-  # prometheus:
-  #   endpoint: "0.0.0.0:1234"
+  prometheus:
+    endpoint: "0.0.0.0:1234"
   # otlp:
   #   endpoint: tempo:4007
     # tls:
@@ -28,9 +28,9 @@ processors:
 service:
   # extensions: [zpages, health_check]
   pipelines:
-    # # metrics:
-    # #   receivers: [otlp]
-    # #   exporters: [prometheus]
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]
     # traces:
     #   receivers: [otlp]
     #   # processors: [batch]
