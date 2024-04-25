@@ -1,4 +1,5 @@
 ﻿@page "/admin/orders"
+@using BlazorBootstrap
 @inject NavigationManager nav
 @inject HttpClient client
 @inject IPurchaseService purchaseService
@@ -6,6 +7,8 @@
 @attribute [Authorize(Roles = "Admin")]
 
 @rendermode InteractiveServer
+<ConfirmDialog @ref="dialog" />
+
 <h1>ORDERS</h1>
 @if (isLoaded)
 {
@@ -55,7 +58,7 @@
                                     <ul>
                                         @foreach (PurchaseProduct prod in _purchase.PurchaseProducts)
                                         {
-                                            <li>@prod.Product!.Productname</li>
+                                            <li>@prod.Product!.Productname (@prod.Quantity)</li>
                                         }
                                     </ul>
                                 </td>
@@ -63,7 +66,7 @@
 
                             @if (_purchase.Isfulfilled ?? false)
                             {
-                                <td><button class="btn btn-sucess" disabled>Fulfilled</button></td>
+                                <td><button class="btn btn-outline-warning" @onclick="() => ConfirmAsync(_purchase)">Fulfilled</button></td>
 
                             }
                             else
@@ -84,12 +87,11 @@
     private bool showFulfilled = false;
     private bool showProducts = true;
     private List<Purchase> purchases = new();
+    private ConfirmDialog dialog = default!;
 
 
     protected override async Task OnInitializedAsync()
     {
-        client.BaseAddress = new Uri(nav.BaseUri);
-
         purchases = await client.GetFromJsonAsync<List<Purchase>>("api/Purchase/getall") ?? new();
         List<Customer> Customers = await client.GetFromJsonAsync<List<Customer>>("api/Customer/getall") ?? new();
         List<Product> products = await client.GetFromJsonAsync<List<Product>>("api/Product/getall") ?? new();
@@ -117,5 +119,23 @@
         toUpdate.Fulfillmentdate = DateTime.Today;
         toUpdate.Isfulfilled = true;
         await client.PatchAsJsonAsync("api/purchase/update", toUpdate);
+    }
+
+    private async Task ConfirmAsync(Purchase purchase)
+    {
+        var confirmation = await dialog.ShowAsync(
+            title: "Are you sure you want to unfulfill this order?",
+            message1: "This will update the data only for you. Once fulfilled, you must hit the fulfilled button again to undo this change.",
+            message2: "Do you want to proceed?");
+
+        if (confirmation)
+        {
+            purchase.Isfulfilled = false;
+            await client.PatchAsJsonAsync("api/purchase/update", purchase);
+        }
+        else
+        {
+            return;
+        }
     }
 }

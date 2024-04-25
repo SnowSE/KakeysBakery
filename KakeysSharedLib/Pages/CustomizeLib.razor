@@ -28,34 +28,40 @@
 
 <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
-<body>
-    <Alert class="mb-0 rounded" Color="AlertColor.Warning">
-        This form is for pastries with a small to medium amount of customization. 
-        If you wish for a highly customized cake or a cake with lots of detail, 
-        please contact me directly <a href="mailto:kakeysbakery@yahoo.com">kakeysbakery@yahoo.com</a>
-    </Alert>
-    <div class="totalPage">
-        <div class="d-flex flex-wrap justify-content-center">
+<div>
+    <div class="my-5">
+        <Alert class="mb-0 rounded" Color="AlertColor.Warning">
+            <i class="bi bi-info-circle-fill" />
+            This form is for pastries with a small to medium amount of customization. 
+            If you wish for a highly customized cake or a cake with lots of detail, 
+            please contact me directly at <a href="mailto:kakeysbakery@yahoo.com"> kakeysbakery@yahoo.com</a>
+        </Alert>
+    </div>
 
-            <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=>await WeddingCake.ShowAsync()">
-                <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/weddingcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <h3 class="typelabel" style="z-index: 1;">Wedding Cake</h3>
-            </div>
-            <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await Cupcake.ShowAsync(); layers=1;}">
-                <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cupcakes.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <h3 class="typelabel" style="z-index: 1;">Cupcake</h3>
-            </div>
-            <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await RoundCake.ShowAsync(); layers=1;}">
-                <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/customcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <h3 class="typelabel" style="z-index: 1;">Round Cake</h3>
-            </div>
-            <div class="d-flex position-relative order-container rounded-5 m-3 p-3 " @onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
-                <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Sheetcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <h3 class="typelabel" style="z-index: 1;">Sheet Cake</h3>
+    <div>
+        <div class="totalPage">
+            <div class="d-flex flex-wrap justify-content-center">
+
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=>await WeddingCake.ShowAsync()">
+                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/weddingcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <h3 class="typelabel" style="z-index: 1;">Wedding Cake</h3>
+                </div>
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await Cupcake.ShowAsync(); layers=1;}">
+                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cupcakes.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <h3 class="typelabel" style="z-index: 1;">Cupcake</h3>
+                </div>
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await RoundCake.ShowAsync(); layers=1;}">
+                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/customcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <h3 class="typelabel" style="z-index: 1;">Round Cake</h3>
+                </div>
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3 " @onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
+                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Sheetcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <h3 class="typelabel" style="z-index: 1;">Sheet Cake</h3>
+                </div>
             </div>
         </div>
     </div>
-</body>
+</div>
 
 <style>
     .modal-header i {
