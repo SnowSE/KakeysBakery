@@ -6,7 +6,7 @@ scrape_configs:
       module: [http_2xx]  # Look for a HTTP 200 response.
     static_configs:
       - targets:
-        - http://host.docker.internal:9086/health # My Web Target
+        - http://${WEB_ID}.kakeysbakery.duckdns.org:9086/health # My Web Target
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -19,9 +19,6 @@ scrape_configs:
     static_configs:
     - targets: ['otel-collector:8889']
     - targets: ['otel-collector:8888']
-  # - job_name: 'prometheus'
-  #   static_configs:
-  #     - targets: ['localhost:9090']
   - job_name: 'metrics'
     scrape_interval: 5s
     static_configs:
