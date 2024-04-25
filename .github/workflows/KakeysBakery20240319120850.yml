@@ -92,8 +92,8 @@ jobs:
     - name: Kubectl Up
       run: |
         export NAMESPACE="kakey-1"
-        export PULL_REQUEST_ID="1"
-        echo "Pull request id $PULL_REQUEST_ID"
+        export SUBDOMAIN="1"
+        echo "SUBDOMAIN $SUBDOMAIN"
 
         kubectl create namespace $NAMESPACE || true
 
@@ -111,6 +111,12 @@ jobs:
         
           kubectl -n $NAMESPACE delete configmap otel-config || true
           kubectl -n $NAMESPACE create configmap otel-config --from-file=otel-collector-config.yml
+
+          kubectl -n $NAMESPACE delete configmap prometheus-config || true
+          kubectl -n $NAMESPACE create configmap prometheus-config --from-file=prometheus-config.yml
+
+          kubectl -n $NAMESPACE delete configmap blackbox-config || true
+          kubectl -n $NAMESPACE create configmap blackbox-config --from-file=blackbox-config.yml
         cd ../../
 
         kubectl -n $NAMESPACE delete svc blazor-web-db-service || true

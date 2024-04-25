@@ -42,6 +42,7 @@ jobs:
         export PULL_REQUEST_ID=${{ github.event.pull_request.number }}
         export NAMESPACE="kakey-pr-$PULL_REQUEST_ID"
         echo "Pull request id $PULL_REQUEST_ID"
+        export SUBDOMAIN=$PULL_REQUEST_ID
 
         kubectl create namespace $NAMESPACE || true
 

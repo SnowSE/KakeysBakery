@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ${NAMESPACE}
+  name: kakey-blackbox-deployment
+  labels:
+    app: kakey-blackbox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kakey-blackbox
+  template:
+    metadata:
+      labels:
+        app: kakey-blackbox
+    spec:
+      containers:
+      - name: kakey-blackbox
+        image: prom/blackbox-exporter:v0.23.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: COLLECTOR_URL
+          value: http://otel-collector-service:4317/
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE
+          value: "false"
