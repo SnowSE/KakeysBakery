@@ -29,3 +29,15 @@ spec:
           value: server=blazor-web-db-service;user id=postgres;database=kakeydb;password=password
         - name: DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE
           value: "false"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
