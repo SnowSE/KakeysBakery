@@ -1,13 +1,14 @@
 ﻿@page "/admin/send_subscription_email"
 @inject IEmailService emailService
 @inject  KakeysSharedLib.Data.PostgresContext Context
+@inject ICustomerService customer
 @using Blazored.TextEditor
 @using KakeysBakery.Data
 @using Microsoft.EntityFrameworkCore
 @using KakeysSharedLib.Data
 
 @attribute [Authorize(Roles = "Admin")]
-
+<h3 class="mt-5">Send an email to all subscribers. You Currently have @customers.Count() Subscribers</h3>
 <div class="my-5 p-3" style="background-color: white;">
     <BlazoredTextEditor @ref="@QuillHtml">
         <ToolbarContent>
@@ -76,7 +77,13 @@
 
     string MyText = "";
 
-    
+    List<Customer> customers = new();
+
+    protected override async void OnInitialized()
+    {
+        customers = await customer.GetCustomerListAsync();
+        customers = customers.Where(c => c.Issubscribed == true).ToList();
+    }
 
     public async Task GetHTML()
     {

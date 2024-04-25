@@ -1,5 +1,4 @@
-﻿
-@page "/Customize"
+﻿@page "/Customize"
 
 @using KakeysSharedLib.Data
 @using KakeysSharedLib.Services.Interfaces
@@ -7,6 +6,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.EntityFrameworkCore
 @using BlazorBootstrap
+@using Microsoft.Extensions.Logging
 @using TextCopy
 @using KakeysSharedLib.OAuth
 @using Microsoft.AspNetCore.Authorization
@@ -24,6 +24,7 @@
 @inject IAuthenticationManager authManager
 @inject NavigationManager navManager
 @inject HttpClient client
+@inject ILogger<CustomizeLib> logger
 
 <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
@@ -35,7 +36,7 @@
     <div class="mt-5 totalPage ">
         <div class="d-flex flex-wrap justify-content-center">
 
-            <div  class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=>await WeddingCake.ShowAsync()">
+            <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=>await WeddingCake.ShowAsync()">
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/weddingcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                 <h3 class="typelabel" style="z-index: 1;">Wedding Cake</h3>
             </div>
@@ -47,7 +48,7 @@
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/customcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                 <h3 class="typelabel" style="z-index: 1;">Round Cake</h3>
             </div>
-            <div class="d-flex position-relative order-container rounded-5 m-3 p-3 "@onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
+            <div class="d-flex position-relative order-container rounded-5 m-3 p-3 " @onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
                 <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Sheetcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                 <h3 class="typelabel" style="z-index: 1;">Sheet Cake</h3>
             </div>
@@ -56,12 +57,12 @@
 </body>
 
 <style>
-.modal-header i {
-    margin-left: auto !important;
-}
+    .modal-header i {
+        margin-left: auto !important;
+    }
 </style>
 
-<Modal @ref="WeddingCake" Title="Wedding Cake" >
+<Modal @ref="WeddingCake" Title="Wedding Cake">
     <BodyTemplate>
         <p>Sorry, at this time I do not accept customizing wedding cakes online. If you wish to order a wedding cake from me, you can contact me at <a href="mailto:kakeysbakery@yahoo.com">kakeysbakery@yahoo.com</a> or <a href="tel:8017214703">(801) 721-4703</a> anytime to set up a consultation and I will get back with you as soon as I can.</p>
     </BodyTemplate>
@@ -77,11 +78,12 @@
         <table class="table table-borderless">
             <tbody>
                 @if (warnNotLoggedIn is not null)
-                { <tr>
-                    <td>
-                        <label style="color: red; font-weight: bold;">@warnNotLoggedIn</label>
-                    </td>
-                  </tr>
+                {
+                    <tr>
+                        <td>
+                            <label style="color: red; font-weight: bold;">@warnNotLoggedIn</label>
+                        </td>
+                    </tr>
                 }
                 <tr>
                     <td>
@@ -156,7 +158,7 @@
         </table>
         @if (validationString is not null)
         {
-            <p>@validationString</p>
+            <p style="color: red; font-weight: bold;">@validationString</p>
 
         }
     </BodyTemplate>
@@ -184,7 +186,7 @@
                         <label>What size do you want</label>
                     </td>
                     <td>
-                        <select class="form-select"  @onchange="(e) => DropDownChanged(e, iterator, sizeList)">
+                        <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, sizeList)">
                             <option>---</option>
                             @foreach (Addontype size in sheetSizes)
                             {
@@ -195,19 +197,16 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>Frosting or Fondant</p>
-                    </td>
-                    <td>
-                        <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
+                        <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFondant[0] = false">
                         <label for="html">Fondant</label><br>
-                        <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true">
+                        <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFondant[0]= true">
                         <label for="css">Frosting</label><br>
                     </td>
                 </tr>
 
 
                 <tr>
-                    @if (isFrosting)
+                    @if (isFondant[0])
                     {
 
                         <td>
@@ -266,13 +265,13 @@
                 </tr>
 
                 <tr>
-                    <input  @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
+                    <input @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
                 </tr>
             </tbody>
         </table>
         @if (validationString is not null)
         {
-            <p>@validationString</p>
+            <p style="color: red; font-weight: bold;">@validationString</p>
 
         }
     </BodyTemplate>
@@ -303,22 +302,16 @@
                         <input class="form-control" @onchange="LayersChanged" min="1" max="4" type="number" />
                     </td>
                 </tr>
-                <tr>
-                    <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFrosting = false">
-                    <label for="html">Fondant</label>
-                    <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFrosting = true" checked>
-                    <label for="css">Frosting</label>
-                </tr>
                 @for (int i = 0; i < layers; i++)
                 {
-                    int iterator = i + 1;
+                    int iterator = i;
                     <tr>
                         <td>
 
-                            <label>What diameter do you want for layer @(iterator)</label>
+                            <label>What diameter do you want for layer @(iterator + 1 )</label>
                         </td>
                         <td>
-                            <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, sizeList)">
+                            <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator +1, sizeList)">
                                 <option>---</option>
                                 @foreach (Addontype size in cakeSizes)
                                 {
@@ -327,34 +320,46 @@
                             </select>
                         </td>
                     </tr>
-                   
-                    @if (isFrosting)
-                    {
-                        <tr>
-                            <td>
 
-                                <label>What frosting flavor do you want for layer @(iterator)</label>
+                    <tr>
+                        <td>
+                            <form>
+                                <input type="radio" id="html" name="frostingfondant" @onclick=" () => isFondant[iterator] = false">
+                                <label for="html">Fondant</label><br>
+                                <input type="radio" id="css" name="frostingfondant" @onclick="()=> isFondant[iterator] = true" checked>
+                                <label for="css">Frosting</label><br>
+                            </form>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        @if (isFondant[iterator] == true)
+                        {
+                            <td>
+                                <label>What frosting flavor do you want</label>
                             </td>
-                            <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, frostingList)">
-                                <option>---</option>
-                                @foreach (Addon frosting in frostings)
-                                {
-                                    @if (frosting.Addonflavor is not null)
+                            <td>
+                                <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator +1, frostingList)">
+                                    <option>---</option>
+                                    @foreach (Addon frosting in frostings)
                                     {
-                                        <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
+                                        @if (frosting.Addonflavor is not null)
+                                        {
+                                            <option value="@frosting.Addonflavor.Flavor"> @frosting.Addonflavor.Flavor </option>
+                                        }
                                     }
-                                }
-                            </select>
-                            <td></td>
-                        </tr>
-                    }
+                                </select>
+                            </td>
+                        }
+                    </tr>
                     <tr>
                         <td>
 
-                            <label>What flavor of cake do you want for layer @(iterator)</label>
+                            <label>What flavor of cake do you want for layer @(iterator + 1)</label>
                         </td>
                         <td>
-                            <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, flavorList)">
+                            <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator + 1, flavorList)">
                                 <option>---</option>
                                 @foreach (Addon cake in cakeFlavors)
                                 {
@@ -368,13 +373,13 @@
                     </tr>
 
                     <tr>
-                        @if (layers > 1 && i < layers-1)
+                        @if (layers > 1 && i < layers - 1)
                         {
                             <td>
-                                <label>Any flavored fillings between layers @(iterator) and @(iterator + 1)</label>
+                                <label>Any flavored fillings between layers @(iterator + 1) and @(iterator + 2)</label>
                             </td>
                             <td>
-                                <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                                <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator +1, fillingList)">
                                     <option>---</option>
                                     @foreach (Addon filling in fillings)
                                     {
@@ -393,7 +398,7 @@
                                 <label>Any flavored filling?</label>
                             </td>
                             <td>
-                                <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator, fillingList)">
+                                <select class="form-select" @onchange="(e) => DropDownChanged(e, iterator + 1, fillingList)">
                                     <option>---</option>
 
                                     @foreach (Addon filling in fillings)
@@ -411,14 +416,14 @@
                 }
                 <tr>
                     <div>
-                        <input  type="textarea" @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
+                        <input type="textarea" @bind-value="description" rows="4" cols="50" placeholder="Words or other features" />
                     </div>
                 </tr>
             </tbody>
         </table>
         @if (validationString is not null)
         {
-            <p>@validationString</p>
+            <p style="color: red; font-weight: bold;">@validationString</p>
 
         }
     </BodyTemplate>
@@ -436,7 +441,7 @@
     int iterator = 1;
     int layers = 1;
     int quantity = 1;
-    bool isFrosting = true;
+    //bool isFrosting = true;
     string? description;
     string? validationString;
     string? warnNotLoggedIn;
@@ -460,6 +465,7 @@
     List<Addon> cupcakeFlavors = new();
 
     List<string> sizeList = new();
+    List<bool> isFondant = new();
     List<string> frostingList = new();
     List<string> fillingList = new();
     List<string> flavorList = new();
@@ -483,10 +489,16 @@
             layers = Int32.Parse(layerString);
         }
         ResetLists();
+        for(int i = 0; i < layers; i++)
+        {
+            isFondant.Add(true);  
+        }
     }
 
     private void ResetLists()
     {
+        logger.LogInformation("Resetting all of the populated lists");
+        isFondant.Clear();
         sizeList.Clear();
         frostingList.Clear();
         fillingList.Clear();
@@ -519,6 +531,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        logger.LogInformation("Loading the customize page");
+        isFondant.Add(true);
         await GetNeededData();
         await PopulateLists();
         await authManager.SetAuthState(authenticationState);
@@ -537,6 +551,7 @@
     private async Task PopulateLists()
     {
 
+        logger.LogInformation("Populating the lists");
         // figure out way for cake/sheet size
         for (int i = 0; i <= 2; i++)
         {
@@ -559,6 +574,7 @@
 
     private void PopulateFlavors()
     {
+        logger.LogInformation("populating flavors");
         //figure out more long term solution, but for now this works
         if (addons is not null)
         {
@@ -588,7 +604,13 @@
 
     private bool IsValidInput()
     {
+        logger.LogInformation("Checking for valid input");
         validationString = null;
+        if (sizeList.Count < layers)
+        {
+            validationString += "Could not add to cart: Missing Cake Size Values";
+            return false;
+        }
         if (frostingList.Count < layers)
         {
             validationString += "Could not add to cart: Missing Frosting Values";
@@ -624,6 +646,7 @@
 
     private async Task addToCart(string type)
     {
+        logger.LogInformation("Adding to cart");
         if (!IsValidInput())
             return;
         if (!(await authManager!.IsUserLoggedIn()))

@@ -6,17 +6,18 @@
 @using KakeysSharedLib.OAuth
 @using KakeysSharedLib.Telemetry
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Logging
 
 @inject HttpClient client
 @inject IAuthenticationManager authManager
 @inject NavigationManager navManager
-
+@inject ILogger<MyCartLib> logger
 
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="1500" Placement="ToastsPlacement.TopRight" />
 
 @if (IsDataLoaded)
 {
-    <div class="align-content-center p-5" id="totalCart">
+    <div class="align-content-center p-5 d-none d-lg-inline" id="totalCart">
         <div class="text-center">
             <h2 id="pageTitle"> YOUR CART </h2>
         </div>
@@ -62,16 +63,100 @@
                         <tr><td colspan="4"><hr /></td></tr>
                     }
 
-                    <tr id="">
-                        <td colspan="4" style="text-align: right;" class="itemDescription" id="displayTotal">TOTAL: $@getPrice(allCartItemsForCustomer)</td>
+                </tbody>
+            </table>
+
+            @if (allCartItemsForCustomer!.Count > 0)
+            {
+                <table class="ms-auto table me-1" style="max-width: 25%">
+                    <tbody>
+                        <tr>
+                            <td>PRICE:</td>
+                            <td>$@subtotal</td>
+                        </tr>
+                        <tr>
+                            <td>TAXES:</td>
+                            <td>$@taxes</td>
+                        </tr>
+                        <tr>
+                            <td>CARD FEE:</td>
+                            <td>$@cardfees</td>
+                        </tr>
+                        <tr>
+                            <td>TOTAL:</td>
+                            <td>$@total</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <a class="btn btn-primary" href=@($"/Home/PaymentWithPaypal?email={email}")>Pay Now</a>
+
+                @* <div class="d-flex justify-content-end ms-auto"><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div> *@
+            }
+
+        </div>
+        <p>Do you have a specific date when you need this order by?</p>
+        <input type="date" />
+    </div>
+
+
+    <div class="align-content-center p-5 d-inline d-lg-none" id="totalCart">
+        <div class="text-center">
+            <h2 id="pageTitle"> YOUR CART </h2>
+        </div>
+
+
+        @foreach (var cart in allCartItemsForCustomer!)
+        {
+            <div class="d-flex align-items-center justify-content-center p-4 rounded" style="background-color: #EBDCCE;">
+
+                <div class="d-flex flex-column flex-xl-row">
+                    <div class="d-flex align-items-center justify-content-center order-container rounded-5 me-auto">
+                        <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/@(cart!.Product!.ProductAddonBasegoods!.FirstOrDefault()!.Basegood!.Type!.Basegood).jpg">
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-center flex-column mx-5">
+                        <p class="itemName d-flex justify-content-center mt-5">@cart.Product!.Productname</p>
+                        <p class="itemDescription d-flex justify-content-center mt">@(@cart.Product!.Description ?? "Product has no description")</p>
+
+                        <div class="d-flex align-items-center justify-content-center flex-row">
+                            <input class="form-control me-3" type="number" min="1" max="100" @bind="cart.Quantity" @oninput="@(e => UpdateCartQuantity(e, cart))" />
+                            <button class="btn btn-danger" @onclick="async () => { await removeFromCartAsync(cart.Id);}">
+                                <h3 class="bi bi-trash rounded mt-2" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+        @if (allCartItemsForCustomer!.Count > 0)
+        {
+            <table class="ms-auto table me-3" style="max-width: 25%">
+                <tbody>
+                    <tr>
+                        <td>PRICE:</td>
+                        <td>$@subtotal</td>
+                    </tr>
+                    <tr>
+                        <td>TAXES:</td>
+                        <td>$@taxes</td>
+                    </tr>
+                    <tr>
+                        <td>CARD FEE:</td>
+                        <td>$@cardfees</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL:</td>
+                        <td>$@total</td>
                     </tr>
                 </tbody>
             </table>
-            @if (allCartItemsForCustomer!.Count > 0) {
-                <div><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
-            }
-        </div>
 
+            <a class="btn btn-primary" href=@($"/Home/PaymentWithPaypal?email={email}")>Pay Now</a>
+
+            @* <div class="d-flex justify-content-end ms-auto me-3"><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div> *@
+        }
     </div>
 }
 else
@@ -83,12 +168,17 @@ else
     </div>
 }
 
-<a class="btn btn-primary" href="/Home/PaymentWithPaypal">Pay Now</a>
+@* <a class="btn btn-primary" href="/Home/PaymentWithPaypal")>Pay Now</a> *@
+@* <a class="btn btn-primary" href=@($"/Home/PaymentWithPaypal?email={email}")>Pay Now</a> *@
 
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
+    decimal subtotal;
+    decimal taxes;
+    decimal cardfees;
+    decimal total;
     private string email = "";
     List<ToastMessage> messages = new List<ToastMessage>();
     Data.Customer? currentCustomer = new();
@@ -99,6 +189,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        logger.LogInformation("Page Loading");
         await authManager.SetAuthState(authenticationState);
 
         //https://github.com/paypal/paypal-rest-api-specifications/blob/main/openapi/payments_payment_v2.json
@@ -117,6 +208,8 @@ else
 
         try
         {
+            logger.LogInformation("Getting user email");
+
             currentCustomer = await client.GetFromJsonAsync<Data.Customer>($"api/customer/get_by_email/{email}");
             var products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
 
@@ -146,10 +239,16 @@ else
 
         await base.OnInitializedAsync();
         IsDataLoaded = true;
+        subtotal = Math.Round(getPrice(allCartItemsForCustomer), 2);
+        taxes = Math.Round(subtotal * .0725m, 2);
+        cardfees = Math.Round((subtotal * .035m) + .5m, 2);
+        total = Math.Round(subtotal + taxes + cardfees, 2);
+
     }
 
     private decimal getPrice(List<Cart> carts)
     {
+        logger.LogInformation("Getting price connected to current customer");
         decimal toReturn = 0m;
         foreach (Cart c in carts)
         {
@@ -189,6 +288,7 @@ else
 
     private async Task updateLocalCartToDatabaseAsync(List<Cart> carts)
     {
+        logger.LogInformation("Updating cart in the database");
         foreach (var cart in carts)
         {
             var skinnyCart = cart;
@@ -200,18 +300,21 @@ else
     }
     private async Task removeFromCartAsync(int cartId)
     {
+        logger.LogInformation("Removing from cart");
         await client.DeleteAsync($"api/cart/delete/{cartId}");
         allCartItemsForCustomer!.Remove(allCartItemsForCustomer.Find(c => c.Id == cartId)!);
         StateHasChanged();
     }
     public async Task CheckoutCart(int customerId)
     {
+        logger.LogInformation("Checking out cart");
         IsDataLoaded = false;
 
-        if (allCartItemsForCustomer!.Count < 1) { 
+        if (allCartItemsForCustomer!.Count < 1)
+        {
             CreateToastMessage(ToastType.Danger, "No items in cart");
-            IsDataLoaded = true; 
-            return; 
+            IsDataLoaded = true;
+            return;
         }
         await updateLocalCartToDatabaseAsync(allCartItemsForCustomer!);
 
@@ -245,6 +348,7 @@ else
 
     private async Task UpdateCartQuantity(ChangeEventArgs e, Cart cart)
     {
+        logger.LogInformation("Updating Cart quantity");
         try
         {
             var newQuantity = Convert.ToInt32(e.Value!.ToString());

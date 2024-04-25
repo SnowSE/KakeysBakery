@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KakeysBakery.Services;
 
-public class BaseGoodService : IBaseGoodService
+public partial class BaseGoodService : IBaseGoodService
 {
     private readonly PostgresContext _context;
+
     public BaseGoodService(PostgresContext pc)
     {
         _context = pc;
@@ -29,6 +30,7 @@ public class BaseGoodService : IBaseGoodService
 
     public async Task<List<Basegood>> GetBaseGoodListAsync()
     {
+
         return await _context.Basegoods.ToListAsync() ?? [];
     }
 
