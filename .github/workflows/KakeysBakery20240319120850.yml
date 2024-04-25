@@ -104,7 +104,10 @@ jobs:
         cd Telemetry/kube-configs
           kubectl -n $NAMESPACE delete configmap grafana-datasource-config || true
           kubectl -n $NAMESPACE create configmap grafana-datasource-config --from-file=grafana-datasource.yml
-        
+
+          kubectl -n $NAMESPACE delete configmap loki-config || true
+          kubectl -n $NAMESPACE create configmap loki-config --from-file=loki-config.yml
+
           kubectl -n $NAMESPACE delete configmap otel-config || true
           kubectl -n $NAMESPACE create configmap otel-config --from-file=otel-collector-config.yml
 
