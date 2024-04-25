@@ -35,7 +35,6 @@
     //List<ToastMessage> messages = new List<ToastMessage>();
     //Data.Customer? currentCustomer = new();
     List<Cart>? allCartItemsForCustomer = new();
-    bool IsDataLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,12 +84,10 @@
     public async Task CheckoutCart(int customerId)
     {
         logger.LogInformation("Checking out cart");
-        IsDataLoaded = false;
 
         if (allCartItemsForCustomer!.Count < 1)
         {
             //CreateToastMessage(ToastType.Danger, "No items in cart");
-            IsDataLoaded = true;
             return;
         }
         await updateLocalCartToDatabaseAsync(allCartItemsForCustomer!);
@@ -108,6 +105,5 @@
         {
             //CreateToastMessage(ToastType.Danger, "Error occured when checking out");
         }
-        IsDataLoaded = true;
     }
 }
