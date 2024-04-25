@@ -43,8 +43,18 @@
                         <AuthorizeView Roles="Admin">
                             <Authorized>
                                 <NavLink class="nav-link mx-1" href="/admin/edit-product" style="z-index:2" Match="NavLinkMatch.All">
-                                    <span class="nav-item d-none d-xl-inline p-3 text-nowrap" href="#">Admin</span>
-                                    <span class="nav-item d-xl-none text-nowrap" href="#">Admin</span>
+                                    <span class="nav-item d-none d-xl-inline p-3 text-nowrap" href="#">Edit</span>
+                                    <span class="nav-item d-xl-none text-nowrap" href="#">/admin/edit-product</span>
+
+                                </NavLink>
+                                <NavLink class="nav-link mx-1" href="/admin/orders" style="z-index:2" Match="NavLinkMatch.All">
+                                    <span class="nav-item d-none d-xl-inline p-3 text-nowrap" href="#">View Orders</span>
+                                    <span class="nav-item d-xl-none text-nowrap" href="#">/admin/orders</span>
+
+                                </NavLink>
+                                <NavLink class="nav-link mx-1" href="/admin/send_subscription_email" style="z-index:2" Match="NavLinkMatch.All">
+                                    <span class="nav-item d-none d-xl-inline p-3 text-nowrap" href="#">Send Email</span>
+                                    <span class="nav-item d-xl-none text-nowrap" href="#">/admin/send_subscription_email</span>
 
                                 </NavLink>
                             </Authorized>
