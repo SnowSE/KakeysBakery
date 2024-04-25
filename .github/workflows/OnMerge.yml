@@ -1,0 +1,46 @@
+name: Pull Request Environment (Telemetry and Run Site on K8s Cluster)
+
+on:
+  pull_request:
+    types: [opened]
+env:
+  CONFIGURATION: Release
+  WORKING_DIRECTORY: KakeysBakery
+jobs:
+  Build:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+
+    - name: Restore
+      run: |
+          dotnet restore "${{ env.WORKING_DIRECTORY }}"
+
+    - name: Lint
+      run: |
+          cd KakeysBakery
+          dotnet format --verify-no-changes --severity warn
+    - name: Build
+      run: |
+          dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore /warnaserror
+
+    - name: Run Test Suite
+      run: |
+        cd ./KakeysBakery.Tests/
+        dotnet test
+
+  kubernetes:
+    runs-on: self-hosted
+    needs: Build
+    steps:
+    - name: Kubectl Up
+      run: |
+        export PULL_REQUEST_ID=${{ github.event.pull_request.number }}
+        export NAMESPACE="kakey-pr-$PULL_REQUEST_ID"
+        echo "Pull request id $PULL_REQUEST_ID"
+
+        kubectl delete namespace $NAMESPACE
