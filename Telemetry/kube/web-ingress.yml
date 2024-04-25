@@ -3,7 +3,13 @@ kind: Ingress
 metadata:
   namespace: ${NAMESPACE}
   name: kakey-blazor-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: cert-manager-webhook-duckdns-kakey-1-cert-manager-webhook-duckd-production
 spec:
+  tls:
+  - hosts:
+    - kakeysbakery.duckdns.org
+    secretName: kakeysbakery-1-kube-tls-production
   ingressClassName: nginx
   rules:
   - host: kakeysbakery.duckdns.org
