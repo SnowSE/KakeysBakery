@@ -2,7 +2,7 @@ name: (On PR) Pull Request Environment (Telemetry and Run Site on K8s Cluster)
 
 on:
   pull_request:
-    types: [closed]
+    types: [opened]
 env:
   CONFIGURATION: Release
   WORKING_DIRECTORY: KakeysBakery
