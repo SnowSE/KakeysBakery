@@ -137,7 +137,7 @@ builder.Services.AddSwaggerGen(c =>
 
 
 const string serviceName = "otelService";
-const string otelEndpoint = "http://otel-collector:4317/";
+const string otelEndpoint = "http://otel-collector-service:4317/";
 
 builder.Logging.AddOpenTelemetry(options =>
 {
