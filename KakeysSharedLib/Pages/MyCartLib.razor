@@ -63,15 +63,35 @@
                         <tr><td colspan="4"><hr /></td></tr>
                     }
 
-                    <tr id="">
-                        <td colspan="4" style="text-align: right;" class="itemDescription" id="displayTotal">TOTAL: $@getPrice(allCartItemsForCustomer)</td>
-                    </tr>
                 </tbody>
             </table>
+
             @if (allCartItemsForCustomer!.Count > 0)
             {
-                <div><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
+                <table class="ms-auto table me-1" style="max-width: 25%">
+                    <tbody>
+                        <tr>
+                            <td>PRICE:</td>
+                            <td>$@subtotal</td>
+                        </tr>
+                        <tr>
+                            <td>TAXES:</td>
+                            <td>$@taxes</td>
+                        </tr>
+                        <tr>
+                            <td>CARD FEE:</td>
+                            <td>$@cardfees</td>
+                        </tr>
+                        <tr>
+                            <td>TOTAL:</td>
+                            <td>$@total</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-end ms-auto"><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
             }
+
         </div>
 
     </div>
@@ -109,10 +129,28 @@
         }
         @if (allCartItemsForCustomer!.Count > 0)
         {
-            <div class="d-flex flex-row justify-content-end align-items-center">
-                <p colspan="4" style="text-align: right;" class="itemDescription" id="displayTotal">TOTAL: $@getPrice(allCartItemsForCustomer)</p>
-                <button class="btn btn-primary ms-3" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button>
-            </div>
+            <table class="ms-auto table me-3" style="max-width: 25%">
+                <tbody>
+                    <tr>
+                        <td>PRICE:</td>
+                        <td>$@subtotal</td>
+                    </tr>
+                    <tr>
+                        <td>TAXES:</td>
+                        <td>$@taxes</td>
+                    </tr>
+                    <tr>
+                        <td>CARD FEE:</td>
+                        <td>$@cardfees</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL:</td>
+                        <td>$@total</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="d-flex justify-content-end ms-auto me-3"><button class="btn btn-primary" @onclick="async () => { await CheckoutCart(currentCustomer!.Id);}">Place Order</button></div>
         }
     </div>
 }
@@ -132,6 +170,10 @@ else
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
+    decimal subtotal;
+    decimal taxes;
+    decimal cardfees;
+    decimal total;
     private string email = "";
     List<ToastMessage> messages = new List<ToastMessage>();
     Data.Customer? currentCustomer = new();
@@ -192,6 +234,11 @@ else
 
         await base.OnInitializedAsync();
         IsDataLoaded = true;
+        subtotal = Math.Round(getPrice(allCartItemsForCustomer), 2);
+        taxes = Math.Round(subtotal * .0725m, 2);
+        cardfees = Math.Round((subtotal * .035m) + .5m, 2);
+        total = Math.Round(subtotal + taxes + cardfees, 2);
+
     }
 
     private decimal getPrice(List<Cart> carts)

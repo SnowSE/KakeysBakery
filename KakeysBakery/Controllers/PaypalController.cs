@@ -135,12 +135,12 @@ public class HomeController : Controller
         //Adding Item Details like name, currency, price etc  
         itemList.items.Add(new Item()
         {
-
             name = "Purchase",
             currency = "USD",
             price = products.ToString(),
             quantity = "1",
-            sku = "asd"
+            sku = "asd",
+            //tax = tax.ToString()
         });
         //itemList.items.Add(new Item()
         //{
@@ -161,19 +161,19 @@ public class HomeController : Controller
             cancel_url = _configuration.GetValue<string>("BaseUri"),   //changed to 
             return_url = redirectUrl
         };
-        // Adding Tax, shipping and Subtotal details  
+        //Adding Tax, shipping and Subtotal details
         //var details = new Details()
         //{
         //    tax = tax.ToString(),
         //    shipping = "0",
-        //    subtotal = (1).ToString()
+        //    subtotal = products.ToString()
         //};
         //Final amount with details  
         var amount = new Amount()
         {
             currency = "USD",
             total = (products).ToString(), // Total must be equal to sum of tax, shipping and subtotal.  
-                                           //details = details
+            //details = details
         };
         var transactionList = new List<Transaction>();
         // Adding description about the transaction  
