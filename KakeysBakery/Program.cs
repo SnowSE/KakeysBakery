@@ -162,7 +162,8 @@ builder.Services.AddOpenTelemetry()
     .WithMetrics(metrics => metrics
         .AddAspNetCoreInstrumentation()
         .AddMeter(Metrics.Name)
-        .AddConsoleExporter()
+        // .AddConsoleExporter()
+        .AddPrometheusExporter()
         .AddOtlpExporter(o =>
             o.Endpoint = new Uri(otelEndpoint)));
 
@@ -222,6 +223,8 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 //app.MapControllerRoute(
 //name: "default",
 //pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapPrometheusScrapingEndpoint();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
