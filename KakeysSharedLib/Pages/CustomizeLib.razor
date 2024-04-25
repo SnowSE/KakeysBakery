@@ -29,11 +29,12 @@
 <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
 <body>
-    <div class="mt-5" style="padding: 2%">
-
-        <h3>This form is for pastries with a small to medium amount of customization. If you wish for a highly customized cake or a cake with lots of detail, please contact me directly <a href="mailto:kakeysbakery@yahoo.com">kakeysbakery@yahoo.com</a></h3>
-    </div>
-    <div class="mt-5 totalPage ">
+    <Alert class="mb-0 rounded" Color="AlertColor.Warning">
+        This form is for pastries with a small to medium amount of customization. 
+        If you wish for a highly customized cake or a cake with lots of detail, 
+        please contact me directly <a href="mailto:kakeysbakery@yahoo.com">kakeysbakery@yahoo.com</a>
+    </Alert>
+    <div class="totalPage">
         <div class="d-flex flex-wrap justify-content-center">
 
             <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=>await WeddingCake.ShowAsync()">
