@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: ${PR_ID}.kakeysbakery.duckdns.org
+  - host: ${PULL_REQUEST_ID}.kakeysbakery.duckdns.org
     http:
       paths:
       - path: /
