@@ -39,10 +39,10 @@ public class CustomerService : ICustomerService
                 .FirstOrDefaultAsync();
     }
 
-    public async Task<Customer?> GetCustomerAsync(string forname, string surname)
+    public async Task<Customer?> GetCustomerByNameAsync(string forname)
     {
         return await _context.Customers
-                .Where(b => b.Forename == forname && b.Surname == surname)
+                .Where(b => b.Forename == forname)
                 .FirstOrDefaultAsync();
     }
 
