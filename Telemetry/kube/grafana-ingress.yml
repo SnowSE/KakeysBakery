@@ -3,13 +3,7 @@ kind: Ingress
 metadata:
   namespace: ${NAMESPACE}
   name: kakey-grafana-ingress
-  annotations:
-    cert-manager.io/cluster-issuer: cert-manager-webhook-duckdns-alex-production
 spec:
-  tls:
-  - hosts:
-    - grafana.kakeysbakery.alex-kube.duckdns.org
-    secretName: grafana-kakeysbakery-1-kube-tls-production
   ingressClassName: nginx
   rules:
   - host: grafana.kakeysbakery.duckdns.org
