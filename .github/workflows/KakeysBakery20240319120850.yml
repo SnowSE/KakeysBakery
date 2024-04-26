@@ -43,15 +43,15 @@ jobs:
     #     pycobertura show --format html --output /home/garion/coverage.html */*/*/coverage.cobertura.xml -s Search
     #    cd ..
 
-    - name: Publish
-      run: |
-          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+    # - name: Publish
+    #   run: |
+    #       dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
 
-    - name: Publish Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    # - name: Publish Artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: webapp
+    #     path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
     - name: Microsoft Teams Notification
       uses: skitionek/notify-microsoft-teams@master
