@@ -5,6 +5,7 @@ metadata:
   name: kakey-blazor-ingress
   annotations:
     cert-manager.io/cluster-issuer: cert-manager.io/cluster-issuer: cert-manager-webhook-duckdns-alex-production
+spec:
   tls:
   - hosts:
     - kakeysbakery.alex-kube.duckdns.org
