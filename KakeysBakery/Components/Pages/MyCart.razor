@@ -260,12 +260,15 @@ else
 
             setPrice();
         }
-        catch (Exception e) { throw e; }
+        catch
+        {
+            CreateToastMessage(ToastType.Danger, "Error when loading data");
+        }
         StateHasChanged();
 
         await base.OnInitializedAsync();
         IsDataLoaded = true;
-        subtotal = Math.Round(getPrice(allCartItemsForCustomer), 2);
+        subtotal = Math.Round(getPrice(allCartItemsForCustomer!), 2);
         taxes = Math.Round(subtotal * .0725m, 2);
         cardfees = Math.Round((subtotal * .035m) + .5m, 2);
         total = Math.Round(subtotal + taxes + cardfees, 2);

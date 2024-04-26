@@ -54,7 +54,6 @@
 
   <ItemGroup>
     <None Include="wwwroot\imgs\AmericanAsApplePie.png" />
-    <None Include="wwwroot\imgs\BlackLogo.png" />
     <None Include="wwwroot\imgs\BlueLogo.png" />
     <None Include="wwwroot\imgs\Bread.jpg" />
     <None Include="wwwroot\imgs\Cake.jpg" />
