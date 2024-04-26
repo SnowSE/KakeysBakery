@@ -46,17 +46,17 @@ public class MauiAuthenticationManager(HttpClient client) : IAuthenticationManag
         if (state.User.Identity.IsAuthenticated is false) { return false; }
 
         string email = await GetUserEmail();
-        Customer = await GetUserFromEmail(email);
+        Customer = await GetUserFromName(email);
 
         return true;
     }
 
-    public async Task<Customer> GetUserFromEmail(string email)
+    public async Task<Customer> GetUserFromName(string email)
     {
         Customer? result = null;
         try
         {
-            result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_email/{email}");
+            result = await client.GetFromJsonAsync<Customer>($"api/customer/get_by_name/{email}");
         }
         catch { }
 
@@ -75,10 +75,7 @@ public class MauiAuthenticationManager(HttpClient client) : IAuthenticationManag
 
         Customer user = new()
         {
-            Forename = state!.User!.Identity!.Name,
-            Email = state.User.Claims
-                        .Where(c => c.Type.Contains("emailaddress"))
-                        .FirstOrDefault()!.Value
+            Forename = state!.User!.Identity!.Name
         };
 
         await client.PostAsJsonAsync("api/customer/add", user);
@@ -91,11 +88,16 @@ public class MauiAuthenticationManager(HttpClient client) : IAuthenticationManag
         await GetAuthState();
         if (state is null) { throw new NullReferenceException("Error: User is not logged in!"); }
 
-        var user = state.User.Claims
-            .Where(c => c.Type.Contains("emailaddress"))
-            .FirstOrDefault();
+        var user = state.User.Identity;
+            //.Where(c => c.Contains("emailaddress"))
+            //.FirstOrDefault();
 
         if (user is null) { throw new NullReferenceException("Error: User has no email!"); }
-        return user.Value;
+        return user.Name;
+    }
+
+    public Task<Customer> GetUserFromEmail(string email)
+    {
+        throw new NotImplementedException();
     }
 }

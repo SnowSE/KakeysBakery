@@ -32,10 +32,10 @@ public class CustomerController : ControllerBase
         return Ok(prod); // Return the addon if found
     }
 
-    [HttpGet("get_by_name/{forname}/{surname}")]
-    public async Task<IActionResult> GetCustomerAsync(string forname, string surname)
+    [HttpGet("get_by_name/{forname}")]
+    public async Task<IActionResult> GetCustomerAsync(string forname)
     {
-        var prod = await CustomerService.GetCustomerAsync(forname, surname);
+        var prod = await CustomerService.GetCustomerByNameAsync(forname);
         if (prod == null)
         {
             return NotFound(); // Return 404 Not Found status
