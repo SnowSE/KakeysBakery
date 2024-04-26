@@ -31,7 +31,13 @@ spec:
         - name: datasources
           mountPath: /etc/grafana/provisioning/datasources/datasource.yml
           subPath: grafana-datasource.yml
+        - name: dashboards
+          mountPath: /etc/grafana/provisioning/dashboards/dashboard.yml
+          subPath: dashboard.yml
       volumes:
       - name: datasources
         configMap:
           name: grafana-datasource-config
+      - name: dashboards
+        configMap:
+          name: grafana-dashboard-config

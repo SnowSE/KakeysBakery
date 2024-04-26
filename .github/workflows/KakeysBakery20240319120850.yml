@@ -103,7 +103,10 @@ jobs:
 
         cd Telemetry/kube-configs
           kubectl -n $NAMESPACE delete configmap grafana-datasource-config || true
-          kubectl -n $NAMESPACE create configmap grafana-datasource-config --from-file=grafana/
+          kubectl -n $NAMESPACE create configmap grafana-datasource-config --from-file=grafana-datasource.yml
+
+          kubectl -n $NAMESPACE delete configmap grafana-dashboard-config || true
+          kubectl -n $NAMESPACE create configmap grafana-dashboard-config --from-file=dashboard.yml
 
           kubectl -n $NAMESPACE delete configmap loki-config || true
           kubectl -n $NAMESPACE create configmap loki-config --from-file=loki-config.yml
