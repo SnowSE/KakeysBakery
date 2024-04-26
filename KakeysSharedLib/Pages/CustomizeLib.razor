@@ -13,14 +13,6 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Net.Http.Json;
 
-@inject IAddonService addon
-@inject IBaseGoodService basegood
-@inject IAddonTypeService addontype
-@inject IAddonFlavorService addonflavor
-@inject IProductService product
-@inject ICustomerService customer
-@inject IProductAddonBasegoodService prod_basegood_addon
-@inject ICartService cart
 @inject IAuthenticationManager authManager
 @inject NavigationManager navManager
 @inject HttpClient client
@@ -28,33 +20,40 @@
 
 <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
-<body>
-    <div class="mt-5" style="padding: 2%">
-
-        <h3>This form is for pastries with a small to medium amount of customization. If you wish for a highly customized cake or a cake with lots of detail, please contact me directly <a href="mailto:kakeysbakery@yahoo.com">kakeysbakery@yahoo.com</a></h3>
+<div>
+    <div class="my-5">
+        <Alert class="mb-0 rounded" Color="AlertColor.Warning">
+            <i class="bi bi-info-circle-fill" />
+            This form is for pastries with a small to medium amount of customization. 
+            If you wish for a highly customized cake or a cake with lots of detail, 
+            please contact me directly at <a href="mailto:kakeysbakery@yahoo.com"> kakeysbakery@yahoo.com</a>
+        </Alert>
     </div>
-    <div class="mt-5 totalPage ">
-        <div class="d-flex flex-wrap justify-content-center">
 
-            <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=>await WeddingCake.ShowAsync()">
-                <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/weddingcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <h3 class="typelabel" style="z-index: 1;">Wedding Cake</h3>
-            </div>
-            <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await Cupcake.ShowAsync(); layers=1;}">
-                <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cupcakes.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <h3 class="typelabel" style="z-index: 1;">Cupcake</h3>
-            </div>
-            <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await RoundCake.ShowAsync(); layers=1;}">
-                <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/customcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <h3 class="typelabel" style="z-index: 1;">Round Cake</h3>
-            </div>
-            <div class="d-flex position-relative order-container rounded-5 m-3 p-3 " @onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
-                <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Sheetcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
-                <h3 class="typelabel" style="z-index: 1;">Sheet Cake</h3>
+    <div>
+        <div class="totalPage">
+            <div class="d-flex flex-wrap justify-content-center">
+
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=>await WeddingCake.ShowAsync()">
+                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/weddingcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <h3 class="typelabel" style="z-index: 1;">Wedding Cake</h3>
+                </div>
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await Cupcake.ShowAsync(); layers=1;}">
+                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cupcakes.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <h3 class="typelabel" style="z-index: 1;">Cupcake</h3>
+                </div>
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await RoundCake.ShowAsync(); layers=1;}">
+                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/customcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <h3 class="typelabel" style="z-index: 1;">Round Cake</h3>
+                </div>
+                <div class="d-flex position-relative order-container rounded-5 m-3 p-3 " @onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
+                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Sheetcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <h3 class="typelabel" style="z-index: 1;">Sheet Cake</h3>
+                </div>
             </div>
         </div>
     </div>
-</body>
+</div>
 
 <style>
     .modal-header i {
@@ -543,9 +542,9 @@
 
     private async Task GetNeededData()
     {
-        addons = await addon.GetAddonListAsync();
-        flavors = await addonflavor.GetAddonFlavorListAsync();
-        types = await addontype.GetAddonTypeListAsync();
+        addons = await client.GetFromJsonAsync<List<Addon>>($"api/addon/getall/");
+        flavors = await client.GetFromJsonAsync<List<Addonflavor>>($"api/addonflavor/getall/");
+        types = await client.GetFromJsonAsync<List<Addontype>>($"api/addontype/getall/");
     }
 
     private async Task PopulateLists()
@@ -555,13 +554,13 @@
         // figure out way for cake/sheet size
         for (int i = 0; i <= 2; i++)
         {
-            var addonType = await addontype.GetAddonTypeAsync(i + 4);
+            var addonType = await client.GetFromJsonAsync<Addontype>($"api/addontype/get/{i + 4}");
             if (addonType is not null)
             {
                 cakeSizes.Add(addonType);
             }
 
-            var sheetType = await addontype.GetAddonTypeAsync(i + 7);
+            var sheetType = await client.GetFromJsonAsync<Addontype>($"api/addontype/get/{i + 7}");
             if (sheetType is not null)
             {
                 sheetSizes.Add(sheetType);
@@ -659,7 +658,8 @@
                 Description = description,
                 Productname = flavorList[0] + " " + frostingList[0] + " " + type
             };
-        await product.CreateProductAsync(prodToAdd);
+
+        await client.PostAsJsonAsync<Product>("api/product/add", prodToAdd);
 
         await AddToCustomerAddonList(prodToAdd.Id, frostingList, frostings);
         await AddToCustomerAddonList(prodToAdd.Id, fillingList, fillings);
@@ -702,12 +702,11 @@
 
     public async Task AddAddon(int productId, int addonId)
     {
-        await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = productId, Addonid = addonId, Basegoodid = 53 });
+        await client.PostAsJsonAsync<ProductAddonBasegood>($"api/productaddonbasegood/add", new() { Productid = productId, Addonid = addonId, Basegoodid = 53 });
     }
 
     public async Task AddToCart(int productId, int quantity, int customerId)
     {
-        await cart.CreateCartAsync(new() { Productid = productId, Quantity = quantity, Customerid = customerId });
+        await client.PostAsJsonAsync<Cart>("api/cart/add", new() { Productid = productId, Quantity = quantity, Customerid = customerId });
     }
-
 }

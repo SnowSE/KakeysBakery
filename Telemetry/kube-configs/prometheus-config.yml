@@ -6,20 +6,20 @@ scrape_configs:
       module: [http_2xx]  # Look for a HTTP 200 response.
     static_configs:
       - targets:
-        - http://${WEB_ID}.kakeysbakery.duckdns.org:9086/health # My Web Target
+        - http://kakeysbakery.duckdns.org:80/health # My Web Target
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: blackbox:9115
-  - job_name: 'otel-collector'
-    scrape_interval: 10s
-    static_configs:
-    - targets: ['otel-collector:8889']
-    - targets: ['otel-collector:8888']
+        replacement: kakey-blackbox-service:9115
+  # - job_name: 'otel-collector'
+  #   scrape_interval: 10s
+  #   static_configs:
+    # - targets: ['otel-collector:8889']
+    # - targets: ['otel-collector:8888']
   - job_name: 'metrics'
     scrape_interval: 5s
     static_configs:
-      - targets: ['otel-collector:1234']
+      - targets: ['kakey-blazor-service:8080']

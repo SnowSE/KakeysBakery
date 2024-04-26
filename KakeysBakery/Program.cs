@@ -102,6 +102,7 @@ builder.Services.AddScoped(o =>
 
 //for feature flag requirement
 FeatureFlagService.SetVariable(builder.Configuration.GetValue<string>("FeatureFlag") == "true");
+FeatureFlagService.SetVariable2(builder.Configuration.GetValue<string>("IsOnMaui") == "true");
 
 builder.Services.AddBlazorBootstrap();
 
@@ -162,7 +163,8 @@ builder.Services.AddOpenTelemetry()
     .WithMetrics(metrics => metrics
         .AddAspNetCoreInstrumentation()
         .AddMeter(Metrics.Name)
-        .AddConsoleExporter()
+        // .AddConsoleExporter()
+        .AddPrometheusExporter()
         .AddOtlpExporter(o =>
             o.Endpoint = new Uri(otelEndpoint)));
 
@@ -222,6 +224,8 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 //app.MapControllerRoute(
 //name: "default",
 //pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapPrometheusScrapingEndpoint();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()

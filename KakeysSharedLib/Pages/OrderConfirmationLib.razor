@@ -22,8 +22,17 @@
 }
 
 <div>
-<p>Would you like to keep in contact with me for news, promotions and other information? If so sign up for my mailing list</p>
-<input value="@subscribe" @onchange="async () => subscribe = await updateSubscribe(!subscribe)" type="checkbox">
+    <span>
+        <label>Would you like to keep in contact with me for news, promotions and other information? If so sign up for my mailing list</label>
+        <input @onchange="async () => subscribe = await updateSubscribe(!subscribe)" type="checkbox" checked="@subscribe">
+    </span>
+    <p></p>
+    <span>
+        <label>Input a phone number here to recieve notifications about your order status.</label>
+        <input @bind="@PhoneNumber" maxlength="14"  placeholder="555-555-5555"/>
+    </span>
+    <button @onclick="async () => await updatePhone()">Update Phone Number</button>
+
 </div>
 
 @code {
@@ -31,11 +40,11 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
     private string email = "";
+    private string? PhoneNumber;
     Data.Customer? currentCustomer = new();
     //List<ToastMessage> messages = new List<ToastMessage>();
     //Data.Customer? currentCustomer = new();
     List<Cart>? allCartItemsForCustomer = new();
-    bool IsDataLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,6 +68,11 @@
 
         if (paymentSuccess.didPaymentGoThrough)
             await CheckoutCart(currentCustomer!.Id);
+    }
+    private async Task updatePhone()
+    {
+        currentCustomer!.Phone = PhoneNumber;
+        await client.PatchAsJsonAsync("api/customer/update", currentCustomer);
     }
 
     private async Task<bool> updateSubscribe(bool subscribed)
@@ -85,12 +99,10 @@
     public async Task CheckoutCart(int customerId)
     {
         logger.LogInformation("Checking out cart");
-        IsDataLoaded = false;
 
         if (allCartItemsForCustomer!.Count < 1)
         {
             //CreateToastMessage(ToastType.Danger, "No items in cart");
-            IsDataLoaded = true;
             return;
         }
         await updateLocalCartToDatabaseAsync(allCartItemsForCustomer!);
@@ -108,6 +120,5 @@
         {
             //CreateToastMessage(ToastType.Danger, "Error occured when checking out");
         }
-        IsDataLoaded = true;
     }
 }

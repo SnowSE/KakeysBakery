@@ -12,10 +12,11 @@
             The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
             either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
         <!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
-        	<NoWarn>NU1701;NETSDK1206</NoWarn> <!--Suppress PayPal, Alpine warning-->
+        <NoWarn>NU1701;NETSDK1206</NoWarn>
+        <!--Suppress PayPal, Alpine warning-->
 
-		<OutputType>Exe</OutputType>        
-		<RootNamespace>MauiKakeys</RootNamespace>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>MauiKakeys</RootNamespace>
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -39,7 +40,8 @@
 
         <NoWarn>NU1701;NETSDK1206</NoWarn>
 
-        <UserSecretsId>45a37989-f26b-42a2-a3be-28fe5ed930d9</UserSecretsId> <!--Suppress PayPal, Alpine warning-->
+        <UserSecretsId>45a37989-f26b-42a2-a3be-28fe5ed930d9</UserSecretsId>
+        <!--Suppress PayPal, Alpine warning-->
     </PropertyGroup>
 
     <ItemGroup>
@@ -74,11 +76,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\KakeysSharedLib\KakeysSharedLib.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Components\Pages\" />
+        <ProjectReference Include="..\KakeysSharedLib\KakeysSharedLib.csproj" />
     </ItemGroup>
 
 </Project>
