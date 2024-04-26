@@ -2,10 +2,18 @@
 @using KakeysSharedLib.Telemetry
 @using Microsoft.Extensions.Logging
 @inject ILogger<AboutUsLib> logger
+@inject HttpClient client
 
 <h3 class="mt-5">Kakey's Bakery: A Journey of Passion</h3>
 <div class="d-flex flex-column flex-xl-row align-items-center mx-5">
-    <img class="bshadow mx-5" id="bread" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/HomeadeBread.jpg" />
+    @if (IsAzureDown)
+    {
+        <img class="bshadow mx-5" id="bread" src="/imgs/HomeadeBread.jpg" />
+    }
+    else
+    {
+        <img class="bshadow mx-5" id="bread" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/HomeadeBread.jpg" />
+    }
     <p class="m-5" id="aboutus">
         Back in 2018, I got hooked on watching "The Great British Baking Championship." Despite some doubts from a tough high school culinary teacher, my love for baking never faded. So, I decided to give it another shot and enrolled in Salt Lake Community College's culinary institute. There, I rediscovered my passion for baking.
         After a few years of studying and moving to Sanpete County, I realized it was time to start my own bakery. There wasn't one around, and I saw an opportunity to create something special.
@@ -16,9 +24,17 @@
 
 
 @code {
-    protected override void OnInitialized()
+    bool IsAzureDown = false;
+
+    protected override async Task OnInitializedAsync()
     {
         logger.LogInformation("Populating about us page");
         Metrics.AboutUsAccessCount.Add(1);
+
+        var response = await client.GetAsync("https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Muffins.jpg"); // Try to get an image from Azure
+        if (!response.IsSuccessStatusCode)
+        {
+            IsAzureDown = true;
+        }
     }
 }

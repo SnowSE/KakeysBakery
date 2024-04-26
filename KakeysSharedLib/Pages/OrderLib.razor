@@ -98,7 +98,7 @@
                                await modal.ShowAsync();
                         }'>
                         <h3 class="typelabel" style="z-index: 1;">@type.Basegood</h3>
-                        <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/@(type.Basegood).jpg">
+                        <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="@ImgSuffix/@(type.Basegood).jpg">
 
                     </div>
                 }
@@ -126,9 +126,16 @@ else
 
     CartManager? manager;
 
+    string ImgSuffix = "https://kakeybakerystorage9.blob.core.windows.net/bakerybasics";
 
     protected override async Task OnInitializedAsync()
     {
+        var response = await client.GetAsync("https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Muffins.jpg"); // Try to get an image from Azure
+        if (!response.IsSuccessStatusCode)
+        {
+            ImgSuffix = "/imgs/";
+        }
+
         logger.LogInformation("Page Loading");
         Stopwatch watch = new();
         watch.Start();

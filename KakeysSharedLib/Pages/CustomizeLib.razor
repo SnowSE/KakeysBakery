@@ -35,19 +35,19 @@
             <div class="d-flex flex-wrap justify-content-center">
 
                 <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=>await WeddingCake.ShowAsync()">
-                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/weddingcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <img src="@ImgSuffix/weddingcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                     <h3 class="typelabel" style="z-index: 1;">Wedding Cake</h3>
                 </div>
                 <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await Cupcake.ShowAsync(); layers=1;}">
-                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/cupcakes.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <img src="@ImgSuffix/cupcakes.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                     <h3 class="typelabel" style="z-index: 1;">Cupcake</h3>
                 </div>
                 <div class="d-flex position-relative order-container rounded-5 m-3 p-3" @onclick="async ()=> {await RoundCake.ShowAsync(); layers=1;}">
-                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/customcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <img src="@ImgSuffix/customcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                     <h3 class="typelabel" style="z-index: 1;">Round Cake</h3>
                 </div>
                 <div class="d-flex position-relative order-container rounded-5 m-3 p-3 " @onclick="async ()=> {await SheetCake.ShowAsync(); layers=1;}">
-                    <img src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Sheetcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
+                    <img src="@ImgSuffix/Sheetcake.jpg" class="imgbutton img-fluid img-thumbnail rounded-5 shadow">
                     <h3 class="typelabel" style="z-index: 1;">Sheet Cake</h3>
                 </div>
             </div>
@@ -528,6 +528,7 @@
         }
     }
 
+    string ImgSuffix = "https://kakeybakerystorage9.blob.core.windows.net/bakerybasics";
     protected override async Task OnInitializedAsync()
     {
         logger.LogInformation("Loading the customize page");
@@ -537,6 +538,12 @@
         await authManager.SetAuthState(authenticationState);
         if (!(await authManager!.IsUserLoggedIn())) warnNotLoggedIn = "You are not logged in, changes to cart will not be saved";
         Metrics.CustomizeAccessCount.Add(1);
+
+        var response = await client.GetAsync("https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Muffins.jpg"); // Try to get an image from Azure
+        if (!response.IsSuccessStatusCode)
+        {
+            ImgSuffix = "/imgs/";
+        }
     }
 
 

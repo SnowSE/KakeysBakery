@@ -41,7 +41,14 @@
                         <tr class="cartCard flex-row">
                             <td class="pe-4">
                                 <div class="d-flex position-relative order-container rounded-5 m-3 p-3">
-                                    <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/@(cart!.Product!.ProductAddonBasegoods!.FirstOrDefault()!.Basegood!.Type!.Basegood).jpg">
+                                    @if (IsAzureDown)
+                                    {
+                                        <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="/imgs/@(cart!.Product!.ProductAddonBasegoods!.FirstOrDefault()!.Basegood!.Type!.Basegood).jpg">
+                                    }
+                                    else
+                                    {
+                                        <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/@(cart!.Product!.ProductAddonBasegoods!.FirstOrDefault()!.Basegood!.Type!.Basegood).jpg">
+                                    }
                                 </div>
                             </td>
                             <td>
@@ -115,7 +122,14 @@
 
                 <div class="d-flex flex-column flex-xl-row">
                     <div class="d-flex align-items-center justify-content-center order-container rounded-5 me-auto">
-                        <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/@(cart!.Product!.ProductAddonBasegoods!.FirstOrDefault()!.Basegood!.Type!.Basegood).jpg">
+                        @if (IsAzureDown)
+                        {
+                            <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="/imgs/@(cart!.Product!.ProductAddonBasegoods!.FirstOrDefault()!.Basegood!.Type!.Basegood).jpg">
+                        }
+                        else
+                        {
+                            <img class="imgbutton img-fluid shadow rounded-5 img-thumbnail" src="https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/@(cart!.Product!.ProductAddonBasegoods!.FirstOrDefault()!.Basegood!.Type!.Basegood).jpg">
+                        }
                     </div>
 
                     <div class="d-flex align-items-center justify-content-center flex-column mx-5">
@@ -189,6 +203,7 @@ else
     DateOnly fulfillDate;
     public static decimal currentPrice = new();
     string toFulfillBy = "";
+    bool IsAzureDown = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -199,6 +214,11 @@ else
         //https://github.com/christianhelle/refitter
         fulfillDate = DateOnly.FromDateTime(DateTime.Now.AddDays(7));
 
+        var response = await client.GetAsync("https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Muffins.jpg"); // Try to get an image from Azure
+        if (!response.IsSuccessStatusCode)
+        {
+            IsAzureDown = true;
+        }
 
         toFulfillBy = fulfillDate.Year + "-" + fulfillDate.Month + "-" + fulfillDate.Day;
         Metrics.CartAccessCount.Add(1);

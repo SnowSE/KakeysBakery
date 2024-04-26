@@ -53,6 +53,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\imgs\AmericanAsApplePie.png" />
+    <None Include="wwwroot\imgs\BlackLogo.png" />
+    <None Include="wwwroot\imgs\BlueLogo.png" />
+    <None Include="wwwroot\imgs\Bread.jpg" />
+    <None Include="wwwroot\imgs\Cake.jpg" />
+    <None Include="wwwroot\imgs\Cookies.jpg" />
+    <None Include="wwwroot\imgs\Cupcakes.jpg" />
+    <None Include="wwwroot\imgs\HomeadeBread.jpg" />
+    <None Include="wwwroot\imgs\Muffins.jpg" />
+    <None Include="wwwroot\imgs\Pies.jpg" />
+    <None Include="wwwroot\imgs\Quick Breads.jpg" />
+    <None Include="wwwroot\imgs\Quick Breads1.jpg" />
+    <None Include="wwwroot\imgs\SweetnessCupcakes.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\KakeysSharedLib\KakeysSharedLib.csproj" />
   </ItemGroup>
 
