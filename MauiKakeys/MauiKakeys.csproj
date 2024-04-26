@@ -79,8 +79,4 @@
         <ProjectReference Include="..\KakeysSharedLib\KakeysSharedLib.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Components\Pages\" />
-    </ItemGroup>
-
 </Project>

@@ -1,5 +1,6 @@
 ﻿using Auth0.OidcClient;
 
+using KakeysSharedLib.Data;
 using KakeysSharedLib.OAuth;
 
 using MauiKakeys.MauiAuth0;
@@ -52,6 +53,10 @@ namespace MauiKakeys
             builder.Services.AddBlazorBootstrap();
             builder.Services.AddScoped<MauiUserState>();
             builder.Services.AddScoped<IAuthenticationManager, MauiAuthenticationManager>();
+
+            FeatureFlagService.SetVariable(builder.Configuration.GetValue<string>("FeatureFlag") == "true");
+            FeatureFlagService.SetVariable2(builder.Configuration.GetValue<string>("IsOnMaui") == "true");
+
             return builder.Build();
         }
     }

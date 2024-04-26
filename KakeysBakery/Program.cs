@@ -102,6 +102,7 @@ builder.Services.AddScoped(o =>
 
 //for feature flag requirement
 FeatureFlagService.SetVariable(builder.Configuration.GetValue<string>("FeatureFlag") == "true");
+FeatureFlagService.SetVariable2(builder.Configuration.GetValue<string>("IsOnMaui") == "true");
 
 builder.Services.AddBlazorBootstrap();
 

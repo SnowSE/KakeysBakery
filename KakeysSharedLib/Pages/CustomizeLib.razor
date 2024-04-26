@@ -13,14 +13,6 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Net.Http.Json;
 
-@inject IAddonService addon
-@inject IBaseGoodService basegood
-@inject IAddonTypeService addontype
-@inject IAddonFlavorService addonflavor
-@inject IProductService product
-@inject ICustomerService customer
-@inject IProductAddonBasegoodService prod_basegood_addon
-@inject ICartService cart
 @inject IAuthenticationManager authManager
 @inject NavigationManager navManager
 @inject HttpClient client
@@ -550,9 +542,9 @@
 
     private async Task GetNeededData()
     {
-        addons = await addon.GetAddonListAsync();
-        flavors = await addonflavor.GetAddonFlavorListAsync();
-        types = await addontype.GetAddonTypeListAsync();
+        addons = await client.GetFromJsonAsync<List<Addon>>($"api/addon/getall/");
+        flavors = await client.GetFromJsonAsync<List<Addonflavor>>($"api/addonflavor/getall/");
+        types = await client.GetFromJsonAsync<List<Addontype>>($"api/addontype/getall/");
     }
 
     private async Task PopulateLists()
@@ -562,13 +554,13 @@
         // figure out way for cake/sheet size
         for (int i = 0; i <= 2; i++)
         {
-            var addonType = await addontype.GetAddonTypeAsync(i + 4);
+            var addonType = await client.GetFromJsonAsync<Addontype>($"api/addontype/get/{i + 4}");
             if (addonType is not null)
             {
                 cakeSizes.Add(addonType);
             }
 
-            var sheetType = await addontype.GetAddonTypeAsync(i + 7);
+            var sheetType = await client.GetFromJsonAsync<Addontype>($"api/addontype/get/{i + 7}");
             if (sheetType is not null)
             {
                 sheetSizes.Add(sheetType);
@@ -666,7 +658,8 @@
                 Description = description,
                 Productname = flavorList[0] + " " + frostingList[0] + " " + type
             };
-        await product.CreateProductAsync(prodToAdd);
+
+        await client.PostAsJsonAsync<Product>("api/product/add", prodToAdd);
 
         await AddToCustomerAddonList(prodToAdd.Id, frostingList, frostings);
         await AddToCustomerAddonList(prodToAdd.Id, fillingList, fillings);
@@ -709,12 +702,11 @@
 
     public async Task AddAddon(int productId, int addonId)
     {
-        await prod_basegood_addon.CreateProductAddonBasegoodAsync(new() { Productid = productId, Addonid = addonId, Basegoodid = 53 });
+        await client.PostAsJsonAsync<ProductAddonBasegood>($"api/productaddonbasegood/add", new() { Productid = productId, Addonid = addonId, Basegoodid = 53 });
     }
 
     public async Task AddToCart(int productId, int quantity, int customerId)
     {
-        await cart.CreateCartAsync(new() { Productid = productId, Quantity = quantity, Customerid = customerId });
+        await client.PostAsJsonAsync<Cart>("api/cart/add", new() { Productid = productId, Quantity = quantity, Customerid = customerId });
     }
-
 }
