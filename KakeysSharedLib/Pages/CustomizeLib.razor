@@ -531,12 +531,20 @@
     string ImgSuffix = "https://kakeybakerystorage9.blob.core.windows.net/bakerybasics";
     protected override async Task OnInitializedAsync()
     {
-        logger.LogInformation("Loading the customize page");
-        isFondant.Add(true);
-        await GetNeededData();
-        await PopulateLists();
-        await authManager.SetAuthState(authenticationState);
-        if (!(await authManager!.IsUserLoggedIn())) warnNotLoggedIn = "You are not logged in, changes to cart will not be saved";
+        try
+        {
+
+            logger.LogInformation("Loading the customize page");
+            isFondant.Add(true);
+            await GetNeededData();
+            await PopulateLists();
+            await authManager.SetAuthState(authenticationState);
+            if (!(await authManager!.IsUserLoggedIn())) warnNotLoggedIn = "You are not logged in, changes to cart will not be saved";
+        }
+        catch
+        {
+            CreateToastMessage(ToastType.Danger, "Error loading data");
+        }
         Metrics.CustomizeAccessCount.Add(1);
 
         var response = await client.GetAsync("https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Muffins.jpg"); // Try to get an image from Azure
