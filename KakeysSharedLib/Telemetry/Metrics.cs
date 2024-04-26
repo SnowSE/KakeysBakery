@@ -15,9 +15,9 @@ public class Metrics
     public static Counter<int> homePageAccessCount = DashboardMeter.CreateCounter<int>("homepage.count");
     public static Histogram<int> orderPageLoadTimes = DashboardMeter.CreateHistogram<int>("orderpage.histogram");
 
-    public static Counter<int> OrderAccessCount = DashboardMeter.CreateCounter<int>("homepage.count");
-    public static Counter<int> CustomizeAccessCount = DashboardMeter.CreateCounter<int>("homepage.count");
-    public static Counter<int> AboutUsAccessCount = DashboardMeter.CreateCounter<int>("homepage.count");
-    public static Counter<int> CartAccessCount = DashboardMeter.CreateCounter<int>("homepage.count");
-
+    public static Counter<int> OrderAccessCount = DashboardMeter.CreateCounter<int>("orderaccess.count");
+    public static Counter<int> CustomizeAccessCount = DashboardMeter.CreateCounter<int>("customize.count");
+    public static Counter<int> AboutUsAccessCount = DashboardMeter.CreateCounter<int>("about.count");
+    public static Counter<int> CartAccessCount = DashboardMeter.CreateCounter<int>("cart.count");
+    public static Counter<int> ErrorCount = DashboardMeter.CreateCounter<int>("error.count");
 }

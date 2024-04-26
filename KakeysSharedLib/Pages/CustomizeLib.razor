@@ -543,6 +543,7 @@
         }
         catch
         {
+            Metrics.ErrorCount.Add(1);
             CreateToastMessage(ToastType.Danger, "Error loading data");
         }
         Metrics.CustomizeAccessCount.Add(1);

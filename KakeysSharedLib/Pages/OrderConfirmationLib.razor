@@ -102,6 +102,7 @@
 
         if (allCartItemsForCustomer!.Count < 1)
         {
+            Metrics.ErrorCount.Add(1);
             //CreateToastMessage(ToastType.Danger, "No items in cart");
             return;
         }
@@ -118,6 +119,7 @@
         }
         else //It failed and returned an invalid purchaseID
         {
+            Metrics.ErrorCount.Add(1);
             //CreateToastMessage(ToastType.Danger, "Error occured when checking out");
         }
     }

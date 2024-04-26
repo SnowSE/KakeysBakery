@@ -31,6 +31,7 @@
         logger.LogInformation("Populating about us page");
         Metrics.AboutUsAccessCount.Add(1);
 
+
         var response = await client.GetAsync("https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Muffins.jpg"); // Try to get an image from Azure
         if (!response.IsSuccessStatusCode)
         {

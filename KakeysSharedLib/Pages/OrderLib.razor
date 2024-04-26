@@ -151,6 +151,8 @@ else
         }
         catch
         {
+            Metrics.ErrorCount.Add(1);
+
             CreateToastMessage(ToastType.Danger, "Error loading data");
         }
 
@@ -181,7 +183,7 @@ else
         catch
         {
             logger.LogInformation("Error while adding to cart");
-
+            Metrics.ErrorCount.Add(1);
             CreateToastMessage(ToastType.Danger, "Error occured when adding to cart");
         }
 
