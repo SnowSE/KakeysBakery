@@ -4,7 +4,7 @@ metadata:
   namespace: ${NAMESPACE}
   name: kakey-grafana-ingress
     annotations:
-    cert-manager.io/cluster-issuer: cert-manager-webhook-duckdns-alex-production
+      cert-manager.io/cluster-issuer: cert-manager-webhook-duckdns-alex-production
 spec:
   tls:
   - hosts:
