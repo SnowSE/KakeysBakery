@@ -69,8 +69,8 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services
     .AddAuth0WebAppAuthentication(options =>
     {
-        options.Domain = builder.Configuration.GetValue<string>("Auth0Domain", "DEFAULT_AUTH0_DOMAIN") ?? "";
-        options.ClientId = builder.Configuration.GetValue<string>("Auth0ClientId", "DEFAULT_AUTH0_CLIENT_ID") ?? "";
+        options.Domain = builder.Configuration.GetValue<string>("Auth0Domain", "dev-zas6rizyxopiwv2b.us.auth0.com") ?? "";
+        options.ClientId = builder.Configuration.GetValue<string>("Auth0ClientId", "xUuj4xt0Pn4wLdompKNjM3suZZKx9fdC") ?? "";
         options.Scope = "openid profile email";
     });
 

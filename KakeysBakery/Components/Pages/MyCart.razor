@@ -236,7 +236,7 @@ else
         {
             logger.LogInformation("Getting user email");
 
-            currentCustomer = await client.GetFromJsonAsync<Data.Customer>($"api/Customer/get_by_name/{email}");
+            currentCustomer = await client.GetFromJsonAsync<Customer>($"api/Customer/get_by_name/{email}");
             var products = await client.GetFromJsonAsync<List<Product>>("api/product/getall");
 
             //get the cart and then filter itself to only get items connected to the current customer
