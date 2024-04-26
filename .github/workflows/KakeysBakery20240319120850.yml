@@ -101,10 +101,12 @@ jobs:
           kubectl -n $NAMESPACE create configmap blazor-web-postgres-init --from-file=Apr15ddl.sql
         cd ../
 
-        cd Telemetry/kube-configs
+        cd Telemetry/kube-configs/grafana
           kubectl -n $NAMESPACE delete configmap grafana-datasource-config || true
-          kubectl -n $NAMESPACE create configmap grafana-datasource-config --from-file=grafana-datasource.yml
+          kubectl -n $NAMESPACE create configmap grafana-datasource-config --from-file=.
+        cd ../../../
 
+        cd Telemetry/kube-configs
           kubectl -n $NAMESPACE delete configmap loki-config || true
           kubectl -n $NAMESPACE create configmap loki-config --from-file=loki-config.yml
 
