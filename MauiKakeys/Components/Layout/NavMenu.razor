@@ -1,5 +1,6 @@
 ﻿@using MauiKakeys.MauiAuth0
 @inject MauiUserState userState
+@inject HttpClient client
 
 <nav class="navbar navbar-expand-xl border-bottom border-body shadow-xl" data-bs-theme="dark" style="background-color: #4E362E">
     <div class="container-fluid">
@@ -70,3 +71,16 @@
 
     </div>
 </nav>
+
+
+@code {
+    string ImgSuffix = "https://kakeybakerystorage9.blob.core.windows.net/bakerybasics";
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await client.GetAsync("https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Muffins.jpg"); // Try to get an image from Azure
+        if (!response.IsSuccessStatusCode)
+        {
+            ImgSuffix = "/imgs/";
+        }
+    }
+}
