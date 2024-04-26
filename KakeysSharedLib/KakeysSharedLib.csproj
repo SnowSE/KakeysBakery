@@ -8,6 +8,34 @@
     <UserSecretsId>7a86a38e-23c2-4c9e-88b3-2ee1aca4ece3</UserSecretsId> <!--Suppress PayPal, Alpine warning-->
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\imgs\AmericanAsApplePie.png" />
+    <Content Remove="wwwroot\imgs\Bread.jpg" />
+    <Content Remove="wwwroot\imgs\Cake.jpg" />
+    <Content Remove="wwwroot\imgs\Cookies.jpg" />
+    <Content Remove="wwwroot\imgs\cupcakes.jpg" />
+    <Content Remove="wwwroot\imgs\HomeadeBread.jpg" />
+    <Content Remove="wwwroot\imgs\Muffins.jpg" />
+    <Content Remove="wwwroot\imgs\Pies.jpg" />
+    <Content Remove="wwwroot\imgs\Quick Breads.jpg" />
+    <Content Remove="wwwroot\imgs\Quick Breads1.jpg" />
+    <Content Remove="wwwroot\imgs\SweetnessCupcakes.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\imgs\AmericanAsApplePie.png" />
+    <None Include="wwwroot\imgs\Bread.jpg" />
+    <None Include="wwwroot\imgs\Cake.jpg" />
+    <None Include="wwwroot\imgs\Cookies.jpg" />
+    <None Include="wwwroot\imgs\cupcakes.jpg" />
+    <None Include="wwwroot\imgs\HomeadeBread.jpg" />
+    <None Include="wwwroot\imgs\Muffins.jpg" />
+    <None Include="wwwroot\imgs\Pies.jpg" />
+    <None Include="wwwroot\imgs\Quick Breads.jpg" />
+    <None Include="wwwroot\imgs\Quick Breads1.jpg" />
+    <None Include="wwwroot\imgs\SweetnessCupcakes.jpg" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />

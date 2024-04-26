@@ -34,7 +34,7 @@
         var response = await client.GetAsync("https://kakeybakerystorage9.blob.core.windows.net/bakerybasics/Muffins.jpg"); // Try to get an image from Azure
         if (!response.IsSuccessStatusCode)
         {
-            ImgSuffix = "/imgs/";
+            ImgSuffix = "/imgs";
         }
     }
 

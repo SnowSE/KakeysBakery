@@ -4,15 +4,14 @@ metadata:
   namespace: ${NAMESPACE}
   name: kakey-blazor-ingress
   annotations:
-    cert-manager.io/cluster-issuer: cert-manager-webhook-duckdns-kakey-1-cert-manager-webhook-duckd-production
-spec:
+    cert-manager.io/cluster-issuer: cert-manager.io/cluster-issuer: cert-manager-webhook-duckdns-alex-production
   tls:
   - hosts:
-    - kakeysbakery.duckdns.org
+    - kakeysbakery.alex-kube.duckdns.org
     secretName: kakeysbakery-1-kube-tls-production
   ingressClassName: nginx
   rules:
-  - host: ${PULL_REQUEST_ID}.kakeysbakery.duckdns.org
+  - host: ${PULL_REQUEST_ID}.kakeysbakery.alex-kube.duckdns.org
     http:
       paths:
       - path: /
