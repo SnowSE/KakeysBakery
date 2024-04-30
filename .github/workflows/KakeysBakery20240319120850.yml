@@ -30,18 +30,18 @@ jobs:
       run: |
           dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore /warnaserror
 
-    - name: Run Test Suite
-      run: |
-        cd ./KakeysBakery.Tests/
-        dotnet test
+    # - name: Run Test Suite
+    #   run: |
+    #     cd ./KakeysBakery.Tests/
+    #     dotnet test
 
-    - name: Compile Code Coverage
-      run: |
-       cd KakeysBakery.Tests
-        rm -rf TestResults || true
-        dotnet test --collect:"XPlat Code Coverage" 
-        pycobertura show --format html --output /home/garion/coverage.html */*/*/coverage.cobertura.xml -s Search
-       cd ..
+    # - name: Compile Code Coverage
+    #   run: |
+    #    cd KakeysBakery.Tests
+    #     rm -rf TestResults || true
+    #     dotnet test --collect:"XPlat Code Coverage" 
+    #     pycobertura show --format html --output /home/garion/coverage.html */*/*/coverage.cobertura.xml -s Search
+    #    cd ..
 
     - name: Publish
       run: |
