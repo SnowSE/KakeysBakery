@@ -7,32 +7,6 @@ env:
   CONFIGURATION: Release
   WORKING_DIRECTORY: KakeysBakery
 jobs:
-  Build:
-    runs-on: self-hosted
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-
-    - name: Restore
-      run: |
-          dotnet restore "${{ env.WORKING_DIRECTORY }}"
-
-    - name: Lint
-      run: |
-          cd KakeysBakery
-          dotnet format --verify-no-changes --severity warn
-    - name: Build
-      run: |
-          dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore /warnaserror
-
-    - name: Run Test Suite
-      run: |
-        cd ./KakeysBakery.Tests/
-        dotnet test
-
   kubernetes:
     runs-on: self-hosted
     needs: Build
