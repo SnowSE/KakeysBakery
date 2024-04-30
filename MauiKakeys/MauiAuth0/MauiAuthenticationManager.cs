@@ -89,11 +89,11 @@ public class MauiAuthenticationManager(HttpClient client) : IAuthenticationManag
         if (state is null) { throw new NullReferenceException("Error: User is not logged in!"); }
 
         var user = state.User.Identity;
-            //.Where(c => c.Contains("emailaddress"))
-            //.FirstOrDefault();
+        //.Where(c => c.Contains("emailaddress"))
+        //.FirstOrDefault();
 
         if (user is null) { throw new NullReferenceException("Error: User has no email!"); }
-        return user.Name;
+        return user.Name ?? "";
     }
 
     public Task<Customer> GetUserFromEmail(string email)

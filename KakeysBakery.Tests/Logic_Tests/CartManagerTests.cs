@@ -234,6 +234,156 @@ public class CartManagerTests : IClassFixture<BakeryFactory>
     }
 
     [Fact]
+    public async void GetProduct_WhenExists()
+    {
+        // ARRANGE
+        Basegoodflavor flavor = new()
+        {
+            Id = 9500
+        };
+
+        Basegoodtype type = new()
+        {
+            Id = 9600
+        };
+
+        Basegood good = new()
+        {
+            Id = 9700,
+            Typeid = type.Id,
+            Flavorid = flavor.Id
+        };
+
+        Product product = new()
+        {
+            Id = 9800
+        };
+
+        ProductAddonBasegood pab = new()
+        {
+            Id = 1102,
+            Basegoodid = good.Id,
+            Productid = product.Id,
+        };
+
+        await client.PostAsJsonAsync("api/Basegoodtype/add", type);
+        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+        await client.PostAsJsonAsync("api/product/add", product);
+        await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
+
+        CartManager unitUnderTest = new(client);
+
+        // ACT
+        await unitUnderTest.SelectGoodTypeCard(type.Id);
+        await unitUnderTest.UpdateSelection(new ChangeEventArgs()
+        {
+            Value = $"{flavor.Id}",
+        });
+
+        var result = await unitUnderTest.GetProduct();
+
+        // ASSERT
+        Assert.NotNull(result);
+    }
+
+    [Fact]
+    public async void GetProduct_CreatesProduct_WhenNotExists()
+    {
+        // ARRANGE
+        Basegoodflavor flavor = new()
+        {
+            Id = 9501,
+            Flavorname = "Yumm2"
+        };
+
+        Basegoodtype type = new()
+        {
+            Id = 9602,
+            Basegood = "Mweep2"
+        };
+
+        Basegood good = new()
+        {
+            Id = 9703,
+            Typeid = type.Id,
+            Flavorid = flavor.Id
+        };
+
+        ProductAddonBasegood pab = new()
+        {
+            Id = 1104,
+            Basegoodid = good.Id,
+        };
+
+        await client.PostAsJsonAsync("api/Basegoodtype/add", type);
+        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+        await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
+
+        CartManager unitUnderTest = new(client);
+
+        // ACT
+        await unitUnderTest.SelectGoodTypeCard(type.Id);
+        await unitUnderTest.UpdateSelection(new ChangeEventArgs()
+        {
+            Value = $"{flavor.Id}",
+        });
+
+        var result = await unitUnderTest.GetProduct();
+
+        // ASSERT
+        Assert.NotNull(result);
+    }
+
+    [Fact]
+    public async void CreateProduct()
+    {
+        // ARRANGE
+        Basegoodflavor flavor = new()
+        {
+            Id = 9505,
+            Flavorname = "yummy"
+        };
+
+        Basegoodtype type = new()
+        {
+            Id = 9606,
+            Basegood = "Mweep"
+        };
+
+        Basegood good = new()
+        {
+            Id = 9707,
+            Typeid = type.Id,
+            Flavorid = flavor.Id
+        };
+
+        await client.PostAsJsonAsync("api/Basegoodtype/add", type);
+        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
+        await client.PostAsJsonAsync("api/basegood/add", good);
+
+        CartManager unitUnderTest = new(client);
+
+        // ACT
+        await unitUnderTest.SelectGoodTypeCard(type.Id);
+        await unitUnderTest.UpdateSelection(new ChangeEventArgs()
+        {
+            Value = $"{flavor.Id}",
+        });
+
+        var product = await unitUnderTest.CreateProduct();
+
+        // ASSERT
+        Assert.NotNull(product);
+        Assert.Equal(true, product.Ispublic);
+
+        var pab = await client.GetFromJsonAsync<ProductAddonBasegood>($"api/productAddonBasegood/get_by_productId/{product.Id}");
+        Assert.NotNull(pab);
+        Assert.Equal(good.Id, pab.Basegoodid);
+    }
+
+    [Fact]
     public async void AddToCart()
     {
         // ARRANGE
@@ -429,153 +579,4 @@ public class CartManagerTests : IClassFixture<BakeryFactory>
         Assert.True(1 == list.Count());
     }
 
-    [Fact]
-    public async void GetProduct_WhenExists()
-    {
-        // ARRANGE
-        Basegoodflavor flavor = new()
-        {
-            Id = 9500
-        };
-
-        Basegoodtype type = new()
-        {
-            Id = 9600
-        };
-
-        Basegood good = new()
-        {
-            Id = 9700,
-            Typeid = type.Id,
-            Flavorid = flavor.Id
-        };
-
-        Product product = new()
-        {
-            Id = 9800
-        };
-
-        ProductAddonBasegood pab = new()
-        {
-            Id = 1102,
-            Basegoodid = good.Id,
-            Productid = product.Id,
-        };
-
-        await client.PostAsJsonAsync("api/Basegoodtype/add", type);
-        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
-        await client.PostAsJsonAsync("api/basegood/add", good);
-        await client.PostAsJsonAsync("api/product/add", product);
-        await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
-
-        CartManager unitUnderTest = new(client);
-
-        // ACT
-        await unitUnderTest.SelectGoodTypeCard(type.Id);
-        await unitUnderTest.UpdateSelection(new ChangeEventArgs()
-        {
-            Value = $"{flavor.Id}",
-        });
-
-        var result = await unitUnderTest.GetProduct();
-
-        // ASSERT
-        Assert.NotNull(result);
-    }
-
-    [Fact]
-    public async void GetProduct_CreatesProduct_WhenNotExists()
-    {
-        // ARRANGE
-        Basegoodflavor flavor = new()
-        {
-            Id = 9501,
-            Flavorname = "Yumm2"
-        };
-
-        Basegoodtype type = new()
-        {
-            Id = 9602,
-            Basegood = "Mweep2"
-        };
-
-        Basegood good = new()
-        {
-            Id = 9703,
-            Typeid = type.Id,
-            Flavorid = flavor.Id
-        };
-
-        ProductAddonBasegood pab = new()
-        {
-            Id = 1104,
-            Basegoodid = good.Id,
-        };
-
-        await client.PostAsJsonAsync("api/Basegoodtype/add", type);
-        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
-        await client.PostAsJsonAsync("api/basegood/add", good);
-        await client.PostAsJsonAsync("api/productAddonBasegood/add", pab);
-
-        CartManager unitUnderTest = new(client);
-
-        // ACT
-        await unitUnderTest.SelectGoodTypeCard(type.Id);
-        await unitUnderTest.UpdateSelection(new ChangeEventArgs()
-        {
-            Value = $"{flavor.Id}",
-        });
-
-        var result = await unitUnderTest.GetProduct();
-
-        // ASSERT
-        Assert.NotNull(result);
-    }
-
-    [Fact]
-    public async void CreateProduct()
-    {
-        // ARRANGE
-        Basegoodflavor flavor = new()
-        {
-            Id = 9505,
-            Flavorname = "yummy"
-        };
-
-        Basegoodtype type = new()
-        {
-            Id = 9606,
-            Basegood = "Mweep"
-        };
-
-        Basegood good = new()
-        {
-            Id = 9707,
-            Typeid = type.Id,
-            Flavorid = flavor.Id
-        };
-
-        await client.PostAsJsonAsync("api/Basegoodtype/add", type);
-        await client.PostAsJsonAsync("api/basegoodflavor/add", flavor);
-        await client.PostAsJsonAsync("api/basegood/add", good);
-
-        CartManager unitUnderTest = new(client);
-
-        // ACT
-        await unitUnderTest.SelectGoodTypeCard(type.Id);
-        await unitUnderTest.UpdateSelection(new ChangeEventArgs()
-        {
-            Value = $"{flavor.Id}",
-        });
-
-        var product = await unitUnderTest.CreateProduct();
-
-        // ASSERT
-        Assert.NotNull(product);
-        Assert.Equal(true, product.Ispublic);
-
-        var pab = await client.GetFromJsonAsync<ProductAddonBasegood>($"api/productAddonBasegood/get_by_productId/{product.Id}");
-        Assert.NotNull(pab);
-        Assert.Equal(good.Id, pab.Basegoodid);
-    }
 }
